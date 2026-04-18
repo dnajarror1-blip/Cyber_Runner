@@ -105,7 +105,7 @@ int main() {
         EndDrawing();
     }
 
-    // 3. Finalización
+    // 3. Finalizaciónn
     CloseWindow();
     return 0;
 }
