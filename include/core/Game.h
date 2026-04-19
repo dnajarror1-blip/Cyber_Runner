@@ -3,7 +3,6 @@
 //
 
 #pragma once
-#include "raylib.h"
 #include "entities/Player.h"
 #include "entities/Obstacle.h"
 #include <vector>
