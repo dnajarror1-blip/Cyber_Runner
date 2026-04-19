@@ -16,7 +16,7 @@ private:
     int screenHeight = 450;
 
     GameScreen currentScreen = LOGIN;
-    int creditos = 30;
+    int creditos = 100;
 
     Player player;
 
