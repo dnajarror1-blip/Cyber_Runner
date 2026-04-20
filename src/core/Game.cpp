@@ -24,7 +24,7 @@ void Game::resetGame() {
 
 void Game::run() {
 
-    InitWindow(screenWidth, screenHeight, "Cyber-Runner: Neo");
+    InitWindow(screenWidth, screenHeight, "Cyber-Runner: Neon");
     SetTargetFPS(60);
 
 
