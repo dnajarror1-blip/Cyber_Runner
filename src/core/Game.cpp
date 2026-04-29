@@ -5,32 +5,40 @@
 #include <vector>
 #include "entities/Obstacle.h"
 
-// Colores
+// Colores Neón
 const Color NEO_CYAN    = { 0, 255, 255, 255 };
 const Color NEO_MAGENTA = { 255, 0, 255, 255 };
 const Color NEO_YELLOW  = { 253, 249, 0, 255 };
 const Color NEO_RED     = { 230, 41, 55, 255 };
 
+// Constructor: Inicializamos variables base
+Game::Game() {
+    globalSpeed = 5.0f;
+    speedIncrement = 0.0005f; // Incremento sutil por frame
+    currentScreen = LOGIN;
+    creditos = 100;
+}
 
 void Game::resetGame() {
-    //reiniciar al jugador
+    // Reiniciar al jugador
     player = Player();
 
-    //reiniciar obstaculos
+    // Reiniciar dificultad
+    globalSpeed = 5.0f;
+
+    // Reiniciar obstáculos con distancias variadas (Tu rol - Parte 3)
     obstacles.clear();
-    obstacles.push_back(Obstacle(1000, 300, 40, 50, 5));
-    obstacles.push_back(Obstacle(1400, 300, 40, 50, 5));
+    // Colocamos los obstáculos a distancias que den tiempo de reaccionar
+    obstacles.push_back(Obstacle(1000, 310, 30, 45, globalSpeed)); 
+    obstacles.push_back(Obstacle(1500, 220, 40, 25, globalSpeed)); 
 }
 
 void Game::run() {
-
-    InitWindow(screenWidth, screenHeight, "Cyber-Runner: Neon");
+    InitWindow(screenWidth, screenHeight, "Cyber-Runner: Neo-Guate");
     SetTargetFPS(60);
 
-
     while (!WindowShouldClose()) {
-
-        // --- LOGICA ---
+        // --- LÓGICA ---
         switch (currentScreen) {
             case LOGIN:
                 if (IsKeyPressed(KEY_ENTER)) currentScreen = MENU;
@@ -40,17 +48,26 @@ void Game::run() {
                 if (IsKeyPressed(KEY_P)) {
                     if (creditos >= 10) {
                         creditos -= 10;
-                        resetGame(); //  AQUÍ
+                        resetGame(); 
                         currentScreen = JUGANDO;
                     }
                 }
                 break;
 
             case JUGANDO:
+                // 1. Aumentar dificultad progresivamente
+                globalSpeed += speedIncrement;
+
+                // 2. Actualizar Jugador
                 player.update();
+
+                // 3. Actualizar Obstáculos con la nueva velocidad
                 for (auto &obs : obstacles) {
+                    obs.setSpeed(globalSpeed); // Sincroniza la velocidad actual
                     obs.update();
                 }
+
+                // 4. Detección de Colisiones (Física)
                 for (auto &obs : obstacles) {
                     if (CheckCollisionRecs(player.getRect(), obs.getRect())) {
                         currentScreen = GAMEOVER;
@@ -82,16 +99,17 @@ void Game::run() {
                 break;
 
             case JUGANDO:
-
                 player.draw();
                 for (auto &obs : obstacles) {
                     obs.draw();
                 }
 
+                // Piso Neón
                 DrawLine(0, 350, 800, 350, NEO_MAGENTA);
 
-                DrawText("ESQUIVA LOS OBSTACULOS", 10, 10, 20, WHITE);
-                DrawText("Presiona [X] para simular perder", 10, 40, 15, GRAY);
+                // UI de Juego
+                DrawText(TextFormat("VELOCIDAD: %.2f", globalSpeed), 10, 10, 20, NEO_CYAN);
+                DrawText("ESQUIVA LOS OBSTACULOS", 10, 40, 15, WHITE);
                 break;
 
             case GAMEOVER:
