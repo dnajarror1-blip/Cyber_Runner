@@ -12,20 +12,20 @@ private:
     float speed;
 
 public:
-    // Constructor: Define posición, tamaño y velocidad inicial
+    // El constructor que ya tenías
     Obstacle(float x, float y, float width, float height, float speed);
 
-    // Mueve el obstáculo y lo recicla cuando sale de la pantalla
+    // Actualiza la posición y cambia el tipo de obstáculo al reaparecer
     void update();
 
-    // Dibuja el obstáculo en pantalla
+    // Dibuja el obstáculo (mientras no tengas los sprites finales)
     void draw();
 
-    // Permite cambiar la velocidad desde afuera (para la dificultad progresiva)
+    // FUNCIÓN NUEVA: Permite que la velocidad suba con el tiempo
     void setSpeed(float newSpeed);
 
-    // Devuelve el rectángulo para que el Integrante B pueda detectar colisiones
+    // Devuelve el rectángulo para detectar choques
     Rectangle getRect();
 };
 
-#endif //CYBER_RUNNER_OBSTACLE_H
+#endif
