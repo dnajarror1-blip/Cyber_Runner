@@ -2,7 +2,7 @@
 // Created by darwin on 18/04/26.
 //
 
-#include <entities/Obstacle.h>
+#include "entities/Obstacle.h" // Verifica que esta ruta sea la correcta en tu proyecto
 
 Obstacle::Obstacle(float x, float y, float width, float height, float speed) {
     rect = {x, y, width, height};
@@ -10,39 +10,38 @@ Obstacle::Obstacle(float x, float y, float width, float height, float speed) {
 }
 
 void Obstacle::update() {
-    // 1. Mover el obstáculo a la izquierda
+    // 1. El movimiento constante a la izquierda
     rect.x -= speed;
 
-    // 2. Lógica de "Reciclaje" (Cuando sale de la pantalla)
+    // 2. Si sale de la pantalla, lo "teletransportamos" y cambiamos su forma
     if (rect.x + rect.width < 0) {
-        // Teletransportar a la derecha con una distancia aleatoria
         rect.x = 800 + GetRandomValue(0, 300);
 
-        // --- AQUÍ PONES LA LÓGICA DE VARIEDAD (TU TAREA) ---
-        // Decidimos al azar si el siguiente obstáculo será alto o bajo
-        // 0 = Suelo, 1 = Aire
+        // --- TU LÓGICA DE VARIACIÓN ---
+        // Decidimos al azar: 0 es Dron, 1 es Barrera
         if (GetRandomValue(0, 1) == 0) {
-            rect.y = 310; // Altura de obstáculos terrestres
-            rect.height = 40; // Por ejemplo, una valla es más alta
+            rect.y = 220;        // Altura de vuelo (Dron)
+            rect.width = 40;     // Ancho según el diseño Lo-Fi
+            rect.height = 25;    // Alto según el diseño Lo-Fi
         } else {
-            rect.y = 220; // Altura para que el robot pase por debajo (Dron)
-            rect.height = 20; // Un dron es más delgado
+            rect.y = 310;        // Altura de suelo (Barrera)
+            rect.width = 25; 
+            rect.height = 45; 
         }
     }
 }
 
-// --- ESTO ES NUEVO: Agrégalo debajo de update ---
-// Permitirá que el Integrante A o tú mismo aumenten la velocidad desde el main
+// Implementación de la nueva función para subir dificultad
 void Obstacle::setSpeed(float newSpeed) {
     this->speed = newSpeed;
 }
 
 void Obstacle::draw() {
-    // Si es un obstáculo de aire, lo pintamos de otro color temporalmente
+    // Dibujamos de distinto color para saber qué tipo de obstáculo es
     if (rect.y < 300) {
-        DrawRectangleRec(rect, {255, 255, 0, 255}); // Amarillo para drones
+        DrawRectangleRec(rect, YELLOW); // Amarillo para el Dron
     } else {
-        DrawRectangleRec(rect, {255, 0, 255, 255}); // Magenta para suelo
+        DrawRectangleRec(rect, MAGENTA); // Magenta para la Barrera
     }
 }
 
