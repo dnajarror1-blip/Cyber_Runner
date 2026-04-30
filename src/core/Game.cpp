@@ -5,16 +5,16 @@
 #include <vector>
 #include "entities/Obstacle.h"
 
-// Colores Neón
+// Paleta de Colores Neón
 const Color NEO_CYAN    = { 0, 255, 255, 255 };
 const Color NEO_MAGENTA = { 255, 0, 255, 255 };
 const Color NEO_YELLOW  = { 253, 249, 0, 255 };
 const Color NEO_RED     = { 230, 41, 55, 255 };
 
-// Constructor: Inicializamos variables base
+// Constructor: Inicialización del sistema
 Game::Game() {
     globalSpeed = 5.0f;
-    speedIncrement = 0.0005f; // Incremento sutil por frame
+    speedIncrement = 0.0005f;
     currentScreen = LOGIN;
     creditos = 100;
 }
@@ -23,12 +23,12 @@ void Game::resetGame() {
     // Reiniciar al jugador
     player = Player();
 
-    // Reiniciar dificultad
+    // Reiniciar dificultad base
     globalSpeed = 5.0f;
 
-    // Reiniciar obstáculos con distancias variadas (Tu rol - Parte 3)
+    // Reiniciar vector de obstáculos (Tu Rol - Parte 3)
     obstacles.clear();
-    // Colocamos los obstáculos a distancias que den tiempo de reaccionar
+    // Los posicionamos a distancias estratégicas
     obstacles.push_back(Obstacle(1000, 310, 30, 45, globalSpeed)); 
     obstacles.push_back(Obstacle(1500, 220, 40, 25, globalSpeed)); 
 }
@@ -38,43 +38,44 @@ void Game::run() {
     SetTargetFPS(60);
 
     while (!WindowShouldClose()) {
-        // --- LÓGICA ---
+        // --- LÓGICA DE CONTROL ---
         switch (currentScreen) {
             case LOGIN:
                 if (IsKeyPressed(KEY_ENTER)) currentScreen = MENU;
                 break;
 
             case MENU:
-                if (IsKeyPressed(KEY_P)) {
+                // Opción 1: Iniciar partida
+                if (IsKeyPressed(KEY_ONE)) {
                     if (creditos >= 10) {
                         creditos -= 10;
                         resetGame(); 
                         currentScreen = JUGANDO;
                     }
                 }
+                // Opción 4: Salir del programa
+                if (IsKeyPressed(KEY_FOUR)) {
+                    CloseWindow();
+                    return; // Finaliza la ejecución
+                }
+                // Opciones 2 y 3: Login y Carga (Pendientes Integrante D)
                 break;
 
             case JUGANDO:
-                // 1. Aumentar dificultad progresivamente
-                globalSpeed += speedIncrement;
-
-                // 2. Actualizar Jugador
+                globalSpeed += speedIncrement; // Dificultad progresiva
                 player.update();
 
-                // 3. Actualizar Obstáculos con la nueva velocidad
                 for (auto &obs : obstacles) {
-                    obs.setSpeed(globalSpeed); // Sincroniza la velocidad actual
+                    obs.setSpeed(globalSpeed);
                     obs.update();
                 }
 
-                // 4. Detección de Colisiones (Física)
+                // Colisiones (Lógica del Integrante B con tus Hitboxes)
                 for (auto &obs : obstacles) {
                     if (CheckCollisionRecs(player.getRect(), obs.getRect())) {
                         currentScreen = GAMEOVER;
                     }
                 }
-
-                if (IsKeyPressed(KEY_X)) currentScreen = GAMEOVER;
                 break;
 
             case GAMEOVER:
@@ -88,14 +89,28 @@ void Game::run() {
 
         switch (currentScreen) {
             case LOGIN:
-                DrawText("CYBER-RUNNER: NEO-GUATE", 150, 150, 30, NEO_CYAN);
-                DrawText("Presiona ENTER para Iniciar Sesion", 200, 250, 20, WHITE);
+                DrawText("CYBER-RUNNER: NEO-GUATE", 150, 80, 35, NEO_CYAN);
+                DrawText("[ Presiona ENTER para entrar al sistema ]", 180, 350, 20, GRAY);
                 break;
 
             case MENU:
-                DrawText("MENU PRINCIPAL", 300, 50, 20, NEO_MAGENTA);
-                DrawText(TextFormat("CREDITOS: %i", creditos), 320, 150, 20, NEO_YELLOW);
-                DrawText("Presiona [P] para Jugar (Costo 10)", 220, 250, 20, WHITE);
+                DrawText("ACCESO CONCEDIDO", 300, 40, 20, GREEN);
+                DrawText("--- TERMINAL DE CONTROL ---", 220, 80, 25, NEO_MAGENTA);
+
+                // Botones Visuales
+                DrawRectangleLines(250, 140, 300, 40, NEO_CYAN);
+                DrawText("[1] EMPEZAR PARTIDA", 280, 150, 20, WHITE);
+
+                DrawRectangleLines(250, 200, 300, 40, WHITE);
+                DrawText("[2] LOGUEARSE", 280, 210, 20, GRAY);
+
+                DrawRectangleLines(250, 260, 300, 40, WHITE);
+                DrawText("[3] CARGAR USUARIO", 280, 270, 20, GRAY);
+
+                DrawRectangleLines(250, 320, 300, 40, NEO_RED);
+                DrawText("[4] SALIR DEL JUEGO", 280, 330, 20, WHITE);
+
+                DrawText(TextFormat("CREDITOS: %i", creditos), 280, 400, 15, NEO_YELLOW);
                 break;
 
             case JUGANDO:
@@ -103,13 +118,8 @@ void Game::run() {
                 for (auto &obs : obstacles) {
                     obs.draw();
                 }
-
-                // Piso Neón
-                DrawLine(0, 350, 800, 350, NEO_MAGENTA);
-
-                // UI de Juego
+                DrawLine(0, 350, 800, 350, NEO_MAGENTA); // Suelo
                 DrawText(TextFormat("VELOCIDAD: %.2f", globalSpeed), 10, 10, 20, NEO_CYAN);
-                DrawText("ESQUIVA LOS OBSTACULOS", 10, 40, 15, WHITE);
                 break;
 
             case GAMEOVER:
@@ -120,6 +130,5 @@ void Game::run() {
 
         EndDrawing();
     }
-
     CloseWindow();
 }
