@@ -11,7 +11,7 @@ Obstacle::Obstacle(float x, float y, float width, float height, float speed) {
 
 void Obstacle::update(float deltaTime) {
     // 1. El movimiento constante a la izquierda
-    rect.x -= speed;
+    rect.x -= speed * deltaTime;
 
     // 2. Si sale de la pantalla, lo "teletransportamos" y cambiamos su forma
     if (rect.x + rect.width < 0) {

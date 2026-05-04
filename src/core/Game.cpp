@@ -26,7 +26,7 @@ void Game::resetGame()
     player = Player();
 
     // Reiniciar dificultad base
-    globalSpeed = 5.0f;
+    globalSpeed = 350.0f;
 
     // Reiniciar vector de obstáculos (Tu Rol - Parte 3)
     obstacles.clear();
