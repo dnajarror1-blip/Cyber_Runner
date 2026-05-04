@@ -13,6 +13,9 @@ Game::Game()
     speedIncrement = 30.0f;
     currentScreen = LOGIN;
     creditos = 100;
+    score = 0;
+    highScore = 0;
+    scoreTimer = 0.0f;
 }
 
 void Game::resetGame()
@@ -20,10 +23,17 @@ void Game::resetGame()
     player = Player();
 
     globalSpeed = 350.0f;
+    score = 0;
+    scoreTimer = 0.0f;
 
     obstacles.clear();
     obstacles.push_back(Obstacle(1000, 310, 30, 45, globalSpeed));
     obstacles.push_back(Obstacle(1500, 220, 40, 25, globalSpeed));
+
+    coins.clear();
+    coins.push_back(Coin(900, 260, 20, globalSpeed));
+    coins.push_back(Coin(1250, 220, 20, globalSpeed));
+    coins.push_back(Coin(1600, 280, 20, globalSpeed));
 }
 
 void Game::run()
@@ -99,28 +109,45 @@ void Game::updateGame()
         break;
 
     case JUGANDO:
-    {
-        float deltaTime = GetFrameTime();
-
-        globalSpeed += speedIncrement * deltaTime;
-
-        if (globalSpeed > 900.0f)
         {
-            globalSpeed = 900.0f;
+            float deltaTime = GetFrameTime();
+
+            scoreTimer += 100.0f * deltaTime;
+            score = static_cast<int>(scoreTimer);
+
+            globalSpeed += speedIncrement * deltaTime;
+
+            if (globalSpeed > 900.0f)
+            {
+                globalSpeed = 900.0f;
+            }
+
+            player.update(deltaTime);
+
+            for (auto& obs : obstacles)
+            {
+                obs.setSpeed(globalSpeed);
+                obs.update(deltaTime);
+            }
+
+            checkCollisions();
+
+            for (auto& coin : coins)
+            {
+                coin.setSpeed(globalSpeed);
+                coin.update(deltaTime);
+
+                if (coin.isActive() && CheckCollisionRecs(player.getRect(), coin.getRect()))
+                {
+                    creditos += 1;
+                    score += 25;
+                    scoreTimer = static_cast<float>(score);
+                    coin.collect();
+                }
+            }
+
+            break;
         }
-
-        player.update(deltaTime);
-
-        for (auto& obs : obstacles)
-        {
-            obs.setSpeed(globalSpeed);
-            obs.update(deltaTime);
-        }
-
-        checkCollisions();
-
-        break;
-    }
 
     case GAMEOVER:
         if (IsKeyPressed(KEY_R))
@@ -137,6 +164,10 @@ void Game::checkCollisions()
     {
         if (CheckCollisionRecs(player.getRect(), obs.getRect()))
         {
+            if (score > highScore)
+            {
+                highScore = score;
+            }
             currentScreen = GAMEOVER;
         }
     }
@@ -178,9 +209,14 @@ void Game::drawGame()
             obs.draw();
         }
 
+        for (auto& coin : coins)
+        {
+            coin.draw();
+        }
+
         DrawLine(0, 350, 800, 350, NEO_MAGENTA);
 
-        hud.drawGameHUD(globalSpeed, creditos);
+        hud.drawGameHUD(globalSpeed, creditos, score, highScore);
         break;
 
     case GAMEOVER:

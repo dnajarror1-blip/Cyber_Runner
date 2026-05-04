@@ -3,6 +3,7 @@
 #include "entities/Player.h"
 #include "entities/Obstacle.h"
 #include "ui/HUD.h"
+#include "entities/Coin.h"
 
 #include <vector>
 #include <string>
@@ -20,6 +21,7 @@ private:
     const int screenHeight = 450;
 
     std::vector<Obstacle> obstacles;
+    std::vector<Coin> coins;
     float globalSpeed;
     float speedIncrement;
 
@@ -28,6 +30,9 @@ private:
 
     GameScreen currentScreen;
     int creditos;
+    int score;
+    int highScore;
+    float scoreTimer;
     std::string playerName;
 
     void toggleFullscreen();
