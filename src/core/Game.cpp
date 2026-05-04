@@ -37,11 +37,15 @@ void Game::resetGame()
 
 void Game::run()
 {
-    InitWindow(screenWidth, screenHeight, "Cyber-Runner: Neo-Guate");
+    InitWindow(screenWidth, screenHeight, "Cyber-Runner");
+    SetWindowState(FLAG_WINDOW_RESIZABLE);
     SetTargetFPS(60);
-
     while (!WindowShouldClose())
     {
+
+        if (IsKeyPressed(KEY_F11)) {
+            ToggleFullscreen();
+        }
         // --- LÓGICA DE CONTROL ---
         switch (currentScreen)
         {
@@ -53,9 +57,9 @@ void Game::run()
             // Opción 1: Iniciar partida
             if (IsKeyPressed(KEY_ONE))
             {
-                if (creditos >= 10)
+                if (creditos >= 5)
                 {
-                    creditos -= 10;
+                    creditos -= 5;
                     resetGame();
                     currentScreen = JUGANDO;
                 }
