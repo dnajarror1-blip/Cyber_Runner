@@ -8,14 +8,14 @@
 class Player {
 private:
     Rectangle rect = { 100, 300, 50, 50 };
+
     float velocidadY = 0.0f;
+    float sueloY = 300.0f;
+    float gravedad = 1800.0f;
+    float fuerzaSalto = -700.0f;
+    float velocidadCaidaMaxima = 1200.0f;
 
-    const float sueloY = 300.0f;
-    const float gravedad = 1800.0f;
-    const float fuerzaSalto = -700.0f;
-    const float velocidadCaidaMaxima = 1200.0f;
-
-    bool ensuelo = true;
+    bool enSuelo = true;
     int saltosDisponibles = 2;
 
 public:

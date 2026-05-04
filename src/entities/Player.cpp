@@ -29,7 +29,7 @@ void Player::update(float deltaTime) {
     {
         rect.y = sueloY;
         velocidadY = 0.0f;
-        ensuelo = true;
+        enSuelo = true;
         saltosDisponibles = 2;
     }
 }
@@ -37,7 +37,11 @@ void Player::update(float deltaTime) {
 void Player::draw() {
     DrawRectangleRec(rect, { 0, 255, 255, 255 }); // cyan
 
-
+    // Efecto visual simple cuando está en el aire
+    if (!enSuelo)
+    {
+        DrawCircle(rect.x + rect.width / 2, rect.y + rect.height + 8, 8, ORANGE);
+    }
 }
 
 Rectangle Player::getRect() {

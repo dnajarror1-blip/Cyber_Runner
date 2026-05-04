@@ -16,7 +16,7 @@ public:
     Obstacle(float x, float y, float width, float height, float speed);
 
     // Actualiza la posición y cambia el tipo de obstáculo al reaparecer
-    void update();
+    void update(float deltaTime);
 
     // Dibuja el obstáculo (mientras no tengas los sprites finales)
     void draw();

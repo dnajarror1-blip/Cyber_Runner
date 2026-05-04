@@ -9,7 +9,7 @@ Obstacle::Obstacle(float x, float y, float width, float height, float speed) {
     this->speed = speed;
 }
 
-void Obstacle::update() {
+void Obstacle::update(float deltaTime) {
     // 1. El movimiento constante a la izquierda
     rect.x -= speed;
 
