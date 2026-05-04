@@ -2,7 +2,11 @@
 // Created by darwin on 18/04/26.
 //
 
-#ifndef CYBER_RUNNER_HUD_H
-#define CYBER_RUNNER_HUD_H
+#pragma once
+#include "raylib.h"
 
-#endif //CYBER_RUNNER_HUD_H
+class HUD {
+public:
+    void drawGameHUD(float speed, int creditos);
+    void drawMenuHUD(int creditos);
+};
