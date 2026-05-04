@@ -3,6 +3,7 @@
 //
 #include <core/Game.h>
 #include <vector>
+#include <algorithm>
 #include "entities/Obstacle.h"
 
 // Paleta de Colores Neón
@@ -40,11 +41,21 @@ void Game::run()
     InitWindow(screenWidth, screenHeight, "Cyber-Runner");
     SetWindowState(FLAG_WINDOW_RESIZABLE);
     SetTargetFPS(60);
+
+    RenderTexture2D target = LoadRenderTexture(screenWidth, screenHeight);
+    SetTextureFilter(target.texture, TEXTURE_FILTER_POINT);
+
     while (!WindowShouldClose())
     {
-
         if (IsKeyPressed(KEY_F11)) {
-            ToggleFullscreen();
+            if (!IsWindowFullscreen()) {
+                int monitor = GetCurrentMonitor();
+                SetWindowSize(GetMonitorWidth(monitor), GetMonitorHeight(monitor));
+                ToggleFullscreen();
+            } else {
+                ToggleFullscreen();
+                SetWindowSize(screenWidth, screenHeight);
+            };
         }
         // --- LÓGICA DE CONTROL ---
         switch (currentScreen)
@@ -79,7 +90,8 @@ void Game::run()
 
                 globalSpeed += speedIncrement * deltaTime;
 
-                if (globalSpeed > 900.0f) {
+                if (globalSpeed > 900.0f)
+                {
                     globalSpeed = 900.0f;
                 }
 
@@ -107,7 +119,7 @@ void Game::run()
         }
 
         // --- DIBUJADO ---
-        BeginDrawing();
+        BeginTextureMode(target);
         ClearBackground(BLACK);
 
         switch (currentScreen)
@@ -121,7 +133,6 @@ void Game::run()
             DrawText("ACCESO CONCEDIDO", 300, 40, 20, GREEN);
             DrawText("--- TERMINAL DE CONTROL ---", 220, 80, 25, NEO_MAGENTA);
 
-            // Botones Visuales
             DrawRectangleLines(250, 140, 300, 40, NEO_CYAN);
             DrawText("[1] EMPEZAR PARTIDA", 280, 150, 20, WHITE);
 
@@ -139,13 +150,15 @@ void Game::run()
 
         case JUGANDO:
             player.draw();
+
             for (auto& obs : obstacles)
             {
                 obs.draw();
             }
-            DrawLine(0, 350, 800, 350, NEO_MAGENTA); // Suelo
+
+            DrawLine(0, 350, 800, 350, NEO_MAGENTA);
             DrawText(TextFormat("VELOCIDAD: %.2f", globalSpeed), 10, 10, 20, NEO_CYAN);
-            DrawText(TextFormat("INCREMENTO: %.2f", speedIncrement), 10, 35, 20, NEO_YELLOW);;
+            DrawText(TextFormat("INCREMENTO: %.2f", speedIncrement), 10, 35, 20, NEO_YELLOW);
             break;
 
         case GAMEOVER:
@@ -153,6 +166,38 @@ void Game::run()
             DrawText("Presiona [R] para volver al menu", 250, 250, 20, WHITE);
             break;
         }
+
+        EndTextureMode();
+
+        BeginDrawing();
+        ClearBackground(BLACK);
+
+        float scale = std::min(
+            (float)GetScreenWidth() / screenWidth,
+            (float)GetScreenHeight() / screenHeight
+        );
+
+        float scaledWidth = screenWidth * scale;
+        float scaledHeight = screenHeight * scale;
+
+        float offsetX = (GetScreenWidth() - scaledWidth) / 2.0f;
+        float offsetY = (GetScreenHeight() - scaledHeight) / 2.0f;
+
+        Rectangle source = {
+            0.0f,
+            0.0f,
+            (float)target.texture.width,
+            -(float)target.texture.height
+        };
+
+        Rectangle dest = {
+            offsetX,
+            offsetY,
+            scaledWidth,
+            scaledHeight
+        };
+
+        DrawTexturePro(target.texture, source, dest, {0, 0}, 0.0f, WHITE);
 
         EndDrawing();
     }
