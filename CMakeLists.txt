@@ -12,6 +12,8 @@ add_executable(Cyber_Runner
         src/entities/Player.cpp
         src/entities/Obstacle.cpp
         src/ui/HUD.cpp
+        src/entities/Coin.cpp
+        include/entities/Coin.h
 )
 
 #  Detectar sistema

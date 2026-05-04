@@ -1,8 +1,21 @@
-//
-// Created by darwi on 03/05/2026.
-//
+#pragma once
+#include "raylib.h"
 
-#ifndef CYBER_RUNNER_COIN_H
-#define CYBER_RUNNER_COIN_H
+class Coin {
+private:
+    Rectangle rect;
+    float speed;
+    bool active;
 
-#endif //CYBER_RUNNER_COIN_H
+public:
+    Coin(float x, float y, float size, float speed);
+
+    void update(float deltaTime);
+    void draw();
+    void reset(float x);
+    void setSpeed(float newSpeed);
+
+    Rectangle getRect();
+    bool isActive();
+    void collect();
+};
