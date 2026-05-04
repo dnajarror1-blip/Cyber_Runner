@@ -78,6 +78,11 @@ void Game::run()
                 float deltaTime = GetFrameTime();
 
                 globalSpeed += speedIncrement * deltaTime;
+
+                if (globalSpeed > 900.0f) {
+                    globalSpeed = 900.0f;
+                }
+
                 player.update(deltaTime);
 
                 for (auto& obs : obstacles)
@@ -108,7 +113,7 @@ void Game::run()
         switch (currentScreen)
         {
         case LOGIN:
-            DrawText("CYBER-RUNNER: NEO-GUATE", 150, 80, 35, NEO_CYAN);
+            DrawText("CYBER-RUNNER", 250, 80, 35, NEO_CYAN);
             DrawText("[ Presiona ENTER para entrar al sistema ]", 180, 350, 20, GRAY);
             break;
 
@@ -140,6 +145,7 @@ void Game::run()
             }
             DrawLine(0, 350, 800, 350, NEO_MAGENTA); // Suelo
             DrawText(TextFormat("VELOCIDAD: %.2f", globalSpeed), 10, 10, 20, NEO_CYAN);
+            DrawText(TextFormat("INCREMENTO: %.2f", speedIncrement), 10, 35, 20, NEO_YELLOW);;
             break;
 
         case GAMEOVER:
