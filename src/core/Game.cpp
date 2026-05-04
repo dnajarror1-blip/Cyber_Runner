@@ -15,7 +15,7 @@ const Color NEO_RED = {230, 41, 55, 255};
 Game::Game()
 {
     globalSpeed = 350.0f;
-    speedIncrement = 5.0f;
+    speedIncrement = 30.0f;
     currentScreen = LOGIN;
     creditos = 100;
 }
