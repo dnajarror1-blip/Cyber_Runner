@@ -12,10 +12,16 @@ Game::Game()
     globalSpeed = 350.0f;
     speedIncrement = 30.0f;
     currentScreen = LOGIN;
-    creditos = 100;
+
+    playerData = dataManager.loadPlayerData();
+
+    creditos = playerData.credits;
+    highScore = playerData.highScore;
+    playerName = playerData.username;
+
     score = 0;
-    highScore = 0;
     scoreTimer = 0.0f;
+    coinsCollectedThisRun = 0;
 }
 
 void Game::resetGame()
@@ -25,6 +31,7 @@ void Game::resetGame()
     globalSpeed = 350.0f;
     score = 0;
     scoreTimer = 0.0f;
+    coinsCollectedThisRun = 0;
 
     obstacles.clear();
     obstacles.push_back(Obstacle(1000, 310, 30, 45, globalSpeed));
@@ -97,6 +104,13 @@ void Game::updateGame()
             if (creditos >= 5)
             {
                 creditos -= 5;
+
+                playerData.credits = creditos;
+                playerData.gamesPlayed++;
+
+                dataManager.savePlayerData(playerData);
+                dataManager.registerGameStarted(playerData.userId);
+
                 resetGame();
                 currentScreen = JUGANDO;
             }
@@ -140,8 +154,17 @@ void Game::updateGame()
                 if (coin.isActive() && CheckCollisionRecs(player.getRect(), coin.getRect()))
                 {
                     creditos += 1;
+                    coinsCollectedThisRun++;
+
+                    playerData.credits = creditos;
+                    playerData.totalCoinsCollected++;
+
                     score += 25;
                     scoreTimer = static_cast<float>(score);
+
+                    dataManager.savePlayerData(playerData);
+                    dataManager.registerCoinCollected(playerData.userId, 1);
+
                     coin.collect();
                 }
             }
@@ -167,7 +190,19 @@ void Game::checkCollisions()
             if (score > highScore)
             {
                 highScore = score;
+                playerData.highScore = highScore;
             }
+
+            playerData.credits = creditos;
+
+            dataManager.savePlayerData(playerData);
+
+            dataManager.registerGameFinished(
+                playerData.userId,
+                score,
+                coinsCollectedThisRun
+            );
+
             currentScreen = GAMEOVER;
         }
     }

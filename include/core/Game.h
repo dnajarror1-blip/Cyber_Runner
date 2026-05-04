@@ -4,6 +4,8 @@
 #include "entities/Obstacle.h"
 #include "ui/HUD.h"
 #include "entities/Coin.h"
+#include "data/DataManager.h"
+#include "data/PlayerData.h"
 
 #include <vector>
 #include <string>
@@ -28,11 +30,16 @@ private:
     Player player;
     HUD hud;
 
+    DataManager dataManager;
+    PlayerData playerData;
+
     GameScreen currentScreen;
     int creditos;
     int score;
     int highScore;
+    int coinsCollectedThisRun;
     float scoreTimer;
+
     std::string playerName;
 
     void toggleFullscreen();

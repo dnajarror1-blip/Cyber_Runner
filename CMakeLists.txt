@@ -14,6 +14,9 @@ add_executable(Cyber_Runner
         src/ui/HUD.cpp
         src/entities/Coin.cpp
         include/entities/Coin.h
+        src/data/DataManager.cpp
+        include/data/DataManager.h
+        include/data/PlayerData.h
 )
 
 #  Detectar sistema
