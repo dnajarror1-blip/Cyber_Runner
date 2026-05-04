@@ -8,17 +8,19 @@
 class Player {
 private:
     Rectangle rect = { 100, 300, 50, 50 };
-    float velocidadY = 0;
-    bool enSuelo = true;
+    float velocidadY = 0.0f;
+
+    const float sueloY = 300.0f;
+    const float gravedad = 1800.0f;
+    const float fuerzaSalto = -700.0f;
+    const float velocidadCaidaMaxima = 1200.0f;
+
+    bool ensuelo = true;
+    int saltosDisponibles = 2;
 
 public:
-    void update();
+    void update(float deltaTime);
     void draw();
     Rectangle getRect();
 
 };
-
-#ifndef CYBER_RUNNER_PLAYER_H
-#define CYBER_RUNNER_PLAYER_H
-
-#endif //CYBER_RUNNER_PLAYER_H

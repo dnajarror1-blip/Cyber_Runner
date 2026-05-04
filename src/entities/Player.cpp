@@ -3,21 +3,34 @@
 //
 #include "entities/Player.h"
 
-const float GRAVEDAD = 0.6f;
+void Player::update(float deltaTime) {
 
-void Player::update() {
-
-    if (IsKeyPressed(KEY_SPACE) && enSuelo) {
-        velocidadY = -12.0f;
+    // saltar o hace doble salto
+    if (IsKeyPressed(KEY_SPACE) && saltosDisponibles > 0)
+    {
+        velocidadY = fuerzaSalto;
+        saltosDisponibles--;
         enSuelo = false;
     }
+    // Aplicar gravedad
+    velocidadY += gravedad * deltaTime;
 
-    velocidadY += GRAVEDAD;
-    rect.y += velocidadY;
+    // Limitar velocidad máxima de caída
+    if (velocidadY > velocidadCaidaMaxima)
+    {
+        velocidadY = velocidadCaidaMaxima;
+    }
 
-    if (rect.y >= 300) {
-        rect.y = 300;
-        enSuelo = true;
+    // Mover jugador verticalmente
+    rect.y += velocidadY * deltaTime;
+
+    // Detectar suelo
+    if (rect.y >= sueloY)
+    {
+        rect.y = sueloY;
+        velocidadY = 0.0f;
+        ensuelo = true;
+        saltosDisponibles = 2;
     }
 }
 
