@@ -9,21 +9,29 @@ Player::Player()
     // Cargar sprite del robot
     texture = LoadTexture("assets/player.png");
 
-    totalFrames = 4;
+    if (texture.id == 0)
+    {
+        TraceLog(LOG_ERROR, "No se pudo cargar assets/player.png");
+        return;
+    }
+
+    TraceLog(LOG_INFO, "player.png cargado correctamente");
 
     frameWidth =
         static_cast<float>(texture.width) /
         static_cast<float>(totalFrames);
 
-    frameHeight =
-        static_cast<float>(texture.height);
+    // No usamos todo el alto de la imagen porque tiene mucho espacio vacío.
+    frameHeight = spriteCropHeight;
 
     frameRec = {
         0.0f,
-        0.0f,
+        spriteCropY,
         frameWidth,
         frameHeight
     };
+
+    hasNitro = false;
 }
 
 Player::~Player()
@@ -40,11 +48,23 @@ void Player::update(float deltaTime)
     // saltar o hace doble salto
     if (IsKeyPressed(KEY_SPACE) && saltosDisponibles > 0)
     {
-        velocidadY = fuerzaSalto;
+        if (hasNitro && saltosDisponibles == 1)
+        {
+            velocidadY = fuerzaSaltoNitro;
+        }
+        else
+        {
+            velocidadY = fuerzaSalto;
+        }
 
         saltosDisponibles--;
 
         enSuelo = false;
+    }
+
+    if (!enSuelo && IsKeyDown(KEY_DOWN))
+    {
+        velocidadY = fastFallSpeed;
     }
 
     // Aplicar gravedad
@@ -96,8 +116,12 @@ void Player::update(float deltaTime)
     }
 
     frameRec.x =
-        frameWidth *
-        static_cast<float>(frameActual);
+    frameWidth *
+    static_cast<float>(frameActual);
+
+    frameRec.y = spriteCropY;
+    frameRec.width = frameWidth;
+    frameRec.height = spriteCropHeight;
 }
 
 void Player::draw()
@@ -109,23 +133,37 @@ void Player::draw()
         return;
     }
 
-    // TAMAÑO VISUAL DESACOPLADO DE HITBOX
-    float drawWidth =
-        rect.width * visualScale;
+    if (hasNitro)
+    {
+        DrawCircleLines(
+            rect.x + rect.width / 2,
+            rect.y + rect.height / 2,
+            35,
+            SKYBLUE
+        );
 
-    float drawHeight =
-        rect.height * visualScale;
+        DrawCircleLines(
+            rect.x + rect.width / 2,
+            rect.y + rect.height / 2,
+            38,
+            Fade(SKYBLUE, 0.3f)
+        );
+    }
+
+    // TAMAÑO VISUAL DESACOPLADO DE HITBOX
+    float drawWidth = 110.0f;
+
+    float drawHeight = 130.0f;
 
     // CENTRADO VISUAL
     float offsetX =
-        (rect.width - drawWidth) / 2.0f;
+        (drawWidth - rect.width) / 2.0f;
 
     // AJUSTE CRITICO VISUAL
-    float offsetY =
-        (drawHeight - rect.height) - 20.0f;
+    float offsetY = drawHeight - rect.height;
 
     Rectangle dest = {
-        rect.x + offsetX,
+        rect.x - offsetX,
         rect.y - offsetY + hitboxOffsetY,
         drawWidth,
         drawHeight
@@ -163,4 +201,22 @@ void Player::draw()
 Rectangle Player::getRect()
 {
     return rect;
+}
+
+Vector2 Player::getPosition()
+{
+    return {
+        rect.x + rect.width / 2,
+        rect.y + rect.height / 2
+    };
+}
+
+void Player::setNitro(bool active)
+{
+    hasNitro = active;
+}
+
+bool Player::isNitroActive() const
+{
+    return hasNitro;
 }

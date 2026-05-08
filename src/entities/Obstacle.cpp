@@ -48,3 +48,21 @@ void Obstacle::draw() {
 Rectangle Obstacle::getRect() {
     return rect;
 }
+
+void Obstacle::forceRespawn()
+{
+    rect.x = 800 + GetRandomValue(300, 800);
+
+    if (GetRandomValue(0, 1) == 0)
+    {
+        rect.y = 220;
+        rect.width = 40;
+        rect.height = 25;
+    }
+    else
+    {
+        rect.y = 310;
+        rect.width = 25;
+        rect.height = 45;
+    }
+}

@@ -8,14 +8,21 @@ const Color NEO_MAGENTA = {255, 0, 255, 255};
 const Color NEO_YELLOW = {253, 249, 0, 255};
 const Color NEO_RED = {230, 41, 55, 255};
 
-Game::Game()
-{
+Game::Game() {
+    player = nullptr;
+
     globalSpeed = 350.0f;
     speedIncrement = 30.0f;
 
-    currentScreen = LOGIN;
+    maxNormalSpeed = 850.0f;
+    maxNitroSpeed = 1100.0f;
 
-    player = nullptr;
+    hasShield = false;
+    nitroActive = false;
+    nitroTimer = 0.0f;
+    shouldCloseGame = false;
+
+    currentScreen = LOGIN;
 
     playerData = dataManager.loadPlayerData();
 
@@ -28,10 +35,8 @@ Game::Game()
     coinsCollectedThisRun = 0;
 }
 
-void Game::resetGame()
-{
-    if (player != nullptr)
-    {
+void Game::resetGame() {
+    if (player != nullptr) {
         delete player;
         player = nullptr;
     }
@@ -97,8 +102,7 @@ void Game::resetGame()
     );
 }
 
-void Game::run()
-{
+void Game::run() {
     InitWindow(
         screenWidth,
         screenHeight,
@@ -112,18 +116,17 @@ void Game::run()
     SetTargetFPS(60);
 
     RenderTexture2D target =
-        LoadRenderTexture(
-            screenWidth,
-            screenHeight
-        );
+            LoadRenderTexture(
+                screenWidth,
+                screenHeight
+            );
 
     SetTextureFilter(
         target.texture,
         TEXTURE_FILTER_POINT
     );
 
-    while (!WindowShouldClose())
-    {
+    while (!WindowShouldClose() && !shouldCloseGame) {
         toggleFullscreen();
 
         updateGame();
@@ -141,8 +144,7 @@ void Game::run()
 
     UnloadRenderTexture(target);
 
-    if (player != nullptr)
-    {
+    if (player != nullptr) {
         delete player;
         player = nullptr;
     }
@@ -150,12 +152,9 @@ void Game::run()
     CloseWindow();
 }
 
-void Game::toggleFullscreen()
-{
-    if (IsKeyPressed(KEY_F11))
-    {
-        if (!IsWindowFullscreen())
-        {
+void Game::toggleFullscreen() {
+    if (IsKeyPressed(KEY_F11)) {
+        if (!IsWindowFullscreen()) {
             int monitor = GetCurrentMonitor();
 
             SetWindowSize(
@@ -164,9 +163,7 @@ void Game::toggleFullscreen()
             );
 
             ToggleFullscreen();
-        }
-        else
-        {
+        } else {
             ToggleFullscreen();
 
             SetWindowSize(
@@ -177,26 +174,19 @@ void Game::toggleFullscreen()
     }
 }
 
-void Game::updateGame()
-{
-    switch (currentScreen)
-    {
-        case LOGIN:
-        {
-            if (IsKeyPressed(KEY_ENTER))
-            {
+void Game::updateGame() {
+    switch (currentScreen) {
+        case LOGIN: {
+            if (IsKeyPressed(KEY_ENTER)) {
                 currentScreen = MENU;
             }
 
             break;
         }
 
-        case MENU:
-        {
-            if (IsKeyPressed(KEY_ONE))
-            {
-                if (creditos >= 5)
-                {
+        case MENU: {
+            if (IsKeyPressed(KEY_ONE)) {
+                if (creditos >= 5) {
                     creditos -= 5;
 
                     playerData.credits = creditos;
@@ -214,45 +204,56 @@ void Game::updateGame()
                 }
             }
 
-            if (IsKeyPressed(KEY_FOUR))
-            {
-                CloseWindow();
+            if (IsKeyPressed(KEY_FOUR)) {
+                shouldCloseGame = true;
             }
 
             break;
         }
 
-        case JUGANDO:
-        {
+        case JUGANDO: {
             float deltaTime = GetFrameTime();
 
             scoreTimer += 100.0f * deltaTime;
 
             score = static_cast<int>(scoreTimer);
 
-            globalSpeed += speedIncrement * deltaTime;
+            if (nitroActive) {
+                nitroTimer -= deltaTime;
 
-            if (globalSpeed > 900.0f)
-            {
-                globalSpeed = 900.0f;
+                globalSpeed += 250.0f * deltaTime;
+
+                if (globalSpeed > maxNitroSpeed) {
+                    globalSpeed = maxNitroSpeed;
+                }
+
+                if (nitroTimer <= 0.0f) {
+                    nitroActive = false;
+
+                    if (player != nullptr) {
+                        player->setNitro(false);
+                    }
+                }
+            } else {
+                globalSpeed += speedIncrement * deltaTime;
+
+                if (globalSpeed > maxNormalSpeed) {
+                    globalSpeed = maxNormalSpeed;
+                }
             }
 
-            if (player != nullptr)
-            {
+            if (player != nullptr) {
                 player->update(deltaTime);
             }
 
-            for (auto& obs : obstacles)
-            {
+            for (auto &obs: obstacles) {
                 obs.setSpeed(globalSpeed);
 
                 obs.update(deltaTime);
             }
 
-            checkCollisions();
 
-            for (auto& coin : coins)
-            {
+            for (auto &coin: coins) {
                 coin.setSpeed(globalSpeed);
 
                 coin.update(deltaTime);
@@ -264,39 +265,55 @@ void Game::updateGame()
                         player->getRect(),
                         coin.getRect()
                     )
-                )
-                {
-                    creditos += 1;
+                ) {
+                    ItemType itemType = coin.getType();
 
-                    coinsCollectedThisRun++;
+                    if (itemType == ItemType::CREDIT) {
+                        creditos += 1;
 
-                    playerData.credits = creditos;
+                        coinsCollectedThisRun++;
 
-                    playerData.totalCoinsCollected++;
+                        playerData.credits = creditos;
 
-                    score += 25;
+                        playerData.totalCoinsCollected++;
 
-                    scoreTimer =
-                        static_cast<float>(score);
+                        scoreTimer += 25.0f;
+                        score = static_cast<int>(scoreTimer);
 
-                    dataManager.savePlayerData(playerData);
+                        dataManager.savePlayerData(playerData);
 
-                    dataManager.registerCoinCollected(
-                        playerData.userId,
-                        1
-                    );
+                        dataManager.registerCoinCollected(
+                            playerData.userId,
+                            1
+                        );
+                    } else if (itemType == ItemType::NITRO) {
+                        nitroActive = true;
+                        nitroTimer = 3.0f;
+
+                        if (player != nullptr) {
+                            player->setNitro(true);
+                        }
+
+                        scoreTimer += 50.0f;
+                        score = static_cast<int>(scoreTimer);
+                    } else if (itemType == ItemType::SHIELD) {
+                        hasShield = true;
+
+                        scoreTimer += 50.0f;
+                        score = static_cast<int>(scoreTimer);
+                    }
 
                     coin.collect();
                 }
             }
 
+            checkCollisions();
+
             break;
         }
 
-        case GAMEOVER:
-        {
-            if (IsKeyPressed(KEY_R))
-            {
+        case GAMEOVER: {
+            if (IsKeyPressed(KEY_R)) {
                 currentScreen = MENU;
             }
 
@@ -305,24 +322,25 @@ void Game::updateGame()
     }
 }
 
-void Game::checkCollisions()
-{
-    if (player == nullptr)
-    {
+void Game::checkCollisions() {
+    if (player == nullptr) {
         return;
     }
 
-    for (auto& obs : obstacles)
-    {
+    for (auto &obs: obstacles) {
         if (
             CheckCollisionRecs(
                 player->getRect(),
                 obs.getRect()
             )
-        )
-        {
-            if (score > highScore)
-            {
+        ) {
+            if (hasShield) {
+                hasShield = false;
+                obs.forceRespawn();
+                return;
+            }
+
+            if (score > highScore) {
                 highScore = score;
 
                 playerData.highScore = highScore;
@@ -339,16 +357,14 @@ void Game::checkCollisions()
             );
 
             currentScreen = GAMEOVER;
+            return;
         }
     }
 }
 
-void Game::drawGame()
-{
-    switch (currentScreen)
-    {
-        case LOGIN:
-        {
+void Game::drawGame() {
+    switch (currentScreen) {
+        case LOGIN: {
             DrawText(
                 "CYBER-RUNNER",
                 250,
@@ -368,8 +384,7 @@ void Game::drawGame()
             break;
         }
 
-        case MENU:
-        {
+        case MENU: {
             DrawText(
                 "ACCESO CONCEDIDO",
                 300,
@@ -455,20 +470,16 @@ void Game::drawGame()
             break;
         }
 
-        case JUGANDO:
-        {
-            if (player != nullptr)
-            {
+        case JUGANDO: {
+            if (player != nullptr) {
                 player->draw();
             }
 
-            for (auto& obs : obstacles)
-            {
+            for (auto &obs: obstacles) {
                 obs.draw();
             }
 
-            for (auto& coin : coins)
-            {
+            for (auto &coin: coins) {
                 coin.draw();
             }
 
@@ -484,14 +495,29 @@ void Game::drawGame()
                 globalSpeed,
                 creditos,
                 score,
-                highScore
+                highScore,
+                nitroActive
             );
+
+            if (hasShield) {
+                DrawText("ESCUDO ACTIVO", 600, 45, 15, ORANGE);
+
+                if (player != nullptr) {
+                    Vector2 playerCenter = player->getPosition();
+
+                    DrawCircleLines(
+                        playerCenter.x,
+                        playerCenter.y,
+                        35,
+                        ORANGE
+                    );
+                }
+            }
 
             break;
         }
 
-        case GAMEOVER:
-        {
+        case GAMEOVER: {
             DrawText(
                 "SISTEMA CRITICO: GAME OVER",
                 180,
@@ -513,8 +539,7 @@ void Game::drawGame()
     }
 }
 
-void Game::drawScaledGame(RenderTexture2D& target)
-{
+void Game::drawScaledGame(RenderTexture2D &target) {
     BeginDrawing();
 
     ClearBackground(BLACK);
@@ -528,10 +553,10 @@ void Game::drawScaledGame(RenderTexture2D& target)
     float scaledHeight = screenHeight * scale;
 
     float offsetX =
-        (GetScreenWidth() - scaledWidth) / 2.0f;
+            (GetScreenWidth() - scaledWidth) / 2.0f;
 
     float offsetY =
-        (GetScreenHeight() - scaledHeight) / 2.0f;
+            (GetScreenHeight() - scaledHeight) / 2.0f;
 
     Rectangle source = {
         0.0f,

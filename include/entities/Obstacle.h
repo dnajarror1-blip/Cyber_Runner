@@ -1,9 +1,3 @@
-//
-// Created by darwin on 18/04/26.
-//
-#ifndef CYBER_RUNNER_OBSTACLE_H
-#define CYBER_RUNNER_OBSTACLE_H
-
 #include "raylib.h"
 
 class Obstacle {
@@ -24,8 +18,10 @@ public:
     // FUNCIÓN NUEVA: Permite que la velocidad suba con el tiempo
     void setSpeed(float newSpeed);
 
+    void forceRespawn();
+
     // Devuelve el rectángulo para detectar choques
     Rectangle getRect();
 };
 
-#endif
+

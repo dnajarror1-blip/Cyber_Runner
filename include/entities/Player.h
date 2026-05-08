@@ -17,10 +17,14 @@ private:
 
     float gravedad = 900.0f;
     float fuerzaSalto = -400.0f;
+    float fuerzaSaltoNitro = -550.0f;
     float velocidadCaidaMaxima = 600.0f;
+    float fastFallSpeed = 1000.0f;
 
     bool enSuelo = true;
     int saltosDisponibles = 2;
+
+    bool hasNitro = false;
 
     // TEXTURA
     Texture2D texture = {0};
@@ -34,8 +38,13 @@ private:
     float frameTime = 0.0f;
     float frameSpeed = 0.10f;
 
+    // Cada frame completo del spritesheet mide 384x1024,
+    // pero solo recortaremos la zona donde está el robot.
     float frameWidth = 0.0f;
     float frameHeight = 0.0f;
+
+    float spriteCropY = 330.0f;
+    float spriteCropHeight = 460.0f;
 
     // VISUAL
     float visualScale = 2.2f;
@@ -61,4 +70,8 @@ public:
     void draw();
 
     Rectangle getRect();
+    Vector2 getPosition();
+
+    void setNitro(bool active);
+    bool isNitroActive() const;
 };

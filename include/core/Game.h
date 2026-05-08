@@ -30,6 +30,14 @@ private:
     float globalSpeed;
     float speedIncrement;
 
+    float maxNormalSpeed;
+    float maxNitroSpeed;
+
+    bool hasShield;
+    bool nitroActive;
+    float nitroTimer;
+    bool shouldCloseGame;
+
     // OWNER ARCHITECTURE
     Player* player;
 

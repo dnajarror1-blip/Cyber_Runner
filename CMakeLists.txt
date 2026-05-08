@@ -19,6 +19,12 @@ add_executable(Cyber_Runner
         include/data/PlayerData.h
 )
 
+add_custom_command(TARGET Cyber_Runner POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/assets
+        $<TARGET_FILE_DIR:Cyber_Runner>/assets
+)
+
 #  Detectar sistema
 if (WIN32)
     # Ruta de MSYS2 (ajústala si es diferente)
