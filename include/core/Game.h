@@ -11,6 +11,7 @@
 #include <string>
 
 enum GameScreen {
+
     LOGIN,
     MENU,
     JUGANDO,
@@ -19,25 +20,31 @@ enum GameScreen {
 
 class Game {
 private:
+
     const int screenWidth = 800;
     const int screenHeight = 450;
 
     std::vector<Obstacle> obstacles;
     std::vector<Coin> coins;
+
     float globalSpeed;
     float speedIncrement;
 
-    Player player;
+    // OWNER ARCHITECTURE
+    Player* player;
+
     HUD hud;
 
     DataManager dataManager;
     PlayerData playerData;
 
     GameScreen currentScreen;
+
     int creditos;
     int score;
     int highScore;
     int coinsCollectedThisRun;
+
     float scoreTimer;
 
     std::string playerName;
@@ -49,7 +56,10 @@ private:
     void checkCollisions();
 
 public:
+
     Game();
+
     void run();
+
     void resetGame();
 };
