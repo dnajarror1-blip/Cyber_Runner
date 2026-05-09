@@ -186,8 +186,8 @@ void Game::updateGame() {
 
         case MENU: {
             if (IsKeyPressed(KEY_ONE)) {
-                if (creditos >= 5) {
-                    creditos -= 5;
+                if (creditos >= 1) {
+                    creditos -= 1;
 
                     playerData.credits = creditos;
                     playerData.gamesPlayed++;
