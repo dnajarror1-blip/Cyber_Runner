@@ -1,61 +1,31 @@
-//
-// Created by darwin on 18/04/26.
-//
-
 #include "entities/Player.h"
 
 Player::Player()
 {
-    // Cargar sprite del robot
-    texture = LoadTexture("assets/player.png");
+    run1 = LoadTexture("assets/player1.png");
+    run2 = LoadTexture("assets/player2.png");
+    run3 = LoadTexture("assets/player3.png");
+    jump = LoadTexture("assets/player4.png");
 
-    if (texture.id == 0)
-    {
-        TraceLog(LOG_ERROR, "No se pudo cargar assets/player.png");
-        return;
-    }
-
-    TraceLog(LOG_INFO, "player.png cargado correctamente");
-
-    frameWidth =
-        static_cast<float>(texture.width) /
-        static_cast<float>(totalFrames);
-
-    // No usamos todo el alto de la imagen porque tiene mucho espacio vacío.
-    frameHeight = spriteCropHeight;
-
-    frameRec = {
-        0.0f,
-        spriteCropY,
-        frameWidth,
-        frameHeight
-    };
-
-    hasNitro = false;
+    currentTexture = &run1;
 }
 
 Player::~Player()
 {
-    // Liberar VRAM correctamente
-    if (texture.id != 0)
-    {
-        UnloadTexture(texture);
-    }
+    if (run1.id) UnloadTexture(run1);
+    if (run2.id) UnloadTexture(run2);
+    if (run3.id) UnloadTexture(run3);
+    if (jump.id) UnloadTexture(jump);
 }
 
 void Player::update(float deltaTime)
 {
-    // saltar o hace doble salto
     if (IsKeyPressed(KEY_SPACE) && saltosDisponibles > 0)
     {
-        if (hasNitro && saltosDisponibles == 1)
-        {
-            velocidadY = fuerzaSaltoNitro;
-        }
-        else
-        {
-            velocidadY = fuerzaSalto;
-        }
+        velocidadY =
+            (hasNitro && saltosDisponibles == 1)
+            ? fuerzaSaltoNitro
+            : fuerzaSalto;
 
         saltosDisponibles--;
 
@@ -67,19 +37,15 @@ void Player::update(float deltaTime)
         velocidadY = fastFallSpeed;
     }
 
-    // Aplicar gravedad
     velocidadY += gravedad * deltaTime;
 
-    // Limitar velocidad máxima de caída
     if (velocidadY > velocidadCaidaMaxima)
     {
         velocidadY = velocidadCaidaMaxima;
     }
 
-    // Mover jugador verticalmente
     rect.y += velocidadY * deltaTime;
 
-    // Detectar suelo
     if (rect.y >= sueloY)
     {
         rect.y = sueloY;
@@ -91,7 +57,6 @@ void Player::update(float deltaTime)
         saltosDisponibles = 2;
     }
 
-    // SISTEMA DE ANIMACION
     if (enSuelo)
     {
         frameTime += deltaTime;
@@ -102,100 +67,61 @@ void Player::update(float deltaTime)
 
             frameActual++;
 
-            // Frames 0-2 = correr
             if (frameActual > 2)
             {
                 frameActual = 0;
             }
         }
+
+        switch(frameActual)
+        {
+            case 0: currentTexture = &run1; break;
+            case 1: currentTexture = &run2; break;
+            case 2: currentTexture = &run3; break;
+        }
     }
     else
     {
-        // Frame salto
-        frameActual = 3;
+        currentTexture = &jump;
     }
-
-    frameRec.x =
-    frameWidth *
-    static_cast<float>(frameActual);
-
-    frameRec.y = spriteCropY;
-    frameRec.width = frameWidth;
-    frameRec.height = spriteCropHeight;
 }
 
 void Player::draw()
 {
-    // Fallback seguro si falla el asset
-    if (texture.id == 0)
+    if (currentTexture == nullptr || currentTexture->id == 0)
     {
-        DrawRectangleRec(rect, {0, 255, 255, 255});
+        DrawRectangleRec(rect, RED);
         return;
     }
 
-    if (hasNitro)
-    {
-        DrawCircleLines(
-            rect.x + rect.width / 2,
-            rect.y + rect.height / 2,
-            35,
-            SKYBLUE
-        );
-
-        DrawCircleLines(
-            rect.x + rect.width / 2,
-            rect.y + rect.height / 2,
-            38,
-            Fade(SKYBLUE, 0.3f)
-        );
-    }
-
-    // TAMAÑO VISUAL DESACOPLADO DE HITBOX
-    float drawWidth = 110.0f;
-
-    float drawHeight = 130.0f;
-
-    // CENTRADO VISUAL
-    float offsetX =
-        (drawWidth - rect.width) / 2.0f;
-
-    // AJUSTE CRITICO VISUAL
-    float offsetY = drawHeight - rect.height;
+    Rectangle source = {
+        0,
+        0,
+        (float)currentTexture->width,
+        (float)currentTexture->height
+    };
 
     Rectangle dest = {
-        rect.x - offsetX,
-        rect.y - offsetY + hitboxOffsetY,
-        drawWidth,
-        drawHeight
+        rect.x - 7.0f,
+        rect.y - 10.0f,
+        visualWidth,
+        visualHeight
     };
 
     DrawTexturePro(
-        texture,
-        frameRec,
+        *currentTexture,
+        source,
         dest,
-        {0, 0},
+        {0,0},
         0.0f,
         WHITE
     );
 
-    // DEBUG HITBOX
-    // Mantener debugging original
     DrawRectangleLinesEx(
         rect,
         1.0f,
         SKYBLUE
     );
-
-    // Efecto visual simple cuando está en el aire
-    if (!enSuelo)
-    {
-        DrawCircle(
-            rect.x + rect.width / 2.0f,
-            rect.y + rect.height + 8.0f,
-            6.0f,
-            ORANGE
-        );
-    }
 }
 
 Rectangle Player::getRect()
@@ -206,8 +132,8 @@ Rectangle Player::getRect()
 Vector2 Player::getPosition()
 {
     return {
-        rect.x + rect.width / 2,
-        rect.y + rect.height / 2
+        rect.x + rect.width / 2.0f,
+        rect.y + rect.height / 2.0f
     };
 }
 

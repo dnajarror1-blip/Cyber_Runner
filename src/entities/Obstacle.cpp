@@ -20,13 +20,13 @@ void Obstacle::update(float deltaTime) {
         // --- TU LÓGICA DE VARIACIÓN ---
         // Decidimos al azar: 0 es Dron, 1 es Barrera
         if (GetRandomValue(0, 1) == 0) {
-            rect.y = 220;        // Altura de vuelo (Dron)
+            rect.y = 205;        // Altura de vuelo (Dron)
             rect.width = 40;     // Ancho según el diseño Lo-Fi
             rect.height = 25;    // Alto según el diseño Lo-Fi
         } else {
             rect.y = 310;        // Altura de suelo (Barrera)
             rect.width = 25; 
-            rect.height = 45; 
+            rect.height = 40;
         }
     }
 }
@@ -55,7 +55,7 @@ void Obstacle::forceRespawn()
 
     if (GetRandomValue(0, 1) == 0)
     {
-        rect.y = 220;
+        rect.y = 205;
         rect.width = 40;
         rect.height = 25;
     }
@@ -63,6 +63,6 @@ void Obstacle::forceRespawn()
     {
         rect.y = 310;
         rect.width = 25;
-        rect.height = 45;
+        rect.height = 40;
     }
 }
