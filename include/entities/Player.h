@@ -34,9 +34,6 @@ private:
     float frameTime = 0.0f;
     float frameSpeed = 0.10f;
 
-    const float visualWidth = 42.0f;
-    const float visualHeight = 68.0f;
-
 public:
 
     Player();

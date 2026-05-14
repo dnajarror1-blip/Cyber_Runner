@@ -102,10 +102,10 @@ void Player::draw()
     };
 
     Rectangle dest = {
-        rect.x - 7.0f,
-        rect.y - 10.0f,
-        visualWidth,
-        visualHeight
+        rect.x,
+        rect.y,
+        rect.width,
+        rect.height
     };
 
     DrawTexturePro(
@@ -117,11 +117,11 @@ void Player::draw()
         WHITE
     );
 
-    DrawRectangleLinesEx(
-        rect,
-        1.0f,
-        SKYBLUE
-    );
+    //DrawRectangleLinesEx(   // Contorno del hitbox, se ha dejado como comment para cualquier cambio adicional
+    //    rect,
+    //    1.0f,
+    //    SKYBLUE
+    //);
 }
 
 Rectangle Player::getRect()
