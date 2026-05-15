@@ -1,1 +1,168 @@
+#include "raylib.h"
+#include <fstream>
+#include <iostream>
 
+using namespace std;
+
+const int COSTO_PARTIDA = 10;
+const char* ARCHIVO_CREDITOS = "creditos.txt";
+
+int creditos = 0;
+int monedasRecolectadas = 0;
+
+bool partidaActiva = false;
+// moneda
+Rectangle moneda = { 600, 300, 30, 30 };
+
+// aqui iria el robot
+Rectangle jugador = { 100, 300, 50, 50 };
+
+//archivo
+int LeerCreditos()
+{
+    ifstream archivo(ARCHIVO_CREDITOS);
+
+    if (!archivo.is_open())
+    {
+        ofstream crear(ARCHIVO_CREDITOS);
+        crear << 50;
+        crear.close();
+
+        return 50;
+    }
+
+    int c = 0;
+    archivo >> c;
+    archivo.close();
+
+    return c;
+}
+
+void GuardarCreditos(int c)
+{
+    ofstream archivo(ARCHIVO_CREDITOS);
+
+    archivo << c;
+
+    archivo.close();
+}
+bool IniciarPartida()
+{
+    if (creditos >= COSTO_PARTIDA)
+    {
+        creditos -= COSTO_PARTIDA;
+        GuardarCreditos(creditos);
+
+        monedasRecolectadas = 0;
+    
+        moneda.x = 600;
+
+        return true;
+    }
+
+    return false;
+}
+int main()
+{
+    InitWindow(800, 450, "Runner");
+
+    SetTargetFPS(60);
+
+    // Leer créditos al iniciar
+    creditos = LeerCreditos();
+
+    while (!WindowShouldClose())
+    {
+    
+        if (!partidaActiva)
+        {
+            if (IsKeyPressed(KEY_ENTER))
+            {
+                partidaActiva = IniciarPartida();
+            }
+        }
+
+
+        if (partidaActiva)
+        {
+            // Movimiento jugador
+            if (IsKeyDown(KEY_RIGHT)) jugador.x += 5;
+            if (IsKeyDown(KEY_LEFT)) jugador.x -= 5;
+            if (IsKeyDown(KEY_UP)) jugador.y -= 5;
+            if (IsKeyDown(KEY_DOWN)) jugador.y += 5;
+
+            // Movimiento moneda
+            moneda.x -= 4;
+
+            // Respawn moneda
+            if (moneda.x < -30)
+            {
+                moneda.x = 850;
+                moneda.y = GetRandomValue(50, 400);
+            }
+
+            // Colisión moneda
+            if (CheckCollisionRecs(jugador, moneda))
+            {
+                monedasRecolectadas++;
+
+                creditos += 1;
+
+                GuardarCreditos(creditos);
+
+                // Respawn
+                moneda.x = 850;
+                moneda.y = GetRandomValue(50, 400);
+            }
+
+            if (IsKeyPressed(KEY_ESCAPE))
+            {
+                partidaActiva = false;
+            }
+        }
+         //moneda
+        BeginDrawing();
+
+        ClearBackground(DARKGRAY);
+
+        if (!partidaActiva)
+        {
+            DrawText("PRESIONA ENTER PARA JUGAR", 180, 180, 30, WHITE);
+
+            DrawText(TextFormat("Costo: %i creditos", COSTO_PARTIDA),
+                     260, 230, 25, YELLOW);
+
+            DrawText(TextFormat("Creditos actuales: %i", creditos),
+                     240, 280, 25, GREEN);
+
+            if (creditos < COSTO_PARTIDA)
+            {
+                DrawText("NO HAY CREDITOS SUFICIENTES",
+                         180, 330, 25, RED);
+            }
+        }
+        else
+        {
+            // remplazar por el robot
+            DrawRectangleRec(jugador, BLUE);
+
+            // Moneda
+            DrawRectangleRec(moneda, GOLD);
+
+            DrawText(TextFormat("Creditos: %i", creditos),
+                     20, 20, 25, WHITE);
+
+            DrawText(TextFormat("Monedas: %i", monedasRecolectadas),
+                     20, 50, 25, YELLOW);
+
+            DrawText("ESC = terminar partida",
+                     20, 90, 20, LIGHTGRAY);
+        }
+
+        EndDrawing();
+    }
+
+    CloseWindow();
+
+    return 0;
+}
