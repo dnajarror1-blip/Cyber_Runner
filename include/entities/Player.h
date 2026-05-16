@@ -26,6 +26,7 @@ private:
     Texture2D run2 {};
     Texture2D run3 {};
     Texture2D jump {};
+    Texture2D jumpBoost {};
 
     Texture2D* currentTexture = nullptr;
 

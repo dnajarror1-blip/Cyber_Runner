@@ -6,6 +6,7 @@ Player::Player()
     run2 = LoadTexture("assets/player2.png");
     run3 = LoadTexture("assets/player3.png");
     jump = LoadTexture("assets/player4.png");
+    jumpBoost = LoadTexture("assets/playersal1.png");
 
     currentTexture = &run1;
 }
@@ -16,6 +17,7 @@ Player::~Player()
     if (run2.id) UnloadTexture(run2);
     if (run3.id) UnloadTexture(run3);
     if (jump.id) UnloadTexture(jump);
+    if (jumpBoost.id) UnloadTexture(jumpBoost);
 }
 
 void Player::update(float deltaTime)
@@ -82,7 +84,14 @@ void Player::update(float deltaTime)
     }
     else
     {
-        currentTexture = &jump;
+        if (saltosDisponibles == 0 && velocidadY < 0.0f)
+        {
+            currentTexture = &jumpBoost;
+        }
+        else
+        {
+            currentTexture = &jump;
+        }
     }
 }
 
