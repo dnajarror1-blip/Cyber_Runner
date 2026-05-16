@@ -17,6 +17,7 @@ private:
     Texture2D coinTexture1 {};
     Texture2D coinTexture2 {};
     Texture2D nitroTexture {};
+    Texture2D shieldTexture {};
 
     Texture2D* currentTexture = nullptr;
 

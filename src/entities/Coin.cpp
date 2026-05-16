@@ -12,6 +12,7 @@ Coin::Coin(float x, float y, float size, float speed, ItemType type)
     coinTexture1 = LoadTexture("assets/coin1.png");
     coinTexture2 = LoadTexture("assets/coin2.png");
     nitroTexture = LoadTexture("assets/nitro.png");
+    shieldTexture = LoadTexture("assets/escudo.png");
 
     currentTexture = &coinTexture1;
 }
@@ -32,6 +33,11 @@ Coin::~Coin()
     {
         UnloadTexture(nitroTexture);
     }
+
+    if (shieldTexture.id)
+    {
+        UnloadTexture(shieldTexture);
+    }
 }
 
 Coin::Coin(Coin&& other) noexcept
@@ -44,6 +50,7 @@ Coin::Coin(Coin&& other) noexcept
     coinTexture1 = other.coinTexture1;
     coinTexture2 = other.coinTexture2;
     nitroTexture = other.nitroTexture;
+    shieldTexture = other.shieldTexture;
 
     animationTimer = other.animationTimer;
     animationSpeed = other.animationSpeed;
@@ -61,6 +68,10 @@ Coin::Coin(Coin&& other) noexcept
     {
         currentTexture = &nitroTexture;
     }
+    else if (other.currentTexture == &other.shieldTexture)
+    {
+        currentTexture = &shieldTexture;
+    }
     else
     {
         currentTexture = nullptr;
@@ -69,6 +80,7 @@ Coin::Coin(Coin&& other) noexcept
     other.coinTexture1 = {};
     other.coinTexture2 = {};
     other.nitroTexture = {};
+    other.shieldTexture = {};
     other.currentTexture = nullptr;
 }
 
@@ -91,6 +103,11 @@ Coin& Coin::operator=(Coin&& other) noexcept
             UnloadTexture(nitroTexture);
         }
 
+        if (shieldTexture.id)
+        {
+            UnloadTexture(shieldTexture);
+        }
+
         rect = other.rect;
         speed = other.speed;
         active = other.active;
@@ -99,6 +116,7 @@ Coin& Coin::operator=(Coin&& other) noexcept
         coinTexture1 = other.coinTexture1;
         coinTexture2 = other.coinTexture2;
         nitroTexture = other.nitroTexture;
+        shieldTexture = other.shieldTexture;
 
         animationTimer = other.animationTimer;
         animationSpeed = other.animationSpeed;
@@ -116,6 +134,10 @@ Coin& Coin::operator=(Coin&& other) noexcept
         {
             currentTexture = &nitroTexture;
         }
+        else if (other.currentTexture == &other.shieldTexture)
+        {
+            currentTexture = &shieldTexture;
+        }
         else
         {
             currentTexture = nullptr;
@@ -124,6 +146,7 @@ Coin& Coin::operator=(Coin&& other) noexcept
         other.coinTexture1 = {};
         other.coinTexture2 = {};
         other.nitroTexture = {};
+        other.shieldTexture = {};
         other.currentTexture = nullptr;
     }
 
@@ -154,6 +177,10 @@ void Coin::update(float deltaTime)
     {
         currentTexture = &nitroTexture;
     }
+    else if (type == ItemType::SHIELD)
+    {
+        currentTexture = &shieldTexture;
+    }
     else
     {
         currentTexture = nullptr;
@@ -169,25 +196,6 @@ void Coin::draw()
 {
     if (!active)
     {
-        return;
-    }
-
-    if (type == ItemType::SHIELD)
-    {
-        DrawCircle(
-            rect.x + rect.width / 2,
-            rect.y + rect.height / 2,
-            rect.width / 2,
-            ORANGE
-        );
-
-        DrawCircleLines(
-            rect.x + rect.width / 2,
-            rect.y + rect.height / 2,
-            rect.width / 2,
-            WHITE
-        );
-
         return;
     }
 
