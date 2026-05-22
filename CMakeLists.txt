@@ -2,6 +2,11 @@ cmake_minimum_required(VERSION 3.20)
 project(Cyber_Runner)
 
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Librerías necesarias para la API
+find_package(cpr CONFIG REQUIRED)
+find_package(nlohmann_json CONFIG REQUIRED)
 
 # Includes propios
 include_directories(include)
@@ -11,12 +16,22 @@ add_executable(Cyber_Runner
         src/core/Game.cpp
         src/entities/Player.cpp
         src/entities/Obstacle.cpp
-        src/ui/HUD.cpp
         src/entities/Coin.cpp
-        include/entities/Coin.h
+        src/ui/HUD.cpp
         src/data/DataManager.cpp
+
+        include/entities/Coin.h
         include/data/DataManager.h
         include/data/PlayerData.h
+
+        api/ApiClient.cpp
+        api/ApiClient.h
+        api/GameApiConfig.h
+
+        auth/LoginManager.cpp
+        auth/LoginManager.h
+        auth/LoginManager.h
+        auth/LoginManager.cpp
 )
 
 add_custom_command(TARGET Cyber_Runner POST_BUILD
@@ -25,24 +40,29 @@ add_custom_command(TARGET Cyber_Runner POST_BUILD
         $<TARGET_FILE_DIR:Cyber_Runner>/assets
 )
 
-#  Detectar sistema
+# Detectar sistema
 if (WIN32)
-    # Ruta de MSYS2 (ajústala si es diferente)
-    set(RAYLIB_PATH "C:/msys64/mingw64")
+    # Usar MSYS2 UCRT64 para no mezclar toolchains
+    set(MSYS2_PATH "C:/msys64/ucrt64")
 
-    target_include_directories(Cyber_Runner PRIVATE ${RAYLIB_PATH}/include)
-    target_link_directories(Cyber_Runner PRIVATE ${RAYLIB_PATH}/lib)
+    target_include_directories(Cyber_Runner PRIVATE ${MSYS2_PATH}/include)
+    target_link_directories(Cyber_Runner PRIVATE ${MSYS2_PATH}/lib)
 
     target_link_libraries(Cyber_Runner
             raylib
             opengl32
             gdi32
             winmm
+            cpr::cpr
+            nlohmann_json::nlohmann_json
     )
 
 elseif (UNIX)
-    # Linux (Zorin OS)
     find_package(raylib REQUIRED)
 
-    target_link_libraries(Cyber_Runner raylib)
+    target_link_libraries(Cyber_Runner
+            raylib
+            cpr::cpr
+            nlohmann_json::nlohmann_json
+    )
 endif()
