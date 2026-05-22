@@ -6,7 +6,7 @@
 const Color NEO_CYAN_HUD = {0, 255, 255, 255};
 const Color NEO_YELLOW_HUD = {253, 249, 0, 255};
 
-void HUD::drawGameHUD(float speed, int creditos, int score, int highScore, bool nitroActive) {
+void HUD::drawGameHUD(float speed, int creditos, int score, int highScore, bool nitroActive, bool hasShield) {
     DrawText(TextFormat("VELOCIDAD: %.0f", speed), 10, 10, 20, NEO_CYAN_HUD);
     DrawText(TextFormat("CREDITOS: %i", creditos), 10, 35, 20, NEO_YELLOW_HUD);
     DrawText(TextFormat("PUNTAJE: %i", score), 10, 60, 20, WHITE);
@@ -16,6 +16,13 @@ void HUD::drawGameHUD(float speed, int creditos, int score, int highScore, bool 
     {
         DrawText("NITRO ACTIVO", 600, 20, 20, SKYBLUE);
     }
+
+    if (hasShield)
+    {
+        DrawText("ESCUDO ACTIVO", 600, 45, 15, ORANGE);
+    }
+
+    DrawText(TextFormat("FPS: %i", GetFPS()), 700, 10, 20, GREEN);
 }
 
 void HUD::drawMenuHUD(int creditos) {

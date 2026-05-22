@@ -51,6 +51,7 @@ private:
     int creditos;
     int score;
     int highScore;
+    int gameCost;
     int coinsCollectedThisRun;
 
     float scoreTimer;

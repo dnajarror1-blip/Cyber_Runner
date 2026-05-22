@@ -1,5 +1,4 @@
 #include <core/Game.h>
-
 #include <algorithm>
 
 // Paleta de Colores Neón
@@ -13,6 +12,8 @@ Game::Game() {
 
     globalSpeed = 350.0f;
     speedIncrement = 30.0f;
+
+    gameCost = 1;
 
     maxNormalSpeed = 850.0f;
     maxNitroSpeed = 1100.0f;
@@ -44,6 +45,14 @@ void Game::resetGame() {
     player = new Player();
 
     globalSpeed = 350.0f;
+
+    hasShield = false;
+    nitroActive = false;
+    nitroTimer = 0.0f;
+
+    if (player != nullptr) {
+        player->setNitro(false);
+    }
 
     score = 0;
     scoreTimer = 0.0f;
@@ -186,8 +195,8 @@ void Game::updateGame() {
 
         case MENU: {
             if (IsKeyPressed(KEY_ONE)) {
-                if (creditos >= 1) {
-                    creditos -= 1;
+                if (creditos >= gameCost) {
+                    creditos -= gameCost;
 
                     playerData.credits = creditos;
                     playerData.gamesPlayed++;
@@ -465,6 +474,8 @@ void Game::drawGame() {
                 WHITE
             );
 
+            DrawText(TextFormat("COSTO POR PARTIDA: %i CREDITO(S)", gameCost), 250, 380, 15, NEO_YELLOW);
+
             hud.drawMenuHUD(creditos);
 
             break;
@@ -496,9 +507,9 @@ void Game::drawGame() {
                 creditos,
                 score,
                 highScore,
-                nitroActive
+                nitroActive,
+                hasShield
             );
-
             if (hasShield) {
                 DrawText("ESCUDO ACTIVO", 600, 45, 15, ORANGE);
 
