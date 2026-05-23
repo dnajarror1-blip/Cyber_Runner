@@ -6,6 +6,7 @@
 #include "entities/Coin.h"
 #include "data/DataManager.h"
 #include "data/PlayerData.h"
+#include "../../api/ApiClient.h"
 
 #include <vector>
 #include <string>
@@ -38,6 +39,18 @@ private:
     float nitroTimer;
     bool shouldCloseGame;
 
+    ApiClient& api;
+
+    UsuarioApi usuarioActual;
+
+    PartidaApi partidaActual;
+
+    bool partidaActiva = false;
+
+    bool sesionIniciada = false;
+
+    bool usandoApi = false;
+
     // OWNER ARCHITECTURE
     Player* player;
 
@@ -66,7 +79,11 @@ private:
 
 public:
 
-    Game();
+    explicit Game(ApiClient& apiClient);
+
+    void setUsuario(
+     const UsuarioApi& usuario
+ );
 
     void run();
 

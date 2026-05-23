@@ -7,7 +7,9 @@ const Color NEO_MAGENTA = {255, 0, 255, 255};
 const Color NEO_YELLOW = {253, 249, 0, 255};
 const Color NEO_RED = {230, 41, 55, 255};
 
-Game::Game() {
+Game::Game(ApiClient& apiClient)
+: api(apiClient)
+{
     player = nullptr;
 
     globalSpeed = 350.0f;
@@ -34,6 +36,15 @@ Game::Game() {
     score = 0;
     scoreTimer = 0.0f;
     coinsCollectedThisRun = 0;
+}
+
+void Game::setUsuario(
+    const UsuarioApi& usuario
+)
+{
+    usuarioActual = usuario;
+
+    sesionIniciada = true;
 }
 
 void Game::resetGame() {

@@ -30,8 +30,7 @@ add_executable(Cyber_Runner
 
         auth/LoginManager.cpp
         auth/LoginManager.h
-        auth/LoginManager.h
-        auth/LoginManager.cpp
+
 )
 
 add_custom_command(TARGET Cyber_Runner POST_BUILD
