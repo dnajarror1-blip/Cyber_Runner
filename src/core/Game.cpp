@@ -163,6 +163,30 @@ void Game::finalizarPartidaApi(const std::string& resultado)
 
     std::string error;
 
+    if (score > ultimoScoreReportado)
+    {
+        std::string errorScoreFinal;
+
+        bool scoreFinalOk = api.reportarScore(
+            partidaActual.idPartida,
+            score,
+            nivelActual,
+            errorScoreFinal
+        );
+
+        if (scoreFinalOk)
+        {
+            ultimoScoreReportado = score;
+        }
+        else
+        {
+            TraceLog(
+                LOG_WARNING,
+                TextFormat("No se pudo reportar score final: %s", errorScoreFinal.c_str())
+            );
+        }
+    }
+
     bool ok = api.finalizarPartida(
         partidaActual.idPartida,
         score,
@@ -175,11 +199,22 @@ void Game::finalizarPartidaApi(const std::string& resultado)
 
     if (ok)
     {
-        creditos += tokensGanados;
-        playerData.credits = creditos;
+        mensajeApi = "API: partida finalizada correctamente.";
+
+        TraceLog(
+            LOG_INFO,
+            TextFormat(
+                "Partida finalizada. Resultado: %s | Score: %i | Tokens ganados: %i",
+                resultado.c_str(),
+                score,
+                tokensGanados
+            )
+        );
     }
     else
     {
+        mensajeApi = "API: no se pudo finalizar partida.";
+
         TraceLog(
             LOG_WARNING,
             TextFormat("No se pudo finalizar partida: %s", error.c_str())
@@ -734,7 +769,21 @@ void Game::drawGame()
                 WHITE
             );
 
-            DrawText(TextFormat("COSTO POR PARTIDA: %i CREDITO(S)", gameCost), 250, 380, 15, NEO_YELLOW);
+            DrawText(
+    TextFormat("COSTO POR PARTIDA: %i CREDITO(S)", gameCost),
+    250,
+    380,
+    15,
+    NEO_YELLOW
+);
+
+            DrawText(
+                mensajeApi.c_str(),
+                250,
+                405,
+                15,
+                DARKGRAY
+            );
 
             hud.drawMenuHUD(creditos);
 
