@@ -1,7 +1,3 @@
-//
-// Created by darwin on 18/04/26.
-//
-
 #include "entities/Obstacle.h"
 
 Obstacle::Obstacle(float x, float y, float width, float height, float speed) {
