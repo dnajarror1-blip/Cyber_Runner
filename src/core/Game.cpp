@@ -199,7 +199,7 @@ void Game::finalizarPartidaApi(const std::string& resultado)
 
     if (ok)
     {
-        mensajeApi = "API: partida finalizada correctamente.";
+        mensajeApi = TextFormat("API: partida finalizada. Tokens ganados: %i", tokensGanados);
 
         TraceLog(
             LOG_INFO,
