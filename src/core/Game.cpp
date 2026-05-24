@@ -17,7 +17,7 @@ Game::Game(ApiClient& apiClient)
     globalSpeed = 350.0f;
     speedIncrement = 30.0f;
 
-    gameCost = 1;
+    gameCost = GameApiConfig::COSTO_PARTIDA;
 
     maxNormalSpeed = 850.0f;
     maxNitroSpeed = 1100.0f;
