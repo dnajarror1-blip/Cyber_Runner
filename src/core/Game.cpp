@@ -1,6 +1,6 @@
 #include <core/Game.h>
 #include <algorithm>
-
+#include "../../api/GameApiConfig.h"
 // Paleta de Colores Neón
 const Color NEO_CYAN = {0, 255, 255, 255};
 const Color NEO_MAGENTA = {255, 0, 255, 255};
@@ -45,6 +45,147 @@ void Game::setUsuario(
     usuarioActual = usuario;
 
     sesionIniciada = true;
+}
+
+bool Game::iniciarPartidaApi()
+{
+    if (!sesionIniciada || !api.tieneSesion())
+    {
+        TraceLog(LOG_ERROR, "No hay sesion activa para iniciar partida.");
+        return false;
+    }
+
+    std::string error;
+
+    bool ok = api.iniciarPartida(
+        partidaActual,
+        error,
+        GameApiConfig::VERSION_JUEGO,
+        gameCost
+    );
+
+    if (!ok)
+    {
+        TraceLog(
+            LOG_ERROR,
+            TextFormat("No se pudo iniciar partida: %s", error.c_str())
+        );
+
+        return false;
+    }
+
+    partidaActiva = true;
+    partidaFinalizada = false;
+
+    ultimoScoreReportado = 0;
+    nivelActual = 1;
+
+    creditos = partidaActual.saldoDespues;
+    playerData.credits = creditos;
+
+    inicioPartida = std::chrono::steady_clock::now();
+
+    TraceLog(
+        LOG_INFO,
+        TextFormat("Partida iniciada en API. ID: %lld", partidaActual.idPartida)
+    );
+
+    return true;
+}
+
+void Game::reportarScoreApiSiCorresponde()
+{
+    if (!partidaActiva || partidaFinalizada)
+    {
+        return;
+    }
+
+    if (score - ultimoScoreReportado < GameApiConfig::REPORTAR_CADA_PUNTOS)
+    {
+        return;
+    }
+
+    std::string error;
+
+    bool ok = api.reportarScore(
+        partidaActual.idPartida,
+        score,
+        nivelActual,
+        error
+    );
+
+    if (ok)
+    {
+        ultimoScoreReportado = score;
+    }
+    else
+    {
+        TraceLog(
+            LOG_WARNING,
+            TextFormat("No se pudo reportar score: %s", error.c_str())
+        );
+    }
+}
+
+int Game::calcularTokensGanados(int scoreFinal) const
+{
+    if (scoreFinal >= GameApiConfig::SCORE_PREMIO_ALTO)
+    {
+        return GameApiConfig::PREMIO_ALTO;
+    }
+
+    if (scoreFinal >= GameApiConfig::SCORE_PREMIO_BAJO)
+    {
+        return GameApiConfig::PREMIO_BAJO;
+    }
+
+    return 0;
+}
+
+void Game::finalizarPartidaApi(const std::string& resultado)
+{
+    if (!partidaActiva || partidaFinalizada)
+    {
+        return;
+    }
+
+    auto finPartida = std::chrono::steady_clock::now();
+
+    int duracionSegundos = static_cast<int>(
+        std::chrono::duration_cast<std::chrono::seconds>(
+            finPartida - inicioPartida
+        ).count()
+    );
+
+    int tokensGanados = calcularTokensGanados(score);
+
+    std::string error;
+
+    bool ok = api.finalizarPartida(
+        partidaActual.idPartida,
+        score,
+        nivelActual,
+        resultado,
+        duracionSegundos,
+        tokensGanados,
+        error
+    );
+
+    if (ok)
+    {
+        creditos += tokensGanados;
+        playerData.credits = creditos;
+    }
+    else
+    {
+        TraceLog(
+            LOG_WARNING,
+            TextFormat("No se pudo finalizar partida: %s", error.c_str())
+        );
+    }
+
+    partidaFinalizada = true;
+    partidaActiva = false;
 }
 
 void Game::resetGame() {
@@ -205,24 +346,15 @@ void Game::updateGame() {
         }
 
         case MENU: {
-            if (IsKeyPressed(KEY_ONE)) {
-                if (creditos >= gameCost) {
-                    creditos -= gameCost;
+                if (IsKeyPressed(KEY_ONE))
+                {
+                    if (iniciarPartidaApi())
+                    {
+                        resetGame();
 
-                    playerData.credits = creditos;
-                    playerData.gamesPlayed++;
-
-                    dataManager.savePlayerData(playerData);
-
-                    dataManager.registerGameStarted(
-                        playerData.userId
-                    );
-
-                    resetGame();
-
-                    currentScreen = JUGANDO;
+                        currentScreen = JUGANDO;
+                    }
                 }
-            }
 
             if (IsKeyPressed(KEY_FOUR)) {
                 shouldCloseGame = true;

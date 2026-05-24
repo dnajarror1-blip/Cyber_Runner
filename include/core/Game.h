@@ -46,11 +46,14 @@ private:
 
     PartidaApi partidaActual;
 
-    bool partidaActiva = false;
-
     bool sesionIniciada = false;
+    bool partidaActiva = false;
+    bool partidaFinalizada = false;
 
-    bool usandoApi = false;
+    int nivelActual = 1;
+    int ultimoScoreReportado = 0;
+
+    std::chrono::steady_clock::time_point inicioPartida;
 
     // OWNER ARCHITECTURE
     Player* player;
@@ -77,6 +80,11 @@ private:
     void drawGame();
     void drawScaledGame(RenderTexture2D& target);
     void checkCollisions();
+    bool iniciarPartidaApi();
+
+    void reportarScoreApiSiCorresponde();
+    void finalizarPartidaApi(const std::string& resultado);
+    int calcularTokensGanados(int scoreFinal) const;
 
 public:
 
