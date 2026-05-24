@@ -554,18 +554,12 @@ void Game::updateGame()
 
                     if (itemType == ItemType::CREDIT)
                     {
-                        creditos += 1;
-
                         coinsCollectedThisRun++;
-
-                        playerData.credits = creditos;
 
                         playerData.totalCoinsCollected++;
 
                         scoreTimer += 25.0f;
                         score = static_cast<int>(scoreTimer);
-
-                        dataManager.savePlayerData(playerData);
 
                         dataManager.registerCoinCollected(
                             playerData.userId,
