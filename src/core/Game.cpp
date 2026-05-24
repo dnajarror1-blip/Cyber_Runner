@@ -10,6 +10,8 @@ const Color NEO_RED = {230, 41, 55, 255};
 Game::Game(ApiClient& apiClient)
     : api(apiClient)
 {
+    mensajeApi = "API: esperando accion.";
+
     player = nullptr;
 
     globalSpeed = 350.0f;
@@ -51,6 +53,7 @@ bool Game::iniciarPartidaApi()
 {
     if (!sesionIniciada || !api.tieneSesion())
     {
+        mensajeApi = "API: no hay sesion activa.";
         TraceLog(LOG_ERROR, "No hay sesion activa para iniciar partida.");
         return false;
     }
@@ -66,11 +69,8 @@ bool Game::iniciarPartidaApi()
 
     if (!ok)
     {
-        TraceLog(
-            LOG_ERROR,
-            TextFormat("No se pudo iniciar partida: %s", error.c_str())
-        );
-
+        mensajeApi = "API: no se pudo iniciar partida.";
+        TraceLog(LOG_ERROR, TextFormat("No se pudo iniciar partida: %s", error.c_str()));
         return false;
     }
 
@@ -89,6 +89,8 @@ bool Game::iniciarPartidaApi()
         LOG_INFO,
         TextFormat("Partida iniciada en API. ID: %lld", partidaActual.idPartida)
     );
+
+    mensajeApi = "API: partida iniciada correctamente.";
 
     return true;
 }
@@ -186,6 +188,61 @@ void Game::finalizarPartidaApi(const std::string& resultado)
 
     partidaFinalizada = true;
     partidaActiva = false;
+}
+
+void Game::consultarRankingApi()
+{
+    if (!sesionIniciada || !api.tieneSesion())
+    {
+        mensajeApi = "API: no hay sesion para ranking.";
+        TraceLog(LOG_ERROR, "No hay sesion activa para consultar ranking.");
+        return;
+    }
+
+    std::vector<RankingItem> ranking;
+    std::string error;
+
+    bool ok = api.consultarRanking(
+        ranking,
+        error
+    );
+
+    if (!ok)
+    {
+        mensajeApi = "API: no se pudo consultar ranking.";
+
+        TraceLog(
+            LOG_ERROR,
+            TextFormat("No se pudo consultar ranking: %s", error.c_str())
+        );
+
+        return;
+    }
+
+    TraceLog(LOG_INFO, "===== RANKING =====");
+
+    if (ranking.empty())
+    {
+        mensajeApi = "API: ranking vacio.";
+        TraceLog(LOG_INFO, "Ranking vacio.");
+        return;
+    }
+
+    mensajeApi = "API: ranking consultado. Revisa consola.";
+
+    for (size_t i = 0; i < ranking.size(); ++i)
+    {
+        TraceLog(
+            LOG_INFO,
+            TextFormat(
+                "%i. %s | Score: %i | Nivel: %i",
+                static_cast<int>(i + 1),
+                ranking[i].username.c_str(),
+                ranking[i].bestScore,
+                ranking[i].bestNivel
+            )
+        );
+    }
 }
 
 void Game::resetGame()
@@ -308,6 +365,11 @@ void Game::run()
         drawScaledGame(target);
     }
 
+    if (partidaActiva && !partidaFinalizada)
+    {
+        finalizarPartidaApi("EXIT");
+    }
+
     UnloadRenderTexture(target);
 
     if (player != nullptr)
@@ -370,6 +432,11 @@ void Game::updateGame()
 
                     currentScreen = JUGANDO;
                 }
+            }
+
+            if (IsKeyPressed(KEY_THREE))
+            {
+                consultarRankingApi();
             }
 
             if (IsKeyPressed(KEY_FOUR))
@@ -644,7 +711,7 @@ void Game::drawGame()
             );
 
             DrawText(
-                "[3] CARGAR USUARIO",
+                "[3] VER RANKING",
                 280,
                 270,
                 20,

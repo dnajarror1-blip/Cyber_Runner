@@ -53,6 +53,8 @@ private:
     int nivelActual = 1;
     int ultimoScoreReportado = 0;
 
+    std::string mensajeApi;
+
     std::chrono::steady_clock::time_point inicioPartida;
 
     // OWNER ARCHITECTURE
@@ -85,6 +87,7 @@ private:
     void reportarScoreApiSiCorresponde();
     void finalizarPartidaApi(const std::string& resultado);
     int calcularTokensGanados(int scoreFinal) const;
+    void consultarRankingApi();
 
 public:
 
