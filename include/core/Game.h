@@ -23,6 +23,16 @@ enum GameScreen {
 class Game {
 private:
 
+    // fondo imp
+    float transitionAlpha;
+    float bgOffset;
+    float bgWidth;
+    Texture2D fondo1 {};
+    Texture2D fondo2 {};
+    Texture2D fondo3 {};
+
+    Music backgroundMusic {};
+
     const int screenWidth = 800;
     const int screenHeight = 450;
 
@@ -80,6 +90,7 @@ private:
     void toggleFullscreen();
     void updateGame();
     void drawGame();
+    void drawBackground(); //fondo
     void drawScaledGame(RenderTexture2D& target);
     void checkCollisions();
     bool iniciarPartidaApi();

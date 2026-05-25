@@ -14,6 +14,11 @@ Game::Game(ApiClient& apiClient)
 
     player = nullptr;
 
+    //fondo
+    transitionAlpha = 0.0f;
+    bgOffset = 0.0f;
+    bgWidth = 0.0f;
+
     globalSpeed = 350.0f;
     speedIncrement = 30.0f;
 
@@ -366,6 +371,16 @@ void Game::run()
         "Cyber-Runner"
     );
 
+    InitAudioDevice();
+
+    backgroundMusic = LoadMusicStream("assets/music/fondo.ogg");
+
+    PlayMusicStream(backgroundMusic);
+
+    fondo1 = LoadTexture("assets/textures/fondocyber.png");
+    fondo2 = LoadTexture("assets/textures/fondocyber2.png");
+    fondo3 = LoadTexture("assets/textures/fondocyber3.png");
+
     player = new Player();
 
     SetWindowState(FLAG_WINDOW_RESIZABLE);
@@ -385,6 +400,9 @@ void Game::run()
 
     while (!WindowShouldClose() && !shouldCloseGame)
     {
+    //music
+        UpdateMusicStream(backgroundMusic);
+
         toggleFullscreen();
 
         updateGame();
@@ -392,6 +410,8 @@ void Game::run()
         BeginTextureMode(target);
 
         ClearBackground(BLACK);
+
+        drawBackground(); //fondo imp
 
         drawGame();
 
@@ -405,6 +425,14 @@ void Game::run()
         finalizarPartidaApi("EXIT");
     }
 
+    UnloadTexture(fondo1);
+    UnloadTexture(fondo2);
+    UnloadTexture(fondo3);
+
+    UnloadMusicStream(backgroundMusic);
+
+    CloseAudioDevice();
+
     UnloadRenderTexture(target);
 
     if (player != nullptr)
@@ -415,6 +443,88 @@ void Game::run()
 
     CloseWindow();
 }
+
+//fondo imp
+void Game::drawBackground()
+{
+    int etapa = (score / 4000) % 3;
+
+    static int etapaAnterior = 0;
+
+    if (etapa != etapaAnterior)
+    {
+        transitionAlpha = 0.0f;
+        etapaAnterior = etapa;
+    }
+
+    Texture2D fondoActual {};
+    Texture2D fondoSiguiente {};
+
+    if (etapa == 0)
+    {
+        fondoActual = fondo1;
+        fondoSiguiente = fondo2;
+    }
+    else if (etapa == 1)
+    {
+        fondoActual = fondo2;
+        fondoSiguiente = fondo3;
+    }
+    else
+    {
+        fondoActual = fondo3;
+        fondoSiguiente = fondo1;
+    }
+
+    float scale =
+        static_cast<float>(screenHeight) /
+        static_cast<float>(fondoActual.height);
+
+    bgWidth = fondoActual.width * scale;
+
+    Color fadeColor = {
+        255,
+        255,
+        255,
+        static_cast<unsigned char>(transitionAlpha * 255)
+    };
+
+    DrawTextureEx(
+        fondoActual,
+        {bgOffset, 0},
+        0.0f,
+        scale,
+        WHITE
+    );
+
+    DrawTextureEx(
+        fondoActual,
+        {bgOffset + bgWidth, 0},
+        0.0f,
+        scale,
+        WHITE
+    );
+
+    if (transitionAlpha > 0.0f)
+    {
+        DrawTextureEx(
+            fondoSiguiente,
+            {bgOffset, 0},
+            0.0f,
+            scale,
+            fadeColor
+        );
+
+        DrawTextureEx(
+            fondoSiguiente,
+            {bgOffset + bgWidth, 0},
+            0.0f,
+            scale,
+            fadeColor
+        );
+    }
+}
+
 
 void Game::toggleFullscreen()
 {
@@ -522,6 +632,25 @@ void Game::updateGame()
     case JUGANDO:
         {
             float deltaTime = GetFrameTime();
+
+        //scrolling imp
+
+        bgOffset -= 25.0f * deltaTime;
+
+        if (bgOffset <= -bgWidth)
+        {
+            bgOffset = 0.0f;
+        }
+
+        if (transitionAlpha < 1.0f)
+        {
+            transitionAlpha += 0.5f * deltaTime;
+
+            if (transitionAlpha > 1.0f)
+            {
+                transitionAlpha = 1.0f;
+            }
+        }
 
             scoreTimer += 100.0f * deltaTime;
 
