@@ -460,22 +460,22 @@ void Game::updateGame()
     case MENU:
         {
             if (IsKeyPressed(KEY_ONE))
-            {
-                if (iniciarPartidaApi())
-                {
-                    resetGame();
+{
+    if (iniciarPartidaApi())
+    {
+        resetGame();
 
-                    currentScreen = JUGANDO;
-                }
-                else
-                {
-                    mensajeApi = "API: modo prueba local, partida sin servidor.";
+        currentScreen = JUGANDO;
+    }
+    else
+    {
+        mensajeApi = "API: modo prueba local, partida sin servidor.";
 
-                    resetGame();
+        resetGame();
 
-                    currentScreen = JUGANDO;
-                }
-            }
+        currentScreen = JUGANDO;
+    }
+}
 
             if (IsKeyPressed(KEY_THREE))
             {
