@@ -570,6 +570,19 @@ void Game::updateGame() {
         }
 
         case JUGANDO: {
+            bool pausaPressed =
+                    IsKeyPressed(KEY_ESCAPE) ||
+                    IsKeyPressed(KEY_P) ||
+                    (
+                        IsGamepadAvailable(0) &&
+                        IsGamepadButtonPressed(0, GAMEPAD_BUTTON_MIDDLE_RIGHT)
+                    );
+
+            if (pausaPressed) {
+                currentScreen = PAUSA;
+                break;
+            }
+
             float deltaTime = GetFrameTime();
 
             //scrolling imp
@@ -677,6 +690,38 @@ void Game::updateGame() {
             }
 
             checkCollisions();
+
+            break;
+        }
+
+        case PAUSA: {
+            bool continuarPressed =
+                    IsKeyPressed(KEY_ESCAPE) ||
+                    IsKeyPressed(KEY_P) ||
+                    IsKeyPressed(KEY_ONE) ||
+                    (
+                        IsGamepadAvailable(0) &&
+                        (
+                            IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN) ||
+                            IsGamepadButtonPressed(0, GAMEPAD_BUTTON_MIDDLE_RIGHT)
+                        )
+                    );
+
+            if (continuarPressed) {
+                currentScreen = JUGANDO;
+            }
+
+            bool salirMenuPressed =
+                    IsKeyPressed(KEY_TWO) ||
+                    (
+                        IsGamepadAvailable(0) &&
+                        IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_RIGHT)
+                    );
+
+            if (salirMenuPressed) {
+                finalizarPartidaApi("EXIT");
+                currentScreen = MENU;
+            }
 
             break;
         }
@@ -911,6 +956,66 @@ void Game::drawGame() {
                     );
                 }
             }
+
+            break;
+        }
+        case PAUSA:
+        {
+            DrawRectangle(
+                0,
+                0,
+                screenWidth,
+                screenHeight,
+                {0, 0, 0, 180}
+            );
+
+            DrawText(
+                "JUEGO EN PAUSA",
+                255,
+                120,
+                30,
+                NEO_YELLOW
+            );
+
+            DrawRectangleLines(
+                230,
+                190,
+                340,
+                45,
+                NEO_CYAN
+            );
+
+            DrawText(
+                "[1] CONTINUAR",
+                300,
+                202,
+                20,
+                WHITE
+            );
+
+            DrawRectangleLines(
+                230,
+                255,
+                340,
+                45,
+                NEO_RED
+            );
+
+            DrawText(
+                "[2] SALIR AL MENU",
+                285,
+                267,
+                20,
+                WHITE
+            );
+
+            DrawText(
+                "Control: A continuar | B salir",
+                260,
+                335,
+                15,
+                GRAY
+            );
 
             break;
         }

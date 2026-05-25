@@ -1,7 +1,6 @@
 #include "entities/Player.h"
 
-Player::Player()
-{
+Player::Player() {
     run1 = LoadTexture("assets/player1.png");
     run2 = LoadTexture("assets/player2.png");
     run3 = LoadTexture("assets/player3.png");
@@ -11,8 +10,7 @@ Player::Player()
     currentTexture = &run1;
 }
 
-Player::~Player()
-{
+Player::~Player() {
     if (run1.id) UnloadTexture(run1);
     if (run2.id) UnloadTexture(run2);
     if (run3.id) UnloadTexture(run3);
@@ -20,21 +18,19 @@ Player::~Player()
     if (jumpBoost.id) UnloadTexture(jumpBoost);
 }
 
-void Player::update(float deltaTime)
-{
+void Player::update(float deltaTime) {
     bool jumpPressed =
-    IsKeyPressed(KEY_SPACE) ||
-    (
-        IsGamepadAvailable(0) &&
-        IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)
-    );
+            IsKeyPressed(KEY_SPACE) ||
+            (
+                IsGamepadAvailable(0) &&
+                IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)
+            );
 
-    if (jumpPressed && saltosDisponibles > 0)
-    {
+    if (jumpPressed && saltosDisponibles > 0) {
         velocidadY =
-            (hasNitro && saltosDisponibles == 1)
-            ? fuerzaSaltoNitro
-            : fuerzaSalto;
+                (hasNitro && saltosDisponibles == 1)
+                    ? fuerzaSaltoNitro
+                    : fuerzaSalto;
 
         saltosDisponibles--;
 
@@ -42,31 +38,28 @@ void Player::update(float deltaTime)
     }
 
     bool fastFallPressed =
-    IsKeyDown(KEY_DOWN) ||
-    (
-        IsGamepadAvailable(0) &&
-        (
-            IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_DOWN) ||
-            GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_Y) > 0.5f
-        )
-    );
+            IsKeyDown(KEY_DOWN) ||
+            (
+                IsGamepadAvailable(0) &&
+                (
+                    IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_DOWN) ||
+                    GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_Y) > 0.5f
+                )
+            );
 
-    if (!enSuelo && fastFallPressed)
-    {
+    if (!enSuelo && fastFallPressed) {
         velocidadY = fastFallSpeed;
     }
 
     velocidadY += gravedad * deltaTime;
 
-    if (velocidadY > velocidadCaidaMaxima)
-    {
+    if (velocidadY > velocidadCaidaMaxima) {
         velocidadY = velocidadCaidaMaxima;
     }
 
     rect.y += velocidadY * deltaTime;
 
-    if (rect.y >= sueloY)
-    {
+    if (rect.y >= sueloY) {
         rect.y = sueloY;
 
         velocidadY = 0.0f;
@@ -76,46 +69,38 @@ void Player::update(float deltaTime)
         saltosDisponibles = 2;
     }
 
-    if (enSuelo)
-    {
+    if (enSuelo) {
         frameTime += deltaTime;
 
-        if (frameTime >= frameSpeed)
-        {
+        if (frameTime >= frameSpeed) {
             frameTime = 0.0f;
 
             frameActual++;
 
-            if (frameActual > 2)
-            {
+            if (frameActual > 2) {
                 frameActual = 0;
             }
         }
 
-        switch(frameActual)
-        {
-            case 0: currentTexture = &run1; break;
-            case 1: currentTexture = &run2; break;
-            case 2: currentTexture = &run3; break;
+        switch (frameActual) {
+            case 0: currentTexture = &run1;
+                break;
+            case 1: currentTexture = &run2;
+                break;
+            case 2: currentTexture = &run3;
+                break;
         }
-    }
-    else
-    {
-        if (saltosDisponibles == 0 && velocidadY < 0.0f)
-        {
+    } else {
+        if (saltosDisponibles == 0 && velocidadY < 0.0f) {
             currentTexture = &jumpBoost;
-        }
-        else
-        {
+        } else {
             currentTexture = &jump;
         }
     }
 }
 
-void Player::draw()
-{
-    if (currentTexture == nullptr || currentTexture->id == 0)
-    {
+void Player::draw() {
+    if (currentTexture == nullptr || currentTexture->id == 0) {
         DrawRectangleRec(rect, RED);
         return;
     }
@@ -123,8 +108,8 @@ void Player::draw()
     Rectangle source = {
         0,
         0,
-        (float)currentTexture->width,
-        (float)currentTexture->height
+        (float) currentTexture->width,
+        (float) currentTexture->height
     };
 
     Rectangle dest = {
@@ -138,36 +123,33 @@ void Player::draw()
         *currentTexture,
         source,
         dest,
-        {0,0},
+        {0, 0},
         0.0f,
         WHITE
     );
+
     //DrawRectangleLinesEx(// Contorno del hitbox, se ha dejado como comment para cualquier cambio adicional
     //    rect,
     //    1.0f,
     //    SKYBLUE
-    //);
+    //
 }
 
-Rectangle Player::getRect()
-{
+Rectangle Player::getRect() {
     return rect;
 }
 
-Vector2 Player::getPosition()
-{
+Vector2 Player::getPosition() {
     return {
         rect.x + rect.width / 2.0f,
         rect.y + rect.height / 2.0f
     };
 }
 
-void Player::setNitro(bool active)
-{
+void Player::setNitro(bool active) {
     hasNitro = active;
 }
 
-bool Player::isNitroActive() const
-{
+bool Player::isNitroActive() const {
     return hasNitro;
 }

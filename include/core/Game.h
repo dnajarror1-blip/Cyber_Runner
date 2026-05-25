@@ -13,25 +13,24 @@
 #include <chrono>
 
 enum GameScreen {
-
     LOGIN,
     MENU,
     JUGANDO,
-    GAMEOVER
+    PAUSA,
+    GAMEOVER,
 };
 
 class Game {
 private:
-
     // fondo imp
     float transitionAlpha;
     float bgOffset;
     float bgWidth;
-    Texture2D fondo1 {};
-    Texture2D fondo2 {};
-    Texture2D fondo3 {};
+    Texture2D fondo1{};
+    Texture2D fondo2{};
+    Texture2D fondo3{};
 
-    Music backgroundMusic {};
+    Music backgroundMusic{};
 
     const int screenWidth = 800;
     const int screenHeight = 450;
@@ -50,7 +49,7 @@ private:
     float nitroTimer;
     bool shouldCloseGame;
 
-    ApiClient& api;
+    ApiClient &api;
 
     UsuarioApi usuarioActual;
 
@@ -68,7 +67,7 @@ private:
     std::chrono::steady_clock::time_point inicioPartida;
 
     // OWNER ARCHITECTURE
-    Player* player;
+    Player *player;
 
     HUD hud;
 
@@ -88,25 +87,32 @@ private:
     std::string playerName;
 
     void toggleFullscreen();
+
     void updateGame();
+
     void drawGame();
+
     void drawBackground(); //fondo
-    void drawScaledGame(RenderTexture2D& target);
+    void drawScaledGame(RenderTexture2D &target);
+
     void checkCollisions();
+
     bool iniciarPartidaApi();
 
     void reportarScoreApiSiCorresponde();
-    void finalizarPartidaApi(const std::string& resultado);
+
+    void finalizarPartidaApi(const std::string &resultado);
+
     int calcularTokensGanados(int scoreFinal) const;
+
     void consultarRankingApi();
 
 public:
-
-    explicit Game(ApiClient& apiClient);
+    explicit Game(ApiClient &apiClient);
 
     void setUsuario(
-     const UsuarioApi& usuario
- );
+        const UsuarioApi &usuario
+    );
 
     void run();
 
