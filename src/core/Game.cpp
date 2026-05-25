@@ -626,7 +626,7 @@ void Game::updateGame()
             scoreTimer += 100.0f * deltaTime;
 
             score = static_cast<int>(scoreTimer);
-            reportarScoreApiSiCorresponde();
+            //reportarScoreApiSiCorresponde();
 
             if (nitroActive)
             {
