@@ -30,7 +30,6 @@ void Player::update(float deltaTime)
     );
 
     if (jumpPressed && saltosDisponibles > 0)
-
     {
         velocidadY =
             (hasNitro && saltosDisponibles == 1)
@@ -143,8 +142,7 @@ void Player::draw()
         0.0f,
         WHITE
     );
-
-    //DrawRectangleLinesEx(   // Contorno del hitbox, se ha dejado como comment para cualquier cambio adicional
+    //DrawRectangleLinesEx(// Contorno del hitbox, se ha dejado como comment para cualquier cambio adicional
     //    rect,
     //    1.0f,
     //    SKYBLUE
