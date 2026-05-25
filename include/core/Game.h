@@ -17,7 +17,8 @@ enum GameScreen {
     MENU,
     JUGANDO,
     PAUSA,
-    GAMEOVER,
+    CONFIRMAR_SALIDA,
+    GAMEOVER
 };
 
 class Game {

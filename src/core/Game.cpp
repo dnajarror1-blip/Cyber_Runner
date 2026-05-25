@@ -563,7 +563,35 @@ void Game::updateGame() {
                     IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_RIGHT)
                 )
             ) {
+                currentScreen = CONFIRMAR_SALIDA;
+            }
+
+            break;
+        }
+
+        case CONFIRMAR_SALIDA: {
+            bool confirmarSalida =
+                    IsKeyPressed(KEY_ENTER) ||
+                    IsKeyPressed(KEY_Y) ||
+                    (
+                        IsGamepadAvailable(0) &&
+                        IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)
+                    );
+
+            if (confirmarSalida) {
                 shouldCloseGame = true;
+            }
+
+            bool cancelarSalida =
+                    IsKeyPressed(KEY_ESCAPE) ||
+                    IsKeyPressed(KEY_N) ||
+                    (
+                        IsGamepadAvailable(0) &&
+                        IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_RIGHT)
+                    );
+
+            if (cancelarSalida) {
+                currentScreen = MENU;
             }
 
             break;
@@ -912,6 +940,65 @@ void Game::drawGame() {
 
             break;
         }
+        case CONFIRMAR_SALIDA: {
+            DrawText(
+                "CYBER RUNNER",
+                245,
+                80,
+                40,
+                NEO_CYAN
+            );
+
+            DrawRectangle(
+                170,
+                145,
+                460,
+                170,
+                {0, 0, 0, 220}
+            );
+
+            DrawRectangleLines(
+                170,
+                145,
+                460,
+                170,
+                NEO_RED
+            );
+
+            DrawText(
+                "CONFIRMAR SALIDA",
+                255,
+                170,
+                28,
+                NEO_YELLOW
+            );
+
+            DrawText(
+                "Seguro que quieres cerrar el juego?",
+                215,
+                220,
+                20,
+                WHITE
+            );
+
+            DrawText(
+                "[ENTER/Y/A] SI",
+                235,
+                270,
+                18,
+                NEO_CYAN
+            );
+
+            DrawText(
+                "[ESC/N/B] NO",
+                420,
+                270,
+                18,
+                NEO_RED
+            );
+
+            break;
+        }
 
         case JUGANDO: {
             if (player != nullptr) {
@@ -959,8 +1046,7 @@ void Game::drawGame() {
 
             break;
         }
-        case PAUSA:
-        {
+        case PAUSA: {
             DrawRectangle(
                 0,
                 0,
