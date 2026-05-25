@@ -7,9 +7,8 @@ const Color NEO_MAGENTA = {255, 0, 255, 255};
 const Color NEO_YELLOW = {253, 249, 0, 255};
 const Color NEO_RED = {230, 41, 55, 255};
 
-Game::Game(ApiClient& apiClient)
-    : api(apiClient)
-{
+Game::Game(ApiClient &apiClient)
+    : api(apiClient) {
     mensajeApi = "API: esperando accion.";
 
     player = nullptr;
@@ -46,18 +45,15 @@ Game::Game(ApiClient& apiClient)
 }
 
 void Game::setUsuario(
-    const UsuarioApi& usuario
-)
-{
+    const UsuarioApi &usuario
+) {
     usuarioActual = usuario;
 
     sesionIniciada = true;
 }
 
-bool Game::iniciarPartidaApi()
-{
-    if (!sesionIniciada || !api.tieneSesion())
-    {
+bool Game::iniciarPartidaApi() {
+    if (!sesionIniciada || !api.tieneSesion()) {
         mensajeApi = "API: no hay sesion activa.";
         TraceLog(LOG_ERROR, "No hay sesion activa para iniciar partida.");
         return false;
@@ -72,8 +68,7 @@ bool Game::iniciarPartidaApi()
         gameCost
     );
 
-    if (!ok)
-    {
+    if (!ok) {
         mensajeApi = "API: no se pudo iniciar partida.";
         TraceLog(LOG_ERROR, TextFormat("No se pudo iniciar partida: %s", error.c_str()));
         return false;
@@ -100,15 +95,12 @@ bool Game::iniciarPartidaApi()
     return true;
 }
 
-void Game::reportarScoreApiSiCorresponde()
-{
-    if (!partidaActiva || partidaFinalizada)
-    {
+void Game::reportarScoreApiSiCorresponde() {
+    if (!partidaActiva || partidaFinalizada) {
         return;
     }
 
-    if (score - ultimoScoreReportado < GameApiConfig::REPORTAR_CADA_PUNTOS)
-    {
+    if (score - ultimoScoreReportado < GameApiConfig::REPORTAR_CADA_PUNTOS) {
         return;
     }
 
@@ -121,12 +113,9 @@ void Game::reportarScoreApiSiCorresponde()
         error
     );
 
-    if (ok)
-    {
+    if (ok) {
         ultimoScoreReportado = score;
-    }
-    else
-    {
+    } else {
         TraceLog(
             LOG_WARNING,
             TextFormat("No se pudo reportar score: %s", error.c_str())
@@ -134,25 +123,20 @@ void Game::reportarScoreApiSiCorresponde()
     }
 }
 
-int Game::calcularTokensGanados(int scoreFinal) const
-{
-    if (scoreFinal >= GameApiConfig::SCORE_PREMIO_ALTO)
-    {
+int Game::calcularTokensGanados(int scoreFinal) const {
+    if (scoreFinal >= GameApiConfig::SCORE_PREMIO_ALTO) {
         return GameApiConfig::PREMIO_ALTO;
     }
 
-    if (scoreFinal >= GameApiConfig::SCORE_PREMIO_BAJO)
-    {
+    if (scoreFinal >= GameApiConfig::SCORE_PREMIO_BAJO) {
         return GameApiConfig::PREMIO_BAJO;
     }
 
     return 0;
 }
 
-void Game::finalizarPartidaApi(const std::string& resultado)
-{
-    if (!partidaActiva || partidaFinalizada)
-    {
+void Game::finalizarPartidaApi(const std::string &resultado) {
+    if (!partidaActiva || partidaFinalizada) {
         return;
     }
 
@@ -168,8 +152,7 @@ void Game::finalizarPartidaApi(const std::string& resultado)
 
     std::string error;
 
-    if (score > ultimoScoreReportado)
-    {
+    if (score > ultimoScoreReportado) {
         std::string errorScoreFinal;
 
         bool scoreFinalOk = api.reportarScore(
@@ -179,12 +162,9 @@ void Game::finalizarPartidaApi(const std::string& resultado)
             errorScoreFinal
         );
 
-        if (scoreFinalOk)
-        {
+        if (scoreFinalOk) {
             ultimoScoreReportado = score;
-        }
-        else
-        {
+        } else {
             TraceLog(
                 LOG_WARNING,
                 TextFormat("No se pudo reportar score final: %s", errorScoreFinal.c_str())
@@ -202,8 +182,7 @@ void Game::finalizarPartidaApi(const std::string& resultado)
         error
     );
 
-    if (ok)
-    {
+    if (ok) {
         mensajeApi = TextFormat("API: partida finalizada. Tokens ganados: %i", tokensGanados);
 
         TraceLog(
@@ -215,9 +194,7 @@ void Game::finalizarPartidaApi(const std::string& resultado)
                 tokensGanados
             )
         );
-    }
-    else
-    {
+    } else {
         mensajeApi = "API: no se pudo finalizar partida.";
 
         TraceLog(
@@ -230,10 +207,8 @@ void Game::finalizarPartidaApi(const std::string& resultado)
     partidaActiva = false;
 }
 
-void Game::consultarRankingApi()
-{
-    if (!sesionIniciada || !api.tieneSesion())
-    {
+void Game::consultarRankingApi() {
+    if (!sesionIniciada || !api.tieneSesion()) {
         mensajeApi = "API: no hay sesion para ranking.";
         TraceLog(LOG_ERROR, "No hay sesion activa para consultar ranking.");
         return;
@@ -247,8 +222,7 @@ void Game::consultarRankingApi()
         error
     );
 
-    if (!ok)
-    {
+    if (!ok) {
         mensajeApi = "API: no se pudo consultar ranking.";
 
         TraceLog(
@@ -261,8 +235,7 @@ void Game::consultarRankingApi()
 
     TraceLog(LOG_INFO, "===== RANKING =====");
 
-    if (ranking.empty())
-    {
+    if (ranking.empty()) {
         mensajeApi = "API: ranking vacio.";
         TraceLog(LOG_INFO, "Ranking vacio.");
         return;
@@ -270,8 +243,7 @@ void Game::consultarRankingApi()
 
     mensajeApi = "API: ranking consultado. Revisa consola.";
 
-    for (size_t i = 0; i < ranking.size(); ++i)
-    {
+    for (size_t i = 0; i < ranking.size(); ++i) {
         TraceLog(
             LOG_INFO,
             TextFormat(
@@ -285,10 +257,8 @@ void Game::consultarRankingApi()
     }
 }
 
-void Game::resetGame()
-{
-    if (player != nullptr)
-    {
+void Game::resetGame() {
+    if (player != nullptr) {
         delete player;
         player = nullptr;
     }
@@ -301,8 +271,7 @@ void Game::resetGame()
     nitroActive = false;
     nitroTimer = 0.0f;
 
-    if (player != nullptr)
-    {
+    if (player != nullptr) {
         player->setNitro(false);
     }
 
@@ -363,8 +332,7 @@ void Game::resetGame()
     );
 }
 
-void Game::run()
-{
+void Game::run() {
     InitWindow(
         screenWidth,
         screenHeight,
@@ -388,19 +356,18 @@ void Game::run()
     SetTargetFPS(60);
 
     RenderTexture2D target =
-        LoadRenderTexture(
-            screenWidth,
-            screenHeight
-        );
+            LoadRenderTexture(
+                screenWidth,
+                screenHeight
+            );
 
     SetTextureFilter(
         target.texture,
         TEXTURE_FILTER_POINT
     );
 
-    while (!WindowShouldClose() && !shouldCloseGame)
-    {
-    //music
+    while (!WindowShouldClose() && !shouldCloseGame) {
+        //music
         UpdateMusicStream(backgroundMusic);
 
         toggleFullscreen();
@@ -420,8 +387,7 @@ void Game::run()
         drawScaledGame(target);
     }
 
-    if (partidaActiva && !partidaFinalizada)
-    {
+    if (partidaActiva && !partidaFinalizada) {
         finalizarPartidaApi("EXIT");
     }
 
@@ -435,8 +401,7 @@ void Game::run()
 
     UnloadRenderTexture(target);
 
-    if (player != nullptr)
-    {
+    if (player != nullptr) {
         delete player;
         player = nullptr;
     }
@@ -445,40 +410,33 @@ void Game::run()
 }
 
 //fondo imp
-void Game::drawBackground()
-{
+void Game::drawBackground() {
     int etapa = (score / 4000) % 3;
 
     static int etapaAnterior = 0;
 
-    if (etapa != etapaAnterior)
-    {
+    if (etapa != etapaAnterior) {
         transitionAlpha = 0.0f;
         etapaAnterior = etapa;
     }
 
-    Texture2D fondoActual {};
-    Texture2D fondoSiguiente {};
+    Texture2D fondoActual{};
+    Texture2D fondoSiguiente{};
 
-    if (etapa == 0)
-    {
+    if (etapa == 0) {
         fondoActual = fondo1;
         fondoSiguiente = fondo2;
-    }
-    else if (etapa == 1)
-    {
+    } else if (etapa == 1) {
         fondoActual = fondo2;
         fondoSiguiente = fondo3;
-    }
-    else
-    {
+    } else {
         fondoActual = fondo3;
         fondoSiguiente = fondo1;
     }
 
     float scale =
-        static_cast<float>(screenHeight) /
-        static_cast<float>(fondoActual.height);
+            static_cast<float>(screenHeight) /
+            static_cast<float>(fondoActual.height);
 
     bgWidth = fondoActual.width * scale;
 
@@ -505,8 +463,7 @@ void Game::drawBackground()
         WHITE
     );
 
-    if (transitionAlpha > 0.0f)
-    {
+    if (transitionAlpha > 0.0f) {
         DrawTextureEx(
             fondoSiguiente,
             {bgOffset, 0},
@@ -526,12 +483,9 @@ void Game::drawBackground()
 }
 
 
-void Game::toggleFullscreen()
-{
-    if (IsKeyPressed(KEY_F11))
-    {
-        if (!IsWindowFullscreen())
-        {
+void Game::toggleFullscreen() {
+    if (IsKeyPressed(KEY_F11)) {
+        if (!IsWindowFullscreen()) {
             int monitor = GetCurrentMonitor();
 
             SetWindowSize(
@@ -540,9 +494,7 @@ void Game::toggleFullscreen()
             );
 
             ToggleFullscreen();
-        }
-        else
-        {
+        } else {
             ToggleFullscreen();
 
             SetWindowSize(
@@ -553,49 +505,39 @@ void Game::toggleFullscreen()
     }
 }
 
-void Game::updateGame()
-{
-    switch (currentScreen)
-    {
-    case LOGIN:
-        {
+void Game::updateGame() {
+    switch (currentScreen) {
+        case LOGIN: {
             bool continuarPressed =
-                IsKeyPressed(KEY_ENTER) ||
-                (
-                    IsGamepadAvailable(0) &&
+                    IsKeyPressed(KEY_ENTER) ||
                     (
-                        IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN) ||
-                        IsGamepadButtonPressed(0, GAMEPAD_BUTTON_MIDDLE_RIGHT)
-                    )
-                );
+                        IsGamepadAvailable(0) &&
+                        (
+                            IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN) ||
+                            IsGamepadButtonPressed(0, GAMEPAD_BUTTON_MIDDLE_RIGHT)
+                        )
+                    );
 
-            if (continuarPressed)
-            {
+            if (continuarPressed) {
                 currentScreen = MENU;
             }
 
             break;
         }
 
-    case MENU:
-        {
+        case MENU: {
             if (
                 IsKeyPressed(KEY_ONE) ||
                 (
                     IsGamepadAvailable(0) &&
                     IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)
                 )
-            )
-
-            {
-                if (iniciarPartidaApi())
-                {
+            ) {
+                if (iniciarPartidaApi()) {
                     resetGame();
 
                     currentScreen = JUGANDO;
-                }
-                else
-                {
+                } else {
                     mensajeApi = "API: modo prueba local, partida sin servidor.";
 
                     resetGame();
@@ -610,8 +552,7 @@ void Game::updateGame()
                     IsGamepadAvailable(0) &&
                     IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_LEFT)
                 )
-            )
-            {
+            ) {
                 consultarRankingApi();
             }
 
@@ -621,88 +562,73 @@ void Game::updateGame()
                     IsGamepadAvailable(0) &&
                     IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_RIGHT)
                 )
-            )
-            {
+            ) {
                 shouldCloseGame = true;
             }
 
             break;
         }
 
-    case JUGANDO:
-        {
+        case JUGANDO: {
             float deltaTime = GetFrameTime();
 
-        //scrolling imp
+            //scrolling imp
 
-        bgOffset -= 25.0f * deltaTime;
+            bgOffset -= 25.0f * deltaTime;
 
-        if (bgOffset <= -bgWidth)
-        {
-            bgOffset = 0.0f;
-        }
-
-        if (transitionAlpha < 1.0f)
-        {
-            transitionAlpha += 0.5f * deltaTime;
-
-            if (transitionAlpha > 1.0f)
-            {
-                transitionAlpha = 1.0f;
+            if (bgOffset <= -bgWidth) {
+                bgOffset = 0.0f;
             }
-        }
+
+            if (transitionAlpha < 1.0f) {
+                transitionAlpha += 0.5f * deltaTime;
+
+                if (transitionAlpha > 1.0f) {
+                    transitionAlpha = 1.0f;
+                }
+            }
 
             scoreTimer += 100.0f * deltaTime;
 
             score = static_cast<int>(scoreTimer);
             //reportarScoreApiSiCorresponde();
 
-            if (nitroActive)
-            {
+            if (nitroActive) {
                 nitroTimer -= deltaTime;
 
                 globalSpeed += 250.0f * deltaTime;
 
-                if (globalSpeed > maxNitroSpeed)
-                {
+                if (globalSpeed > maxNitroSpeed) {
                     globalSpeed = maxNitroSpeed;
                 }
 
-                if (nitroTimer <= 0.0f)
-                {
+                if (nitroTimer <= 0.0f) {
                     nitroActive = false;
 
-                    if (player != nullptr)
-                    {
+                    if (player != nullptr) {
                         player->setNitro(false);
                     }
                 }
-            }
-            else
-            {
+            } else {
                 globalSpeed += speedIncrement * deltaTime;
 
-                if (globalSpeed > maxNormalSpeed)
-                {
+                if (globalSpeed > maxNormalSpeed) {
                     globalSpeed = maxNormalSpeed;
                 }
             }
 
-            if (player != nullptr)
-            {
+            if (player != nullptr) {
                 player->update(deltaTime);
             }
 
-            for (auto& obs : obstacles)
-            {
+            for (auto &obs: obstacles) {
                 obs.setSpeed(globalSpeed);
 
                 obs.update(deltaTime);
             }
 
 
-            for (auto& coin : coins)
-            {
+            for (auto &coin: coins) {
                 coin.setSpeed(globalSpeed);
 
                 coin.update(deltaTime);
@@ -714,12 +640,10 @@ void Game::updateGame()
                         player->getRect(),
                         coin.getRect()
                     )
-                )
-                {
+                ) {
                     ItemType itemType = coin.getType();
 
-                    if (itemType == ItemType::CREDIT)
-                    {
+                    if (itemType == ItemType::CREDIT) {
                         coinsCollectedThisRun++;
 
                         playerData.totalCoinsCollected++;
@@ -731,22 +655,17 @@ void Game::updateGame()
                             playerData.userId,
                             1
                         );
-                    }
-                    else if (itemType == ItemType::NITRO)
-                    {
+                    } else if (itemType == ItemType::NITRO) {
                         nitroActive = true;
                         nitroTimer = 3.0f;
 
-                        if (player != nullptr)
-                        {
+                        if (player != nullptr) {
                             player->setNitro(true);
                         }
 
                         scoreTimer += 50.0f;
                         score = static_cast<int>(scoreTimer);
-                    }
-                    else if (itemType == ItemType::SHIELD)
-                    {
+                    } else if (itemType == ItemType::SHIELD) {
                         hasShield = true;
 
                         scoreTimer += 50.0f;
@@ -762,21 +681,19 @@ void Game::updateGame()
             break;
         }
 
-    case GAMEOVER:
-        {
+        case GAMEOVER: {
             bool volverMenuPressed =
-    IsKeyPressed(KEY_R) ||
-    (
-        IsGamepadAvailable(0) &&
-        (
-            IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN) ||
-            IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_RIGHT) ||
-            IsGamepadButtonPressed(0, GAMEPAD_BUTTON_MIDDLE_RIGHT)
-        )
-    );
+                    IsKeyPressed(KEY_R) ||
+                    (
+                        IsGamepadAvailable(0) &&
+                        (
+                            IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN) ||
+                            IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_RIGHT) ||
+                            IsGamepadButtonPressed(0, GAMEPAD_BUTTON_MIDDLE_RIGHT)
+                        )
+                    );
 
-            if (volverMenuPressed)
-            {
+            if (volverMenuPressed) {
                 currentScreen = MENU;
             }
 
@@ -785,31 +702,25 @@ void Game::updateGame()
     }
 }
 
-void Game::checkCollisions()
-{
-    if (player == nullptr)
-    {
+void Game::checkCollisions() {
+    if (player == nullptr) {
         return;
     }
 
-    for (auto& obs : obstacles)
-    {
+    for (auto &obs: obstacles) {
         if (
             CheckCollisionRecs(
                 player->getRect(),
                 obs.getRect()
             )
-        )
-        {
-            if (hasShield)
-            {
+        ) {
+            if (hasShield) {
                 hasShield = false;
                 obs.forceRespawn();
                 return;
             }
 
-            if (score > highScore)
-            {
+            if (score > highScore) {
                 highScore = score;
 
                 playerData.highScore = highScore;
@@ -833,12 +744,9 @@ void Game::checkCollisions()
     }
 }
 
-void Game::drawGame()
-{
-    switch (currentScreen)
-    {
-    case LOGIN:
-        {
+void Game::drawGame() {
+    switch (currentScreen) {
+        case LOGIN: {
             DrawText(
                 "CYBER-RUNNER",
                 250,
@@ -858,8 +766,7 @@ void Game::drawGame()
             break;
         }
 
-    case MENU:
-        {
+        case MENU: {
             DrawText(
                 "ACCESO CONCEDIDO",
                 300,
@@ -961,20 +868,16 @@ void Game::drawGame()
             break;
         }
 
-    case JUGANDO:
-        {
-            if (player != nullptr)
-            {
+        case JUGANDO: {
+            if (player != nullptr) {
                 player->draw();
             }
 
-            for (auto& obs : obstacles)
-            {
+            for (auto &obs: obstacles) {
                 obs.draw();
             }
 
-            for (auto& coin : coins)
-            {
+            for (auto &coin: coins) {
                 coin.draw();
             }
 
@@ -994,12 +897,10 @@ void Game::drawGame()
                 nitroActive,
                 hasShield
             );
-            if (hasShield)
-            {
+            if (hasShield) {
                 DrawText("ESCUDO ACTIVO", 600, 45, 15, ORANGE);
 
-                if (player != nullptr)
-                {
+                if (player != nullptr) {
                     Vector2 playerCenter = player->getPosition();
 
                     DrawCircleLines(
@@ -1014,8 +915,7 @@ void Game::drawGame()
             break;
         }
 
-    case GAMEOVER:
-        {
+        case GAMEOVER: {
             DrawText(
                 "SISTEMA CRITICO: GAME OVER",
                 180,
@@ -1037,8 +937,7 @@ void Game::drawGame()
     }
 }
 
-void Game::drawScaledGame(RenderTexture2D& target)
-{
+void Game::drawScaledGame(RenderTexture2D &target) {
     BeginDrawing();
 
     ClearBackground(BLACK);
@@ -1052,10 +951,10 @@ void Game::drawScaledGame(RenderTexture2D& target)
     float scaledHeight = screenHeight * scale;
 
     float offsetX =
-        (GetScreenWidth() - scaledWidth) / 2.0f;
+            (GetScreenWidth() - scaledWidth) / 2.0f;
 
     float offsetY =
-        (GetScreenHeight() - scaledHeight) / 2.0f;
+            (GetScreenHeight() - scaledHeight) / 2.0f;
 
     Rectangle source = {
         0.0f,
