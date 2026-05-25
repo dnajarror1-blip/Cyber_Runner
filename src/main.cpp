@@ -8,6 +8,8 @@
 #include <iostream>
 #include <string>
 
+const bool MODO_PRUEBA_SIN_API = true;
+
 int main()
 {
     ApiClient api(
@@ -18,7 +20,7 @@ int main()
 
     std::string errorConexion;
 
-    if (!api.probarConexion(errorConexion)) {
+    if (!MODO_PRUEBA_SIN_API && !api.probarConexion(errorConexion)) {
         std::cout << "No se pudo conectar con la API." << std::endl;
         std::cout << "URL: " << GameApiConfig::BASE_URL << std::endl;
         std::cout << "Detalle: " << errorConexion << std::endl;
@@ -29,34 +31,41 @@ int main()
 
     Game game(api);
 
-    std::string username;
-    std::string password;
-    std::string error;
+    if (!MODO_PRUEBA_SIN_API)
+    {
+        std::string username;
+        std::string password;
+        std::string error;
 
-    std::cout << "===== LOGIN =====" << std::endl;
-    std::cout << "Usuario: ";
-    std::cin >> username;
+        std::cout << "===== LOGIN =====" << std::endl;
+        std::cout << "Usuario: ";
+        std::cin >> username;
 
-    std::cout << "Password: ";
-    std::cin >> password;
+        std::cout << "Password: ";
+        std::cin >> password;
 
-    bool ok =
-        login.iniciarSesion(
-            username,
-            password,
-            error
-        );
+        bool ok =
+            login.iniciarSesion(
+                username,
+                password,
+                error
+            );
 
-    if (!ok) {
-        std::cout << "LOGIN ERROR: " << error << std::endl;
-        std::cout << "No se puede abrir el juego sin sesion activa." << std::endl;
-        return 0;
+        if (!ok) {
+            std::cout << "LOGIN ERROR: " << error << std::endl;
+            std::cout << "No se puede abrir el juego sin sesion activa." << std::endl;
+            return 0;
+        }
+
+        std::cout << "LOGIN OK" << std::endl;
+
+        UsuarioApi usuario = login.getUsuarioActual();
+        game.setUsuario(usuario);
     }
-
-    std::cout << "LOGIN OK" << std::endl;
-
-    UsuarioApi usuario = login.getUsuarioActual();
-    game.setUsuario(usuario);
+    else
+    {
+        std::cout << "MODO PRUEBA SIN API ACTIVADO." << std::endl;
+    }
 
     game.run();
 

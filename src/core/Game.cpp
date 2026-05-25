@@ -467,6 +467,14 @@ void Game::updateGame()
 
                     currentScreen = JUGANDO;
                 }
+                else
+                {
+                    mensajeApi = "API: modo prueba local, partida sin servidor.";
+
+                    resetGame();
+
+                    currentScreen = JUGANDO;
+                }
             }
 
             if (IsKeyPressed(KEY_THREE))

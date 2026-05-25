@@ -22,7 +22,15 @@ Player::~Player()
 
 void Player::update(float deltaTime)
 {
-    if (IsKeyPressed(KEY_SPACE) && saltosDisponibles > 0)
+    bool jumpPressed =
+    IsKeyPressed(KEY_SPACE) ||
+    (
+        IsGamepadAvailable(0) &&
+        IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)
+    );
+
+    if (jumpPressed && saltosDisponibles > 0)
+
     {
         velocidadY =
             (hasNitro && saltosDisponibles == 1)
@@ -34,7 +42,17 @@ void Player::update(float deltaTime)
         enSuelo = false;
     }
 
-    if (!enSuelo && IsKeyDown(KEY_DOWN))
+    bool fastFallPressed =
+    IsKeyDown(KEY_DOWN) ||
+    (
+        IsGamepadAvailable(0) &&
+        (
+            IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_DOWN) ||
+            GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_Y) > 0.5f
+        )
+    );
+
+    if (!enSuelo && fastFallPressed)
     {
         velocidadY = fastFallSpeed;
     }
