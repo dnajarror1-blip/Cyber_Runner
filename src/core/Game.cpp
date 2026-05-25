@@ -449,7 +449,17 @@ void Game::updateGame()
     {
     case LOGIN:
         {
-            if (IsKeyPressed(KEY_ENTER))
+            bool continuarPressed =
+                IsKeyPressed(KEY_ENTER) ||
+                (
+                    IsGamepadAvailable(0) &&
+                    (
+                        IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN) ||
+                        IsGamepadButtonPressed(0, GAMEPAD_BUTTON_MIDDLE_RIGHT)
+                    )
+                );
+
+            if (continuarPressed)
             {
                 currentScreen = MENU;
             }
@@ -459,30 +469,49 @@ void Game::updateGame()
 
     case MENU:
         {
-            if (IsKeyPressed(KEY_ONE))
-{
-    if (iniciarPartidaApi())
-    {
-        resetGame();
+            if (
+                IsKeyPressed(KEY_ONE) ||
+                (
+                    IsGamepadAvailable(0) &&
+                    IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)
+                )
+            )
 
-        currentScreen = JUGANDO;
-    }
-    else
-    {
-        mensajeApi = "API: modo prueba local, partida sin servidor.";
+            {
+                if (iniciarPartidaApi())
+                {
+                    resetGame();
 
-        resetGame();
+                    currentScreen = JUGANDO;
+                }
+                else
+                {
+                    mensajeApi = "API: modo prueba local, partida sin servidor.";
 
-        currentScreen = JUGANDO;
-    }
-}
+                    resetGame();
 
-            if (IsKeyPressed(KEY_THREE))
+                    currentScreen = JUGANDO;
+                }
+            }
+
+            if (
+                IsKeyPressed(KEY_THREE) ||
+                (
+                    IsGamepadAvailable(0) &&
+                    IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_LEFT)
+                )
+            )
             {
                 consultarRankingApi();
             }
 
-            if (IsKeyPressed(KEY_FOUR))
+            if (
+                IsKeyPressed(KEY_FOUR) ||
+                (
+                    IsGamepadAvailable(0) &&
+                    IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_RIGHT)
+                )
+            )
             {
                 shouldCloseGame = true;
             }
@@ -606,7 +635,18 @@ void Game::updateGame()
 
     case GAMEOVER:
         {
-            if (IsKeyPressed(KEY_R))
+            bool volverMenuPressed =
+    IsKeyPressed(KEY_R) ||
+    (
+        IsGamepadAvailable(0) &&
+        (
+            IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN) ||
+            IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_RIGHT) ||
+            IsGamepadButtonPressed(0, GAMEPAD_BUTTON_MIDDLE_RIGHT)
+        )
+    );
+
+            if (volverMenuPressed)
             {
                 currentScreen = MENU;
             }
@@ -772,12 +812,12 @@ void Game::drawGame()
             );
 
             DrawText(
-    TextFormat("COSTO POR PARTIDA: %i CREDITO(S)", gameCost),
-    250,
-    380,
-    15,
-    NEO_YELLOW
-);
+                TextFormat("COSTO POR PARTIDA: %i CREDITO(S)", gameCost),
+                250,
+                380,
+                15,
+                NEO_YELLOW
+            );
 
             DrawText(
                 mensajeApi.c_str(),
