@@ -6,6 +6,7 @@
 #include "entities/Coin.h"
 #include "data/DataManager.h"
 #include "data/PlayerData.h"
+#include "audio/AudioManager.h"
 #include "../../api/ApiClient.h"
 
 #include <vector>
@@ -43,6 +44,8 @@ private:
     const float groundY = 350.0f;
 
     Music backgroundMusic{};
+
+    AudioManager audioManager;
 
     const int screenWidth = 800;
     const int screenHeight = 450;

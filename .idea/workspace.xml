@@ -29,10 +29,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6ddf144c-c33f-411d-9357-7ea431bb52dd" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/include/audio/AudioManager.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/audio/AudioManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/Musica/fondo.wav.wav" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/include/core/Game.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/core/Game.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/include/entities/Obstacle.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/entities/Obstacle.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/entities/Player.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/entities/Player.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/core/Game.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/Game.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/entities/Obstacle.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/Obstacle.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/Player.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/Player.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,12 +59,12 @@
     &quot;assignee&quot;: &quot;dnajarror1-blip&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/dnajarror1-blip/Cyber_Runner.git",
-    "accountId": "a7c65cdb-9ce9-40b4-9acc-f7876f6f3266"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/dnajarror1-blip/Cyber_Runner.git&quot;,
+    &quot;accountId&quot;: &quot;a7c65cdb-9ce9-40b4-9acc-f7876f6f3266&quot;
   }
-}]]></component>
+}</component>
   <component name="MacroExpansionManager">
     <option name="directoryName" value="VtVxoQfU" />
   </component>
@@ -99,6 +106,11 @@
   }
 }</component>
   <component name="RunManager">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="CMakeBoostTestRunConfigurationType" factoryName="Boost Test" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" TEST_MODE="SUITE_TEST">
       <method v="2">
         <option name="BeforeTestRunTask" enabled="true" />
@@ -124,11 +136,6 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -142,6 +149,7 @@
       <workItem from="1779754981298" duration="788000" />
       <workItem from="1779755777298" duration="508000" />
       <workItem from="1779761362417" duration="3199000" />
+      <workItem from="1779771286885" duration="2108000" />
     </task>
     <servers />
   </component>

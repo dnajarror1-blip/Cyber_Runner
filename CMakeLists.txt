@@ -19,10 +19,12 @@ add_executable(Cyber_Runner
         src/entities/Coin.cpp
         src/ui/HUD.cpp
         src/data/DataManager.cpp
+        src/audio/AudioManager.cpp
 
         include/entities/Coin.h
         include/data/DataManager.h
         include/data/PlayerData.h
+        include/audio/AudioManager.h
 
         api/ApiClient.cpp
         api/ApiClient.h
@@ -30,6 +32,7 @@ add_executable(Cyber_Runner
 
         auth/LoginManager.cpp
         auth/LoginManager.h
+
 
 )
 

@@ -22,6 +22,14 @@ private:
 
     bool hasNitro = false;
 
+    bool jumpEvent = false;
+
+    bool doubleJumpEvent = false;
+
+    bool landingEvent = false;
+
+    bool wasInAir = false;
+
     Texture2D run1 {};
     Texture2D run2 {};
     Texture2D run3 {};
@@ -56,4 +64,13 @@ public:
     void setNitro(bool active);
 
     bool isNitroActive() const;
+
+    bool detectJumpStart();
+
+    bool detectDoubleJump();
+
+    bool detectLanding();
+
+    bool isGrounded() const;
+
 };

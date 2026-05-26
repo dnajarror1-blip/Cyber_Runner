@@ -42,4 +42,6 @@ public:
 
     // Devuelve el rectángulo para detectar choques
     Rectangle getRect();
+
+    ObstacleType getType() const;
 };

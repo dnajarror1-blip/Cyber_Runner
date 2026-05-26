@@ -1,3 +1,4 @@
+#include "audio/AudioManager.h"
 #include <core/Game.h>
 #include <algorithm>
 #include "../../api/GameApiConfig.h"
@@ -344,6 +345,8 @@ void Game::run() {
 
     InitAudioDevice();
 
+    audioManager.load();
+
     backgroundMusic = LoadMusicStream("assets/music/fondo.ogg");
 
     PlayMusicStream(backgroundMusic);
@@ -379,6 +382,8 @@ void Game::run() {
         //music
         UpdateMusicStream(backgroundMusic);
 
+        audioManager.update();
+
         toggleFullscreen();
 
         updateGame();
@@ -409,6 +414,8 @@ void Game::run() {
     UnloadTexture(foregroundTexture);
 
     UnloadMusicStream(backgroundMusic);
+
+    audioManager.unload();
 
     CloseAudioDevice();
 
@@ -638,6 +645,7 @@ void Game::updateGame() {
         }
 
         case CONFIRMAR_SALIDA: {
+            audioManager.stopRunning();
             bool confirmarSalida =
                     IsKeyPressed(KEY_ENTER) ||
                     IsKeyPressed(KEY_Y) ||
@@ -737,6 +745,30 @@ void Game::updateGame() {
                 player->update(deltaTime);
             }
 
+            if (player->detectJumpStart())
+            {
+                audioManager.playJump();
+            }
+
+            if (player->detectDoubleJump())
+            {
+                audioManager.playDoubleJump();
+            }
+
+            if (player->detectLanding())
+            {
+                audioManager.playLanding();
+            }
+
+            if (player->isGrounded())
+            {
+                audioManager.startRunning();
+            }
+            else
+            {
+                audioManager.stopRunning();
+            }
+
             for (auto &obs: obstacles) {
                 obs.setSpeed(globalSpeed);
 
@@ -760,6 +792,7 @@ void Game::updateGame() {
                     ItemType itemType = coin.getType();
 
                     if (itemType == ItemType::CREDIT) {
+                        audioManager.playCoin();
                         coinsCollectedThisRun++;
 
                         playerData.totalCoinsCollected++;
@@ -783,6 +816,8 @@ void Game::updateGame() {
                         score = static_cast<int>(scoreTimer);
                     } else if (itemType == ItemType::SHIELD) {
                         hasShield = true;
+
+                        audioManager.playShield();
 
                         scoreTimer += 50.0f;
                         score = static_cast<int>(scoreTimer);
@@ -850,25 +885,46 @@ void Game::updateGame() {
     }
 }
 
-void Game::checkCollisions() {
-    if (player == nullptr) {
+void Game::checkCollisions()
+{
+    if (player == nullptr)
+    {
         return;
     }
 
-    for (auto &obs: obstacles) {
+    for (auto &obs: obstacles)
+    {
         if (
             CheckCollisionRecs(
                 player->getRect(),
                 obs.getRect()
             )
-        ) {
-            if (hasShield) {
+        )
+        {
+            if (obs.getType() == ObstacleType::AIR)
+            {
+                audioManager.playDroneImpact();
+            }
+            else
+            {
+                audioManager.playBoxImpact();
+            }
+
+            if (hasShield)
+            {
                 hasShield = false;
+
                 obs.forceRespawn();
+
                 return;
             }
 
-            if (score > highScore) {
+            audioManager.stopRunning();
+
+            audioManager.playGameOver();
+
+            if (score > highScore)
+            {
                 highScore = score;
 
                 playerData.highScore = highScore;
@@ -887,6 +943,7 @@ void Game::checkCollisions() {
             finalizarPartidaApi("LOSE");
 
             currentScreen = GAMEOVER;
+
             return;
         }
     }
@@ -915,6 +972,7 @@ void Game::drawGame() {
         }
 
         case MENU: {
+            audioManager.stopRunning();
             DrawText(
                 "ACCESO CONCEDIDO",
                 300,
@@ -1122,6 +1180,7 @@ void Game::drawGame() {
             break;
         }
         case PAUSA: {
+            audioManager.stopRunning();
             DrawRectangle(
                 0,
                 0,
@@ -1182,6 +1241,7 @@ void Game::drawGame() {
         }
 
         case GAMEOVER: {
+            audioManager.stopRunning();
             DrawText(
                 "SISTEMA CRITICO: GAME OVER",
                 180,

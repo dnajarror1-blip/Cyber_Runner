@@ -185,4 +185,10 @@ void Obstacle::forceRespawn()
 
         type = ObstacleType::GROUND;
     }
+
+
+}
+ObstacleType Obstacle::getType() const
+{
+    return type;
 }
