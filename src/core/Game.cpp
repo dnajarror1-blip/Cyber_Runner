@@ -18,6 +18,9 @@ Game::Game(ApiClient &apiClient)
     bgOffset = 0.0f;
     bgWidth = 0.0f;
 
+    foregroundOffset = 0.0f;
+    foregroundWidth = 0.0f;
+
     globalSpeed = 350.0f;
     speedIncrement = 30.0f;
 
@@ -348,6 +351,12 @@ void Game::run() {
     fondo1 = LoadTexture("assets/textures/fondocyber.png");
     fondo2 = LoadTexture("assets/textures/fondocyber2.png");
     fondo3 = LoadTexture("assets/textures/fondocyber3.png");
+    foregroundTexture = LoadTexture("assets/textures/foreground.png");
+
+    SetTextureFilter(
+    foregroundTexture,
+    TEXTURE_FILTER_POINT
+);
 
     player = new Player();
 
@@ -380,6 +389,8 @@ void Game::run() {
 
         drawBackground(); //fondo imp
 
+        drawForeground(); // foregorung
+
         drawGame();
 
         EndTextureMode();
@@ -394,6 +405,8 @@ void Game::run() {
     UnloadTexture(fondo1);
     UnloadTexture(fondo2);
     UnloadTexture(fondo3);
+
+    UnloadTexture(foregroundTexture);
 
     UnloadMusicStream(backgroundMusic);
 
@@ -482,6 +495,61 @@ void Game::drawBackground() {
     }
 }
 
+void Game::drawForeground()
+{
+    if (foregroundTexture.id == 0)
+    {
+        return;
+    }
+
+    const float foregroundHeight = 100.0f;
+
+    const float scale =
+        foregroundHeight /
+        static_cast<float>(foregroundTexture.height);
+
+    foregroundWidth =
+        static_cast<float>(foregroundTexture.width) * scale;
+
+    Rectangle source = {
+        0.0f,
+        0.0f,
+        static_cast<float>(foregroundTexture.width),
+        static_cast<float>(foregroundTexture.height)
+    };
+
+    Rectangle dest1 = {
+        foregroundOffset,
+        groundY,
+        foregroundWidth,
+        foregroundHeight
+    };
+
+    Rectangle dest2 = {
+        foregroundOffset + foregroundWidth,
+        groundY,
+        foregroundWidth,
+        foregroundHeight
+    };
+
+    DrawTexturePro(
+        foregroundTexture,
+        source,
+        dest1,
+        {0,0},
+        0.0f,
+        WHITE
+    );
+
+    DrawTexturePro(
+        foregroundTexture,
+        source,
+        dest2,
+        {0,0},
+        0.0f,
+        WHITE
+    );
+}
 
 void Game::toggleFullscreen() {
     if (IsKeyPressed(KEY_F11)) {
@@ -617,8 +685,15 @@ void Game::updateGame() {
 
             bgOffset -= 25.0f * deltaTime;
 
+            foregroundOffset -= globalSpeed * 0.35f * deltaTime;
+
             if (bgOffset <= -bgWidth) {
                 bgOffset = 0.0f;
+            }
+
+            if (foregroundOffset <= -foregroundWidth)
+            {
+                foregroundOffset = 0.0f;
             }
 
             if (transitionAlpha < 1.0f) {
@@ -1013,13 +1088,13 @@ void Game::drawGame() {
                 coin.draw();
             }
 
-            DrawLine(
-                0,
-                350,
-                800,
-                350,
-                NEO_MAGENTA
-            );
+            //DrawLine(
+            //    0,
+            //    350,
+            //    800,
+            //    350,
+            //    NEO_MAGENTA
+            //);
 
             hud.drawGameHUD(
                 globalSpeed,

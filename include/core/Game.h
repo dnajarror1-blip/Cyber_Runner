@@ -25,11 +25,22 @@ class Game {
 private:
     // fondo imp
     float transitionAlpha;
+
     float bgOffset;
     float bgWidth;
+
     Texture2D fondo1{};
     Texture2D fondo2{};
     Texture2D fondo3{};
+
+    // foregournd
+    Texture2D foregroundTexture{};
+
+    float foregroundOffset;
+    float foregroundWidth;
+
+    // hitbox visual del juego
+    const float groundY = 350.0f;
 
     Music backgroundMusic{};
 
@@ -94,6 +105,7 @@ private:
     void drawGame();
 
     void drawBackground(); //fondo
+    void drawForeground(); //foreground
     void drawScaledGame(RenderTexture2D &target);
 
     void checkCollisions();

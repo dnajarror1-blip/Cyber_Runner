@@ -5,6 +5,7 @@ Obstacle::Obstacle(float x, float y, float width, float height, float speed) {
     this->speed = speed;
 
     droneTexture = LoadTexture("assets/dron.png");
+    groundTexture = LoadTexture("assets/groundobstacle.png");
 
     if (rect.y < 300) {
         type = ObstacleType::AIR;
@@ -19,6 +20,10 @@ Obstacle::~Obstacle()
     {
         UnloadTexture(droneTexture);
     }
+    if (groundTexture.id)
+    {
+        UnloadTexture(groundTexture);
+    }
 }
 
 Obstacle::Obstacle(Obstacle&& other) noexcept
@@ -27,8 +32,10 @@ Obstacle::Obstacle(Obstacle&& other) noexcept
     speed = other.speed;
     type = other.type;
     droneTexture = other.droneTexture;
+    groundTexture = other.groundTexture;
 
     other.droneTexture = {};
+    other.groundTexture = {};
 }
 
 Obstacle& Obstacle::operator=(Obstacle&& other) noexcept
@@ -38,6 +45,10 @@ Obstacle& Obstacle::operator=(Obstacle&& other) noexcept
         if (droneTexture.id)
         {
             UnloadTexture(droneTexture);
+        }
+        if (groundTexture.id)
+        {
+            UnloadTexture(groundTexture);
         }
 
         rect = other.rect;
@@ -82,10 +93,10 @@ void Obstacle::setSpeed(float newSpeed) {
     this->speed = newSpeed;
 }
 
-void Obstacle::draw() {
-    // Dibujamos de distinto color para saber qué tipo de obstáculo es
-    if (type == ObstacleType::AIR) {
-
+void Obstacle::draw()
+{
+    if (type == ObstacleType::AIR)
+    {
         if (droneTexture.id == 0)
         {
             DrawRectangleRec(rect, YELLOW);
@@ -114,9 +125,39 @@ void Obstacle::draw() {
             0.0f,
             WHITE
         );
+    }
+    else
+    {
+        if (groundTexture.id == 0)
+        {
+            DrawRectangleRec(rect, MAGENTA);
+            return;
+        }
 
-    } else {
-        DrawRectangleRec(rect, MAGENTA);
+        Rectangle source = {
+            0,
+            0,
+            (float)groundTexture.width,
+            (float)groundTexture.height
+        };
+
+        Rectangle dest = {
+            rect.x,
+            rect.y,
+            rect.width,
+            rect.height
+        };
+
+        DrawTexturePro(
+            groundTexture,
+            source,
+            dest,
+            {0,0},
+            0.0f,
+            WHITE
+        );
+
+        // DrawRectangleLinesEx(rect, 1, RED);
     }
 }
 

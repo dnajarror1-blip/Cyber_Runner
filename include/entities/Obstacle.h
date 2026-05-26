@@ -15,6 +15,7 @@ private:
     ObstacleType type;
 
     Texture2D droneTexture {};
+    Texture2D groundTexture {};
 
 public:
     // El constructor que ya tenías
