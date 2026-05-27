@@ -12,6 +12,7 @@
 #include <vector>
 #include <string>
 #include <chrono>
+#include <future>
 
 enum GameScreen {
     LOGIN,
@@ -81,6 +82,8 @@ private:
 
     std::chrono::steady_clock::time_point inicioPartida;
 
+    std::vector<std::future<std::string>> finalizacionesPartidaPendientes;
+
     // OWNER ARCHITECTURE
     Player *player;
 
@@ -118,6 +121,10 @@ private:
     void reportarScoreApiSiCorresponde();
 
     void finalizarPartidaApi(const std::string &resultado);
+
+    void finalizarPartidaApiAsync(const std::string &resultado);
+
+    void limpiarFinalizacionesPartidaTerminadas();
 
     int calcularTokensGanados(int scoreFinal) const;
 

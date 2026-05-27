@@ -1,6 +1,7 @@
 #include "audio/AudioManager.h"
 #include <core/Game.h>
 #include <algorithm>
+#include <exception>
 #include "../../api/GameApiConfig.h"
 // Paleta de Colores Neón
 const Color NEO_CYAN = {0, 255, 255, 255};
@@ -209,6 +210,94 @@ void Game::finalizarPartidaApi(const std::string &resultado) {
 
     partidaFinalizada = true;
     partidaActiva = false;
+}
+
+void Game::finalizarPartidaApiAsync(const std::string &resultado) {
+    if (!partidaActiva || partidaFinalizada) {
+        return;
+    }
+
+    auto finPartida = std::chrono::steady_clock::now();
+
+    int duracionSegundos = static_cast<int>(
+        std::chrono::duration_cast<std::chrono::seconds>(
+            finPartida - inicioPartida
+        ).count()
+    );
+
+    long long idPartida = partidaActual.idPartida;
+    int scoreFinal = score;
+    int nivelFinal = nivelActual;
+    int ultimoScoreFinalReportado = ultimoScoreReportado;
+    int tokensGanados = calcularTokensGanados(scoreFinal);
+    std::string resultadoFinal = resultado;
+
+    partidaFinalizada = true;
+    partidaActiva = false;
+    mensajeApi = "API: finalizando partida...";
+
+    finalizacionesPartidaPendientes.push_back(
+        std::async(
+            std::launch::async,
+            [this,
+             idPartida,
+             scoreFinal,
+             nivelFinal,
+             ultimoScoreFinalReportado,
+             duracionSegundos,
+             tokensGanados,
+             resultadoFinal]() -> std::string {
+                try {
+                    if (scoreFinal > ultimoScoreFinalReportado) {
+                        std::string errorScoreFinal;
+
+                        api.reportarScore(
+                            idPartida,
+                            scoreFinal,
+                            nivelFinal,
+                            errorScoreFinal
+                        );
+                    }
+
+                    std::string error;
+
+                    bool ok = api.finalizarPartida(
+                        idPartida,
+                        scoreFinal,
+                        nivelFinal,
+                        resultadoFinal,
+                        duracionSegundos,
+                        tokensGanados,
+                        error
+                    );
+
+                    if (ok) {
+                        return "API: partida finalizada. Tokens ganados: " +
+                               std::to_string(tokensGanados);
+                    }
+
+                    return "API: no se pudo finalizar partida.";
+                } catch (const std::exception &e) {
+                    return std::string("API: error finalizando partida: ") + e.what();
+                } catch (...) {
+                    return "API: error desconocido finalizando partida.";
+                }
+            }
+        )
+    );
+}
+
+void Game::limpiarFinalizacionesPartidaTerminadas() {
+    auto it = finalizacionesPartidaPendientes.begin();
+
+    while (it != finalizacionesPartidaPendientes.end()) {
+        if (it->wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
+            mensajeApi = it->get();
+            it = finalizacionesPartidaPendientes.erase(it);
+        } else {
+            ++it;
+        }
+    }
 }
 
 void Game::consultarRankingApi() {
@@ -581,6 +670,8 @@ void Game::toggleFullscreen() {
 }
 
 void Game::updateGame() {
+    limpiarFinalizacionesPartidaTerminadas();
+
     switch (currentScreen) {
         case LOGIN: {
             bool continuarPressed =
@@ -940,7 +1031,7 @@ void Game::checkCollisions()
                 coinsCollectedThisRun
             );
 
-            finalizarPartidaApi("LOSE");
+            finalizarPartidaApiAsync("LOSE");
 
             currentScreen = GAMEOVER;
 

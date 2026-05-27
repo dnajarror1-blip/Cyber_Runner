@@ -1,0 +1,86 @@
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"BackendCodeEditorMiscSettings\">\r\n    <option name=\"/Default/Housekeeping/FeatureSuggestion/FeatureSuggestionManager/DisabledSuggesters/=SwitchToGoToActionSuggester/@EntryIndexedValue\" value=\"true\" type=\"bool\" />\r\n    <option name=\"/Default/Housekeeping/GlobalSettingsUpgraded/IsUpgraded/@EntryValue\" value=\"true\" type=\"bool\" />\r\n    <option name=\"/Default/RiderDebugger/RiderRestoreDecompile/RestoreDecompileSetting/@EntryValue\" value=\"false\" type=\"bool\" />\r\n  </component>\r\n  <component name=\"CMakePresetLoader\">{\r\n  &quot;useNewFormat&quot;: true\r\n}</component>\r\n  <component name=\"CMakeProjectFlavorService\">\r\n    <option name=\"flavorId\" value=\"CMakePlainProjectFlavor\" />\r\n  </component>\r\n  <component name=\"CMakeReloadState\">\r\n    <option name=\"reloaded\" value=\"true\" />\r\n  </component>\r\n  <component name=\"CMakeRunConfigurationManager\">\r\n    <generated>\r\n      <config projectName=\"Cyber_Runner\" targetName=\"Cyber_Runner\" />\r\n    </generated>\r\n  </component>\r\n  <component name=\"CMakeSettings\">\r\n    <configurations>\r\n      <configuration PROFILE_NAME=\"Debug\" ENABLED=\"true\" CONFIG_NAME=\"Debug\" GENERATION_OPTIONS=\"-G Ninja -DCMAKE_PREFIX_PATH=C:/msys64/ucrt64 -DOPENSSL_ROOT_DIR=C:/msys64/ucrt64\" />\r\n    </configurations>\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"6ddf144c-c33f-411d-9357-7ea431bb52dd\" name=\"Changes\" comment=\"\">\r\n      <change beforePath=\"$PROJECT_DIR$/include/core/Game.h\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/include/core/Game.h\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/include/entities/Obstacle.h\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/include/entities/Obstacle.h\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/core/Game.cpp\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/core/Game.cpp\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/entities/Obstacle.cpp\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/entities/Obstacle.cpp\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"ClangdSettings\">\r\n    <option name=\"formatViaClangd\" value=\"false\" />\r\n  </component>\r\n  <component name=\"ExecutionTargetManager\" SELECTED_TARGET=\"CMakeBuildProfile:Debug\" />\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"GitHubPullRequestSearchHistory\">{\r\n  &quot;lastFilter&quot;: {\r\n    &quot;state&quot;: &quot;OPEN&quot;,\r\n    &quot;assignee&quot;: &quot;dnajarror1-blip&quot;\r\n  }\r\n}</component>\r\n  <component name=\"GithubPullRequestsUISettings\"><![CDATA[{\r\n  \"selectedUrlAndAccountId\": {\r\n    \"url\": \"https://github.com/dnajarror1-blip/Cyber_Runner.git\",\r\n    \"accountId\": \"a7c65cdb-9ce9-40b4-9acc-f7876f6f3266\"\r\n  }\r\n}]]></component>\r\n  <component name=\"MacroExpansionManager\">\r\n    <option name=\"directoryName\" value=\"VtVxoQfU\" />\r\n  </component>\r\n  <component name=\"ProjectApplicationVersion\">\r\n    <option name=\"ide\" value=\"CLion\" />\r\n    <option name=\"majorVersion\" value=\"2026\" />\r\n    <option name=\"minorVersion\" value=\"1.2\" />\r\n    <option name=\"productBranch\" value=\"Classic\" />\r\n  </component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;associatedIndex&quot;: 8,\r\n  &quot;fromUser&quot;: false\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"3EErbUdAnLbuOOsPmFnGrVi6w7q\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">{\r\n  &quot;keyToString&quot;: {\r\n    &quot;CMake Application.Cyber_Runner.executor&quot;: &quot;Run&quot;,\r\n    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.RadMigrateCodeStyle&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.west.config.association.type.startup.service&quot;: &quot;true&quot;,\r\n    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,\r\n    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,\r\n    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,\r\n    &quot;git-widget-placeholder&quot;: &quot;main&quot;,\r\n    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,\r\n    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,\r\n    &quot;settings.editor.selected.configurable&quot;: &quot;CMakeSettings&quot;,\r\n    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;\r\n  }\r\n}</component>\r\n  <component name=\"RunManager\">\r\n    <configuration default=\"true\" type=\"CMakeBoostTestRunConfigurationType\" factoryName=\"Boost Test\" REDIRECT_INPUT=\"false\" ELEVATE=\"false\" USE_EXTERNAL_CONSOLE=\"false\" EMULATE_TERMINAL=\"false\" PASS_PARENT_ENVS_2=\"true\" TEST_MODE=\"SUITE_TEST\">\r\n      <method v=\"2\">\r\n        <option name=\"BeforeTestRunTask\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration default=\"true\" type=\"CMakeCatchTestRunConfigurationType\" factoryName=\"Catch Test\" REDIRECT_INPUT=\"false\" ELEVATE=\"false\" USE_EXTERNAL_CONSOLE=\"false\" EMULATE_TERMINAL=\"false\" PASS_PARENT_ENVS_2=\"true\" TEST_MODE=\"SUITE_TEST\">\r\n      <method v=\"2\">\r\n        <option name=\"BeforeTestRunTask\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration default=\"true\" type=\"CMakeDoctestTestRunConfigurationType\" factoryName=\"doctest Test\" REDIRECT_INPUT=\"false\" ELEVATE=\"false\" USE_EXTERNAL_CONSOLE=\"false\" EMULATE_TERMINAL=\"false\" PASS_PARENT_ENVS_2=\"true\" TEST_MODE=\"SUITE_TEST\">\r\n      <method v=\"2\">\r\n        <option name=\"BeforeTestRunTask\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration default=\"true\" type=\"CMakeGoogleTestRunConfigurationType\" factoryName=\"Google Test\" REDIRECT_INPUT=\"false\" ELEVATE=\"false\" USE_EXTERNAL_CONSOLE=\"false\" EMULATE_TERMINAL=\"false\" PASS_PARENT_ENVS_2=\"true\" TEST_MODE=\"SUITE_TEST\">\r\n      <method v=\"2\">\r\n        <option name=\"BeforeTestRunTask\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"Cyber_Runner\" type=\"CMakeRunConfiguration\" factoryName=\"Application\" REDIRECT_INPUT=\"false\" ELEVATE=\"false\" USE_EXTERNAL_CONSOLE=\"false\" EMULATE_TERMINAL=\"false\" PASS_PARENT_ENVS_2=\"true\" PROJECT_NAME=\"Cyber_Runner\" TARGET_NAME=\"Cyber_Runner\" CONFIG_NAME=\"Debug\" RUN_TARGET_PROJECT_NAME=\"Cyber_Runner\" RUN_TARGET_NAME=\"Cyber_Runner\">\r\n      <method v=\"2\">\r\n        <option name=\"com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration default=\"true\" type=\"CMakeRunConfiguration\" factoryName=\"Application\" REDIRECT_INPUT=\"false\" ELEVATE=\"false\" USE_EXTERNAL_CONSOLE=\"false\" EMULATE_TERMINAL=\"false\" PASS_PARENT_ENVS_2=\"true\">\r\n      <method v=\"2\">\r\n        <option name=\"com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n  </component>\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"6ddf144c-c33f-411d-9357-7ea431bb52dd\" name=\"Changes\" comment=\"\" />\r\n      <created>1779754640708</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1779754640708</updated>\r\n      <workItem from=\"1779754641815\" duration=\"7000\" />\r\n      <workItem from=\"1779754800308\" duration=\"109000\" />\r\n      <workItem from=\"1779754981298\" duration=\"788000\" />\r\n      <workItem from=\"1779755777298\" duration=\"508000\" />\r\n      <workItem from=\"1779761362417\" duration=\"3199000\" />\r\n    </task>\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"VCPKGProject\">\r\n    <isAutomaticCheckingOnLaunch value=\"false\" />\r\n    <isAutomaticFoundErrors value=\"true\" />\r\n    <isAutomaticReloadCMake value=\"true\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision aabbc4e08fa82547b5a61e03b3ecaaec9b71a918)
++++ b/.idea/workspace.xml	(date 1779773548273)
+@@ -29,10 +29,8 @@
+   </component>
+   <component name="ChangeListManager">
+     <list default="true" id="6ddf144c-c33f-411d-9357-7ea431bb52dd" name="Changes" comment="">
+-      <change beforePath="$PROJECT_DIR$/include/core/Game.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/core/Game.h" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/include/entities/Obstacle.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/entities/Obstacle.h" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/core/Game.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/Game.cpp" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/entities/Obstacle.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/Obstacle.cpp" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -45,6 +43,7 @@
+   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+   <component name="Git.Settings">
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
++    <option name="UPDATE_TYPE" value="REBASE" />
+   </component>
+   <component name="GitHubPullRequestSearchHistory">{
+   &quot;lastFilter&quot;: {
+@@ -55,7 +54,7 @@
+   <component name="GithubPullRequestsUISettings"><![CDATA[{
+   "selectedUrlAndAccountId": {
+     "url": "https://github.com/dnajarror1-blip/Cyber_Runner.git",
+-    "accountId": "a7c65cdb-9ce9-40b4-9acc-f7876f6f3266"
++    "accountId": "d16b615f-4628-4a27-ab3b-e7e135153f8a"
+   }
+ }]]></component>
+   <component name="MacroExpansionManager">
+@@ -120,11 +119,6 @@
+       </method>
+     </configuration>
+     <configuration name="Cyber_Runner" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Cyber_Runner" TARGET_NAME="Cyber_Runner" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Cyber_Runner" RUN_TARGET_NAME="Cyber_Runner">
+-      <method v="2">
+-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+-      </method>
+-    </configuration>
+-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
+       <method v="2">
+         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+       </method>
+@@ -142,6 +136,7 @@
+       <workItem from="1779754981298" duration="788000" />
+       <workItem from="1779755777298" duration="508000" />
+       <workItem from="1779761362417" duration="3199000" />
++      <workItem from="1779772953342" duration="594000" />
+     </task>
+     <servers />
+   </component>
+@@ -152,5 +147,6 @@
+     <isAutomaticCheckingOnLaunch value="false" />
+     <isAutomaticFoundErrors value="true" />
+     <isAutomaticReloadCMake value="true" />
++    <isAutomaticBootstrapAfterUpdate value="false" />
+   </component>
+ </project>
+\ No newline at end of file
+Index: .idea/vcs.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"VcsDirectoryMappings\">\r\n    <mapping directory=\"\" vcs=\"Git\" />\r\n    <mapping directory=\"$PROJECT_DIR$\" vcs=\"Git\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/vcs.xml b/.idea/vcs.xml
+--- a/.idea/vcs.xml	(revision aabbc4e08fa82547b5a61e03b3ecaaec9b71a918)
++++ b/.idea/vcs.xml	(date 1779772958044)
+@@ -2,6 +2,5 @@
+ <project version="4">
+   <component name="VcsDirectoryMappings">
+     <mapping directory="" vcs="Git" />
+-    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+   </component>
+ </project>
+\ No newline at end of file
