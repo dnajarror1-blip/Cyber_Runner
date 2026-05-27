@@ -24,7 +24,7 @@ Game::Game(ApiClient &apiClient)
     foregroundWidth = 0.0f;
 
     globalSpeed = 350.0f;
-    speedIncrement = 30.0f;
+    speedIncrement = 15.0f;
 
     gameCost = GameApiConfig::COSTO_PARTIDA;
 
@@ -808,28 +808,10 @@ void Game::updateGame() {
             score = static_cast<int>(scoreTimer);
             //reportarScoreApiSiCorresponde();
 
-            if (nitroActive) {
-                nitroTimer -= deltaTime;
+            globalSpeed += speedIncrement * deltaTime;
 
-                globalSpeed += 250.0f * deltaTime;
-
-                if (globalSpeed > maxNitroSpeed) {
-                    globalSpeed = maxNitroSpeed;
-                }
-
-                if (nitroTimer <= 0.0f) {
-                    nitroActive = false;
-
-                    if (player != nullptr) {
-                        player->setNitro(false);
-                    }
-                }
-            } else {
-                globalSpeed += speedIncrement * deltaTime;
-
-                if (globalSpeed > maxNormalSpeed) {
-                    globalSpeed = maxNormalSpeed;
-                }
+            if (globalSpeed > maxNormalSpeed) {
+                globalSpeed = maxNormalSpeed;
             }
 
             if (player != nullptr) {
@@ -895,16 +877,6 @@ void Game::updateGame() {
                             playerData.userId,
                             1
                         );
-                    } else if (itemType == ItemType::NITRO) {
-                        nitroActive = true;
-                        nitroTimer = 3.0f;
-
-                        if (player != nullptr) {
-                            player->setNitro(true);
-                        }
-
-                        scoreTimer += 50.0f;
-                        score = static_cast<int>(scoreTimer);
                     } else if (itemType == ItemType::SHIELD) {
                         hasShield = true;
 

@@ -240,11 +240,7 @@ void Coin::reset(float x)
 
     int roll = GetRandomValue(0, 100);
 
-    if (roll >= 90)
-    {
-        type = ItemType::NITRO;
-    }
-    else if (roll >= 80)
+    if (roll >= 80)
     {
         type = ItemType::SHIELD;
     }
