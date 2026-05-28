@@ -6,6 +6,27 @@
 const Color NEO_CYAN_HUD = {0, 255, 255, 255};
 const Color NEO_YELLOW_HUD = {253, 249, 0, 255};
 
+void HUD::loadAssets()
+{
+    nitroIconTexture = LoadTexture("assets/nitro.png");
+    shieldIconTexture = LoadTexture("assets/escudo.png");
+}
+
+void HUD::unloadAssets()
+{
+    if (nitroIconTexture.id)
+    {
+        UnloadTexture(nitroIconTexture);
+        nitroIconTexture = {};
+    }
+
+    if (shieldIconTexture.id)
+    {
+        UnloadTexture(shieldIconTexture);
+        shieldIconTexture = {};
+    }
+}
+
 static float clampProgress(float value)
 {
     if (value < 0.0f)
@@ -24,7 +45,8 @@ static float clampProgress(float value)
 static void drawPowerIcon(
     Vector2 center,
     Color color,
-    float progress
+    float progress,
+    Texture2D iconTexture
 )
 {
     float clampedProgress = clampProgress(progress);
@@ -43,6 +65,32 @@ static void drawPowerIcon(
         14.0f,
         WHITE
     );
+
+    if (iconTexture.id)
+    {
+        Rectangle source = {
+            0.0f,
+            0.0f,
+            static_cast<float>(iconTexture.width),
+            static_cast<float>(iconTexture.height)
+        };
+
+        Rectangle dest = {
+            center.x - 9.0f,
+            center.y - 9.0f,
+            18.0f,
+            18.0f
+        };
+
+        DrawTexturePro(
+            iconTexture,
+            source,
+            dest,
+            {0.0f, 0.0f},
+            0.0f,
+            WHITE
+        );
+    }
 
     DrawRing(
         center,
@@ -77,7 +125,8 @@ void HUD::drawGameHUD(
         drawPowerIcon(
             {315.0f, 22.0f},
             SKYBLUE,
-            nitroProgress
+            nitroProgress,
+            nitroIconTexture
         );
     }
 
@@ -86,7 +135,8 @@ void HUD::drawGameHUD(
         drawPowerIcon(
             {485.0f, 22.0f},
             ORANGE,
-            shieldProgress
+            shieldProgress,
+            shieldIconTexture
         );
     }
 }

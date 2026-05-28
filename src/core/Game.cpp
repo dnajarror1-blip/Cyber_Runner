@@ -638,6 +638,7 @@ void Game::run() {
     fondo2 = LoadTexture("assets/textures/fondocyber2.png");
     fondo3 = LoadTexture("assets/textures/fondocyber3.png");
     foregroundTexture = LoadTexture("assets/textures/foreground.png");
+    hud.loadAssets();
 
     SetTextureFilter(
     foregroundTexture,
@@ -695,6 +696,7 @@ void Game::run() {
     UnloadTexture(fondo3);
 
     UnloadTexture(foregroundTexture);
+    hud.unloadAssets();
 
     UnloadMusicStream(backgroundMusic);
 

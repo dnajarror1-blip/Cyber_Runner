@@ -3,6 +3,9 @@
 
 class HUD {
 public:
+    void loadAssets();
+    void unloadAssets();
+
     void drawGameHUD(
         float speed,
         int score,
@@ -13,4 +16,8 @@ public:
         float shieldProgress
     );
     void drawMenuHUD(int creditos);
+
+private:
+    Texture2D nitroIconTexture {};
+    Texture2D shieldIconTexture {};
 };
