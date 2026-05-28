@@ -63,6 +63,7 @@ private:
     float maxNitroSpeed;
 
     bool hasShield;
+    float shieldTimer;
     bool nitroActive;
     float nitroTimer;
     bool shouldCloseGame;

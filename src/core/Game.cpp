@@ -33,6 +33,7 @@ Game::Game(ApiClient &apiClient, LoginManager &login)
     maxNitroSpeed = 2400.0f;
 
     hasShield = false;
+    shieldTimer = 0.0f;
     nitroActive = false;
     nitroTimer = 0.0f;
     shouldCloseGame = false;
@@ -372,6 +373,7 @@ void Game::resetGame() {
     globalSpeed = 350.0f;
 
     hasShield = false;
+    shieldTimer = 0.0f;
     nitroActive = false;
     nitroTimer = 0.0f;
 
@@ -1071,6 +1073,15 @@ void Game::updateGame() {
                 }
             }
 
+            if (hasShield) {
+                shieldTimer -= deltaTime;
+
+                if (shieldTimer <= 0.0f) {
+                    shieldTimer = 0.0f;
+                    hasShield = false;
+                }
+            }
+
             //scrolling imp
 
             bgOffset -= 25.0f * deltaTime;
@@ -1194,6 +1205,7 @@ void Game::updateGame() {
                         score = static_cast<int>(scoreTimer);
                     } else if (itemType == ItemType::SHIELD) {
                         hasShield = true;
+                        shieldTimer = 10.0f;
 
                         audioManager.playShield();
 
@@ -1245,19 +1257,50 @@ void Game::updateGame() {
         }
 
         case GAMEOVER: {
-            bool volverMenuPressed =
+            bool reiniciarPressed =
+                    IsKeyPressed(KEY_ONE) ||
                     IsKeyPressed(KEY_R) ||
                     (
                         IsGamepadAvailable(0) &&
-                        (
-                            IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN) ||
-                            IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_RIGHT) ||
-                            IsGamepadButtonPressed(0, GAMEPAD_BUTTON_MIDDLE_RIGHT)
-                        )
+                        IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)
+                    );
+
+            if (reiniciarPressed) {
+                if (iniciarPartidaApi()) {
+                    resetGame();
+                    currentScreen = JUGANDO;
+                } else {
+                    mensajeApi = "API: no se pudo iniciar nueva partida.";
+                }
+
+                break;
+            }
+
+            bool volverMenuPressed =
+                    IsKeyPressed(KEY_TWO) ||
+                    IsKeyPressed(KEY_ESCAPE) ||
+                    (
+                        IsGamepadAvailable(0) &&
+                        IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_RIGHT)
                     );
 
             if (volverMenuPressed) {
                 currentScreen = MENU;
+                break;
+            }
+
+            bool cambiarUsuarioPressed =
+                    IsKeyPressed(KEY_THREE) ||
+                    (
+                        IsGamepadAvailable(0) &&
+                        IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_UP)
+                    );
+
+            if (cambiarUsuarioPressed) {
+                loginUsername.clear();
+                loginPassword.clear();
+                loginPasswordActivo = false;
+                currentScreen = LOGIN;
             }
 
             break;
@@ -1293,6 +1336,7 @@ void Game::checkCollisions()
             if (hasShield)
             {
                 hasShield = false;
+                shieldTimer = 0.0f;
 
                 obs.forceRespawn();
 
@@ -1830,11 +1874,12 @@ void Game::drawGame() {
 
             hud.drawGameHUD(
                 globalSpeed,
-                creditos,
                 score,
                 highScore,
                 nitroActive,
-                hasShield
+                hasShield,
+                nitroTimer / 8.0f,
+                shieldTimer / 10.0f
             );
             if (hasShield) {
                 if (player != nullptr) {
@@ -1914,28 +1959,72 @@ void Game::drawGame() {
 
         case GAMEOVER: {
             audioManager.stopRunning();
+            DrawRectangle(
+                145,
+                55,
+                510,
+                340,
+                {0, 0, 0, 225}
+            );
+
+            DrawRectangleLines(
+                145,
+                55,
+                510,
+                340,
+                NEO_RED
+            );
+
             DrawText(
-                "SISTEMA CRITICO: GAME OVER",
-                180,
-                150,
+                "RESUMEN DE PARTIDA",
+                225,
+                80,
                 30,
                 NEO_RED
             );
 
             DrawText(
-                "Presiona [R] para volver al menu",
+                TextFormat("PUNTAJE FINAL: %i", score),
                 250,
-                250,
+                135,
                 20,
                 WHITE
             );
 
             DrawText(
-                "Control: A/B/Menu volver",
-                290,
-                285,
-                16,
-                GRAY
+                TextFormat("RECORD: %i", highScore),
+                250,
+                165,
+                20,
+                GREEN
+            );
+
+            DrawText(
+                TextFormat("MONEDAS: %i", coinsCollectedThisRun),
+                250,
+                195,
+                20,
+                NEO_YELLOW
+            );
+
+            DrawRectangle(235, 245, 330, 36, {0, 0, 0, 210});
+            DrawRectangleLines(235, 245, 330, 36, NEO_CYAN);
+            DrawText("[1/R/A] REINICIAR", 300, 255, 18, WHITE);
+
+            DrawRectangle(235, 290, 330, 36, {0, 0, 0, 210});
+            DrawRectangleLines(235, 290, 330, 36, WHITE);
+            DrawText("[2/ESC/B] SALIR AL MENU", 270, 300, 18, WHITE);
+
+            DrawRectangle(235, 335, 330, 36, {0, 0, 0, 210});
+            DrawRectangleLines(235, 335, 330, 36, NEO_MAGENTA);
+            DrawText("[3/Y] CAMBIAR USUARIO", 280, 345, 18, WHITE);
+
+            DrawText(
+                mensajeApi.c_str(),
+                215,
+                405,
+                15,
+                LIGHTGRAY
             );
 
             break;
