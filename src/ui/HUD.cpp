@@ -7,10 +7,21 @@ const Color NEO_CYAN_HUD = {0, 255, 255, 255};
 const Color NEO_YELLOW_HUD = {253, 249, 0, 255};
 
 void HUD::drawGameHUD(float speed, int creditos, int score, int highScore, bool nitroActive, bool hasShield) {
-    DrawText(TextFormat("VELOCIDAD: %.0f", speed), 10, 10, 20, NEO_CYAN_HUD);
-    DrawText(TextFormat("CREDITOS: %i", creditos), 10, 35, 20, NEO_YELLOW_HUD);
-    DrawText(TextFormat("PUNTAJE: %i", score), 10, 60, 20, WHITE);
-    DrawText(TextFormat("MEJOR: %i", highScore), 10, 85, 20, GREEN);
+    DrawRectangle(8, 8, 230, 44, {0, 0, 0, 180});
+    DrawRectangleLines(8, 8, 230, 44, NEO_CYAN_HUD);
+    DrawText(TextFormat("PUNTAJE: %i", score), 20, 21, 20, WHITE);
+
+    DrawRectangle(8, 62, 190, 38, {0, 0, 0, 180});
+    DrawRectangleLines(8, 62, 190, 38, NEO_YELLOW_HUD);
+    DrawText(TextFormat("CREDITOS: %i", creditos), 20, 72, 18, NEO_YELLOW_HUD);
+
+    DrawRectangle(560, 8, 230, 44, {0, 0, 0, 180});
+    DrawRectangleLines(560, 8, 230, 44, GREEN);
+    DrawText(TextFormat("MEJOR: %i", highScore), 572, 21, 20, GREEN);
+
+    DrawRectangle(600, 62, 190, 38, {0, 0, 0, 180});
+    DrawRectangleLines(600, 62, 190, 38, NEO_CYAN_HUD);
+    DrawText(TextFormat("VEL: %.0f", speed), 612, 72, 18, NEO_CYAN_HUD);
 
     if (nitroActive)
     {
@@ -19,12 +30,15 @@ void HUD::drawGameHUD(float speed, int creditos, int score, int highScore, bool 
 
     if (hasShield)
     {
-        DrawText("ESCUDO ACTIVO", 600, 45, 15, ORANGE);
+        DrawRectangle(315, 8, 170, 32, {0, 0, 0, 180});
+        DrawRectangleLines(315, 8, 170, 32, ORANGE);
+        DrawText("ESCUDO ACTIVO", 328, 17, 15, ORANGE);
     }
 
-    DrawText(TextFormat("FPS: %i", GetFPS()), 700, 10, 20, GREEN);
+    DrawRectangle(690, 405, 92, 26, {0, 0, 0, 150});
+    DrawText(TextFormat("FPS: %i", GetFPS()), 700, 411, 14, GREEN);
 }
 
 void HUD::drawMenuHUD(int creditos) {
-    DrawText(TextFormat("CREDITOS: %i", creditos), 280, 400, 15, NEO_YELLOW_HUD);
+    DrawText(TextFormat("CREDITOS: %i", creditos), 445, 115, 15, NEO_YELLOW_HUD);
 }

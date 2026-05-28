@@ -710,7 +710,13 @@ void Game::updateGame() {
                 loginPasswordActivo = !loginPasswordActivo;
             }
 
-            if (IsKeyPressed(KEY_ESCAPE)) {
+            if (
+                IsKeyPressed(KEY_ESCAPE) ||
+                (
+                    IsGamepadAvailable(0) &&
+                    IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_RIGHT)
+                )
+            ) {
                 currentScreen = MENU;
                 break;
             }
@@ -776,6 +782,9 @@ void Game::updateGame() {
                     IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_UP)
                 )
             ) {
+                loginUsername.clear();
+                loginPassword.clear();
+                loginPasswordActivo = false;
                 currentScreen = LOGIN;
             }
 
@@ -1103,6 +1112,22 @@ void Game::checkCollisions()
 void Game::drawGame() {
     switch (currentScreen) {
         case LOGIN: {
+            DrawRectangle(
+                185,
+                60,
+                430,
+                335,
+                {0, 0, 0, 225}
+            );
+
+            DrawRectangleLines(
+                185,
+                60,
+                430,
+                335,
+                NEO_CYAN
+            );
+
             DrawText(
                 "CYBER-RUNNER",
                 250,
@@ -1124,7 +1149,15 @@ void Game::drawGame() {
                 250,
                 158,
                 16,
-                GRAY
+                LIGHTGRAY
+            );
+
+            DrawRectangle(
+                250,
+                180,
+                300,
+                38,
+                {0, 0, 0, 210}
             );
 
             DrawRectangleLines(
@@ -1148,7 +1181,15 @@ void Game::drawGame() {
                 250,
                 238,
                 16,
-                GRAY
+                LIGHTGRAY
+            );
+
+            DrawRectangle(
+                250,
+                260,
+                300,
+                38,
+                {0, 0, 0, 210}
             );
 
             DrawRectangleLines(
@@ -1174,7 +1215,15 @@ void Game::drawGame() {
                 165,
                 330,
                 16,
-                GRAY
+                LIGHTGRAY
+            );
+
+            DrawText(
+                "Control: B volver al menu",
+                300,
+                348,
+                14,
+                LIGHTGRAY
             );
 
             DrawText(
@@ -1182,7 +1231,7 @@ void Game::drawGame() {
                 250,
                 365,
                 20,
-                GRAY
+                LIGHTGRAY
             );
 
             break;
@@ -1190,6 +1239,23 @@ void Game::drawGame() {
 
         case MENU: {
             audioManager.stopRunning();
+
+            DrawRectangle(
+                185,
+                25,
+                430,
+                395,
+                {0, 0, 0, 225}
+            );
+
+            DrawRectangleLines(
+                185,
+                25,
+                430,
+                395,
+                NEO_MAGENTA
+            );
+
             DrawText(
                 "ACCESO CONCEDIDO",
                 300,
@@ -1216,6 +1282,8 @@ void Game::drawGame() {
                 sesionIniciada ? NEO_YELLOW : GRAY
             );
 
+            DrawRectangle(250, 140, 300, 40, {0, 0, 0, 210});
+
             DrawRectangleLines(
                 250,
                 140,
@@ -1232,6 +1300,8 @@ void Game::drawGame() {
                 WHITE
             );
 
+            DrawRectangle(250, 200, 300, 40, {0, 0, 0, 210});
+
             DrawRectangleLines(
                 250,
                 200,
@@ -1245,8 +1315,10 @@ void Game::drawGame() {
                 280,
                 210,
                 20,
-                GRAY
+                WHITE
             );
+
+            DrawRectangle(250, 260, 300, 40, {0, 0, 0, 210});
 
             DrawRectangleLines(
                 250,
@@ -1261,8 +1333,10 @@ void Game::drawGame() {
                 280,
                 270,
                 20,
-                GRAY
+                WHITE
             );
+
+            DrawRectangle(250, 320, 300, 40, {0, 0, 0, 210});
 
             DrawRectangleLines(
                 250,
@@ -1289,11 +1363,19 @@ void Game::drawGame() {
             );
 
             DrawText(
+                "Control: A jugar | Y login | X ranking | B salir",
+                230,
+                362,
+                13,
+                LIGHTGRAY
+            );
+
+            DrawText(
                 mensajeApi.c_str(),
                 250,
                 405,
                 15,
-                DARKGRAY
+                LIGHTGRAY
             );
 
             hud.drawMenuHUD(creditos);
@@ -1304,6 +1386,22 @@ void Game::drawGame() {
         case RANKING: {
             audioManager.stopRunning();
 
+            DrawRectangle(
+                80,
+                30,
+                640,
+                385,
+                {0, 0, 0, 225}
+            );
+
+            DrawRectangleLines(
+                80,
+                30,
+                640,
+                385,
+                NEO_CYAN
+            );
+
             DrawText(
                 "RANKING",
                 330,
@@ -1311,6 +1409,8 @@ void Game::drawGame() {
                 32,
                 NEO_CYAN
             );
+
+            DrawRectangle(110, 95, 580, 265, {0, 0, 0, 210});
 
             DrawRectangleLines(
                 110,
@@ -1416,6 +1516,14 @@ void Game::drawGame() {
                 GRAY
             );
 
+            DrawText(
+                "Control: A/B/Menu volver",
+                300,
+                408,
+                14,
+                LIGHTGRAY
+            );
+
             break;
         }
 
@@ -1509,8 +1617,6 @@ void Game::drawGame() {
                 hasShield
             );
             if (hasShield) {
-                DrawText("ESCUDO ACTIVO", 600, 45, 15, ORANGE);
-
                 if (player != nullptr) {
                     Vector2 playerCenter = player->getPosition();
 
@@ -1602,6 +1708,14 @@ void Game::drawGame() {
                 250,
                 20,
                 WHITE
+            );
+
+            DrawText(
+                "Control: A/B/Menu volver",
+                290,
+                285,
+                16,
+                GRAY
             );
 
             break;
