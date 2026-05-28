@@ -9,8 +9,9 @@ const Color NEO_MAGENTA = {255, 0, 255, 255};
 const Color NEO_YELLOW = {253, 249, 0, 255};
 const Color NEO_RED = {230, 41, 55, 255};
 
-Game::Game(ApiClient &apiClient)
-    : api(apiClient) {
+Game::Game(ApiClient &apiClient, LoginManager &login)
+    : api(apiClient),
+      loginManager(login) {
     mensajeApi = "API: esperando accion.";
 
     player = nullptr;
@@ -36,7 +37,7 @@ Game::Game(ApiClient &apiClient)
     nitroTimer = 0.0f;
     shouldCloseGame = false;
 
-    currentScreen = LOGIN;
+    currentScreen = MENU;
 
     playerData = dataManager.loadPlayerData();
 
@@ -55,6 +56,11 @@ void Game::setUsuario(
     usuarioActual = usuario;
 
     sesionIniciada = true;
+
+    playerName = usuarioActual.username;
+    creditos = usuarioActual.saldoTokens;
+    playerData.username = playerName;
+    playerData.credits = creditos;
 }
 
 bool Game::iniciarPartidaApi() {
@@ -674,17 +680,58 @@ void Game::updateGame() {
 
     switch (currentScreen) {
         case LOGIN: {
-            bool continuarPressed =
-                    IsKeyPressed(KEY_ENTER) ||
-                    (
-                        IsGamepadAvailable(0) &&
-                        (
-                            IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN) ||
-                            IsGamepadButtonPressed(0, GAMEPAD_BUTTON_MIDDLE_RIGHT)
-                        )
-                    );
+            std::string &campoActivo =
+                    loginPasswordActivo ? loginPassword : loginUsername;
 
-            if (continuarPressed) {
+            int key = GetCharPressed();
+
+            while (key > 0) {
+                if (key >= 32 && key <= 126 && campoActivo.size() < 32) {
+                    campoActivo.push_back(static_cast<char>(key));
+                }
+
+                key = GetCharPressed();
+            }
+
+            if (IsKeyPressed(KEY_BACKSPACE) && !campoActivo.empty()) {
+                campoActivo.pop_back();
+            }
+
+            if (
+                IsKeyPressed(KEY_TAB) ||
+                IsKeyPressed(KEY_UP) ||
+                IsKeyPressed(KEY_DOWN)
+            ) {
+                loginPasswordActivo = !loginPasswordActivo;
+            }
+
+            if (IsKeyPressed(KEY_ESCAPE)) {
+                currentScreen = MENU;
+                break;
+            }
+
+            if (IsKeyPressed(KEY_ENTER)) {
+                if (!loginPasswordActivo) {
+                    loginPasswordActivo = true;
+                    break;
+                }
+
+                std::string error;
+
+                bool ok = loginManager.iniciarSesion(
+                    loginUsername,
+                    loginPassword,
+                    error
+                );
+
+                if (!ok) {
+                    mensajeApi = "LOGIN: " + error;
+                    break;
+                }
+
+                setUsuario(loginManager.getUsuarioActual());
+
+                mensajeApi = "API: login correcto.";
                 currentScreen = MENU;
             }
 
@@ -699,6 +746,11 @@ void Game::updateGame() {
                     IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)
                 )
             ) {
+                if (!sesionIniciada) {
+                    mensajeApi = "LOGIN: debes loguearte antes de jugar.";
+                    break;
+                }
+
                 if (iniciarPartidaApi()) {
                     resetGame();
 
@@ -710,6 +762,16 @@ void Game::updateGame() {
 
                     currentScreen = JUGANDO;
                 }
+            }
+
+            if (
+                IsKeyPressed(KEY_TWO) ||
+                (
+                    IsGamepadAvailable(0) &&
+                    IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_UP)
+                )
+            ) {
+                currentScreen = LOGIN;
             }
 
             if (
@@ -1024,9 +1086,75 @@ void Game::drawGame() {
             );
 
             DrawText(
-                "[ Presiona ENTER para entrar al sistema ]",
+                "LOGIN",
+                360,
+                135,
+                24,
+                NEO_MAGENTA
+            );
+
+            DrawText(
+                "Usuario",
+                250,
+                158,
+                16,
+                GRAY
+            );
+
+            DrawRectangleLines(
+                250,
                 180,
-                350,
+                300,
+                38,
+                loginPasswordActivo ? WHITE : NEO_CYAN
+            );
+
+            DrawText(
+                loginUsername.empty() ? "_" : loginUsername.c_str(),
+                262,
+                190,
+                18,
+                WHITE
+            );
+
+            DrawText(
+                "Password",
+                250,
+                238,
+                16,
+                GRAY
+            );
+
+            DrawRectangleLines(
+                250,
+                260,
+                300,
+                38,
+                loginPasswordActivo ? NEO_CYAN : WHITE
+            );
+
+            std::string passwordOculto(loginPassword.size(), '*');
+
+            DrawText(
+                loginPassword.empty() ? "_" : passwordOculto.c_str(),
+                262,
+                270,
+                18,
+                WHITE
+            );
+
+            DrawText(
+                "[TAB] CAMBIAR CAMPO   [ENTER] LOGIN   [ESC] MENU",
+                165,
+                330,
+                16,
+                GRAY
+            );
+
+            DrawText(
+                mensajeApi.c_str(),
+                250,
+                365,
                 20,
                 GRAY
             );
@@ -1050,6 +1178,16 @@ void Game::drawGame() {
                 80,
                 25,
                 NEO_MAGENTA
+            );
+
+            DrawText(
+                sesionIniciada
+                    ? TextFormat("JUGADOR: %s", playerName.c_str())
+                    : "JUGADOR: sin login",
+                250,
+                115,
+                16,
+                sesionIniciada ? NEO_YELLOW : GRAY
             );
 
             DrawRectangleLines(
@@ -1077,7 +1215,7 @@ void Game::drawGame() {
             );
 
             DrawText(
-                "[2] LOGUEARSE",
+                sesionIniciada ? "[2] CAMBIAR USUARIO" : "[2] LOGUEARSE",
                 280,
                 210,
                 20,

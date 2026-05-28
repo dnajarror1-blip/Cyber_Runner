@@ -8,6 +8,7 @@
 #include "data/PlayerData.h"
 #include "audio/AudioManager.h"
 #include "../../api/ApiClient.h"
+#include "../../auth/LoginManager.h"
 
 #include <vector>
 #include <string>
@@ -67,6 +68,8 @@ private:
 
     ApiClient &api;
 
+    LoginManager &loginManager;
+
     UsuarioApi usuarioActual;
 
     PartidaApi partidaActual;
@@ -103,6 +106,9 @@ private:
     float scoreTimer;
 
     std::string playerName;
+    std::string loginUsername;
+    std::string loginPassword;
+    bool loginPasswordActivo = false;
 
     void toggleFullscreen();
 
@@ -131,7 +137,7 @@ private:
     void consultarRankingApi();
 
 public:
-    explicit Game(ApiClient &apiClient);
+    explicit Game(ApiClient &apiClient, LoginManager &login);
 
     void setUsuario(
         const UsuarioApi &usuario

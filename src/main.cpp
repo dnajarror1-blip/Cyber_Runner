@@ -29,42 +29,17 @@ int main()
 
     LoginManager login(api);
 
-    Game game(api);
+    Game game(api, login);
 
-    if (!MODO_PRUEBA_SIN_API)
-    {
-        std::string username;
-        std::string password;
-        std::string error;
-
-        std::cout << "===== LOGIN =====" << std::endl;
-        std::cout << "Usuario: ";
-        std::cin >> username;
-
-        std::cout << "Password: ";
-        std::cin >> password;
-
-        bool ok =
-            login.iniciarSesion(
-                username,
-                password,
-                error
-            );
-
-        if (!ok) {
-            std::cout << "LOGIN ERROR: " << error << std::endl;
-            std::cout << "No se puede abrir el juego sin sesion activa." << std::endl;
-            return 0;
-        }
-
-        std::cout << "LOGIN OK" << std::endl;
-
-        UsuarioApi usuario = login.getUsuarioActual();
-        game.setUsuario(usuario);
-    }
-    else
+    if (MODO_PRUEBA_SIN_API)
     {
         std::cout << "MODO PRUEBA SIN API ACTIVADO." << std::endl;
+
+        UsuarioApi usuarioLocal;
+        usuarioLocal.username = "Jugador local";
+        usuarioLocal.saldoTokens = 0;
+
+        game.setUsuario(usuarioLocal);
     }
 
     game.run();
