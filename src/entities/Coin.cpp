@@ -155,6 +155,11 @@ Coin& Coin::operator=(Coin&& other) noexcept
 
 void Coin::update(float deltaTime)
 {
+    if (!active)
+    {
+        return;
+    }
+
     rect.x -= speed * deltaTime;
 
     animationTimer += deltaTime;
@@ -188,7 +193,7 @@ void Coin::update(float deltaTime)
 
     if (rect.x + rect.width < 0)
     {
-        reset(800 + GetRandomValue(200, 600));
+        active = false;
     }
 }
 
@@ -231,22 +236,37 @@ void Coin::draw()
 
 void Coin::reset(float x)
 {
-    rect.x = x;
-    rect.y = GetRandomValue(180, 300);
-
-    active = true;
-
-    animationTimer = 0.0f;
-
     int roll = GetRandomValue(0, 100);
 
     if (roll >= 80)
     {
-        type = ItemType::SHIELD;
+        reset(x, GetRandomValue(180, 300), ItemType::SHIELD);
     }
     else
     {
-        type = ItemType::CREDIT;
+        reset(x, GetRandomValue(180, 300), ItemType::CREDIT);
+    }
+}
+
+void Coin::reset(float x, float y, ItemType newType)
+{
+    rect.x = x;
+    rect.y = y;
+    type = newType;
+    active = true;
+    animationTimer = 0.0f;
+
+    if (type == ItemType::SHIELD)
+    {
+        currentTexture = &shieldTexture;
+    }
+    else if (type == ItemType::NITRO)
+    {
+        currentTexture = &nitroTexture;
+    }
+    else
+    {
+        currentTexture = &coinTexture1;
     }
 }
 
@@ -276,8 +296,6 @@ bool Coin::isActive()
 void Coin::collect()
 {
     active = false;
-
-    reset(800 + GetRandomValue(300, 800));
 }
 
 ItemType Coin::getType()

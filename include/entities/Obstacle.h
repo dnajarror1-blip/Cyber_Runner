@@ -11,6 +11,9 @@ class Obstacle {
 private:
     Rectangle rect;
     float speed;
+    float baseY;
+    float verticalTimer;
+    float verticalPhase;
 
     ObstacleType type;
 
@@ -39,6 +42,7 @@ public:
     void setSpeed(float newSpeed);
 
     void forceRespawn();
+    void respawn(float x);
 
     // Devuelve el rectángulo para detectar choques
     Rectangle getRect();

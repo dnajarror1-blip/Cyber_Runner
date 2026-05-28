@@ -1,8 +1,12 @@
 #include "entities/Obstacle.h"
+#include <cmath>
 
 Obstacle::Obstacle(float x, float y, float width, float height, float speed) {
     rect = {x, y, width, height};
     this->speed = speed;
+    baseY = y;
+    verticalTimer = 0.0f;
+    verticalPhase = static_cast<float>(GetRandomValue(0, 628)) / 100.0f;
 
     droneTexture = LoadTexture("assets/dron.png");
     groundTexture = LoadTexture("assets/groundobstacle.png");
@@ -30,6 +34,9 @@ Obstacle::Obstacle(Obstacle&& other) noexcept
 {
     rect = other.rect;
     speed = other.speed;
+    baseY = other.baseY;
+    verticalTimer = other.verticalTimer;
+    verticalPhase = other.verticalPhase;
     type = other.type;
     droneTexture = other.droneTexture;
     groundTexture = other.groundTexture;
@@ -53,6 +60,9 @@ Obstacle& Obstacle::operator=(Obstacle&& other) noexcept
 
         rect = other.rect;
         speed = other.speed;
+        baseY = other.baseY;
+        verticalTimer = other.verticalTimer;
+        verticalPhase = other.verticalPhase;
         type = other.type;
         droneTexture = other.droneTexture;
 
@@ -66,9 +76,19 @@ void Obstacle::update(float deltaTime) {
     // 1. El movimiento constante a la izquierda
     rect.x -= speed * deltaTime;
 
+    if (type == ObstacleType::AIR)
+    {
+        verticalTimer += deltaTime;
+        rect.y = baseY + static_cast<float>(
+            std::sin(verticalTimer * 2.4f + verticalPhase)
+        ) * 18.0f;
+    }
+
     // 2. Si sale de la pantalla, lo "teletransportamos" y cambiamos su forma
     if (rect.x + rect.width < 0) {
-        rect.x = 800 + GetRandomValue(0, 300);
+        respawn(800 + GetRandomValue(500, 900));
+        return;
+#if 0
 
         // --- TU LÓGICA DE VARIACIÓN ---
         // Decidimos al azar: 0 es Dron, 1 es Barrera
@@ -85,6 +105,7 @@ void Obstacle::update(float deltaTime) {
 
             type = ObstacleType::GROUND;
         }
+#endif
     }
 }
 
@@ -167,11 +188,19 @@ Rectangle Obstacle::getRect() {
 
 void Obstacle::forceRespawn()
 {
-    rect.x = 800 + GetRandomValue(300, 800);
+    respawn(800 + GetRandomValue(600, 950));
+}
+
+void Obstacle::respawn(float x)
+{
+    rect.x = x;
+    verticalTimer = 0.0f;
+    verticalPhase = static_cast<float>(GetRandomValue(0, 628)) / 100.0f;
 
     if (GetRandomValue(0, 1) == 0)
     {
         rect.y = 205;
+        baseY = rect.y;
         rect.width = 40;
         rect.height = 25;
 
@@ -180,6 +209,7 @@ void Obstacle::forceRespawn()
     else
     {
         rect.y = 310;
+        baseY = rect.y;
         rect.width = 25;
         rect.height = 40;
 

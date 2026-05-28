@@ -138,6 +138,10 @@ private:
 
     void consultarRankingApi();
 
+    void generarMonedasEnMatriz(float startX);
+    void actualizarGeneracionMonedas();
+    void separarObstaculos();
+
 public:
     explicit Game(ApiClient &apiClient, LoginManager &login);
 

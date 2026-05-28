@@ -40,6 +40,7 @@ public:
     void update(float deltaTime);
     void draw();
     void reset(float x);
+    void reset(float x, float y, ItemType newType);
     void setSpeed(float newSpeed);
 
     Rectangle getRect();

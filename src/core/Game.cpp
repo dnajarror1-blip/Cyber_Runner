@@ -25,12 +25,12 @@ Game::Game(ApiClient &apiClient, LoginManager &login)
     foregroundWidth = 0.0f;
 
     globalSpeed = 350.0f;
-    speedIncrement = 15.0f;
+    speedIncrement = 38.0f;
 
     gameCost = GameApiConfig::COSTO_PARTIDA;
 
-    maxNormalSpeed = 850.0f;
-    maxNitroSpeed = 1100.0f;
+    maxNormalSpeed = 1600.0f;
+    maxNitroSpeed = 2400.0f;
 
     hasShield = false;
     nitroActive = false;
@@ -406,34 +406,215 @@ void Game::resetGame() {
         )
     );
 
+    obstacles.push_back(
+        Obstacle(
+            2050,
+            310,
+            30,
+            45,
+            globalSpeed
+        )
+    );
+
+    obstacles.push_back(
+        Obstacle(
+            2600,
+            220,
+            40,
+            25,
+            globalSpeed
+        )
+    );
+
+    obstacles.push_back(
+        Obstacle(
+            3150,
+            310,
+            30,
+            45,
+            globalSpeed
+        )
+    );
+
+    obstacles.push_back(
+        Obstacle(
+            3700,
+            220,
+            40,
+            25,
+            globalSpeed
+        )
+    );
+
+    obstacles.push_back(
+        Obstacle(
+            4250,
+            310,
+            30,
+            45,
+            globalSpeed
+        )
+    );
+
+    obstacles.push_back(
+        Obstacle(
+            4800,
+            220,
+            40,
+            25,
+            globalSpeed
+        )
+    );
+
+    obstacles.push_back(
+        Obstacle(
+            5350,
+            310,
+            30,
+            45,
+            globalSpeed
+        )
+    );
+
+    obstacles.push_back(
+        Obstacle(
+            5900,
+            220,
+            40,
+            25,
+            globalSpeed
+        )
+    );
+
+    obstacles.push_back(
+        Obstacle(
+            6450,
+            310,
+            30,
+            45,
+            globalSpeed
+        )
+    );
+
+    obstacles.push_back(
+        Obstacle(
+            7000,
+            220,
+            40,
+            25,
+            globalSpeed
+        )
+    );
+
     coins.clear();
 
-    coins.push_back(
-        Coin(
-            900,
-            260,
-            20,
-            globalSpeed
-        )
-    );
+    for (int i = 0; i < 10; ++i) {
+        coins.push_back(
+            Coin(
+                900 + i * 32,
+                260,
+                20,
+                globalSpeed
+            )
+        );
+    }
 
-    coins.push_back(
-        Coin(
-            1250,
-            220,
-            20,
-            globalSpeed
-        )
-    );
+    generarMonedasEnMatriz(900.0f);
+}
 
-    coins.push_back(
-        Coin(
-            1600,
-            280,
-            20,
-            globalSpeed
-        )
-    );
+void Game::generarMonedasEnMatriz(float startX) {
+    if (coins.empty()) {
+        return;
+    }
+
+    int patron = GetRandomValue(0, 2);
+
+    for (size_t i = 0; i < coins.size(); ++i) {
+        if (i == 8) {
+            coins[i].reset(
+                startX + 520.0f,
+                static_cast<float>(GetRandomValue(205, 295)),
+                ItemType::SHIELD
+            );
+
+            continue;
+        }
+
+        if (i == 9) {
+            coins[i].reset(
+                startX + 740.0f,
+                static_cast<float>(GetRandomValue(205, 295)),
+                ItemType::NITRO
+            );
+
+            continue;
+        }
+
+        int columna = static_cast<int>(i % 4);
+        int fila = static_cast<int>(i / 4);
+
+        float x = startX + columna * 34.0f;
+        float y = 0.0f;
+
+        if (patron == 0) {
+            y = 225.0f + fila * 34.0f;
+        } else if (patron == 1) {
+            y = 250.0f + fila * 34.0f;
+        } else {
+            y = 215.0f + static_cast<float>(columna % 2) * 34.0f + fila * 26.0f;
+        }
+
+        coins[i].reset(x, y, ItemType::CREDIT);
+    }
+}
+
+void Game::actualizarGeneracionMonedas() {
+    for (auto &coin: coins) {
+        if (coin.isActive()) {
+            return;
+        }
+    }
+
+    float startX = 850.0f + static_cast<float>(GetRandomValue(180, 360));
+
+    for (auto &obs: obstacles) {
+        Rectangle rect = obs.getRect();
+
+        if (rect.x > 900.0f) {
+            startX = rect.x - static_cast<float>(GetRandomValue(135, 180));
+            break;
+        }
+    }
+
+    if (startX < 830.0f) {
+        startX = 830.0f;
+    }
+
+    generarMonedasEnMatriz(startX);
+}
+
+void Game::separarObstaculos() {
+    const float minSpacing = 440.0f;
+
+    for (size_t i = 0; i < obstacles.size(); ++i) {
+        for (size_t j = i + 1; j < obstacles.size(); ++j) {
+            Rectangle a = obstacles[i].getRect();
+            Rectangle b = obstacles[j].getRect();
+
+            float distancia = a.x > b.x ? a.x - b.x : b.x - a.x;
+
+            if (distancia >= minSpacing) {
+                continue;
+            }
+
+            size_t mover = a.x < b.x ? j : i;
+            float baseX = std::max(a.x, b.x);
+
+            obstacles[mover].respawn(
+                baseX + minSpacing + static_cast<float>(GetRandomValue(80, 220))
+            );
+        }
+    }
 }
 
 void Game::run() {
@@ -877,6 +1058,19 @@ void Game::updateGame() {
 
             float deltaTime = GetFrameTime();
 
+            if (nitroActive) {
+                nitroTimer -= deltaTime;
+
+                if (nitroTimer <= 0.0f) {
+                    nitroTimer = 0.0f;
+                    nitroActive = false;
+
+                    if (player != nullptr) {
+                        player->setNitro(false);
+                    }
+                }
+            }
+
             //scrolling imp
 
             bgOffset -= 25.0f * deltaTime;
@@ -900,15 +1094,19 @@ void Game::updateGame() {
                 }
             }
 
-            scoreTimer += 100.0f * deltaTime;
+            float scoreMultiplier = nitroActive ? 3.0f : 1.0f;
+
+            scoreTimer += 100.0f * deltaTime * scoreMultiplier;
 
             score = static_cast<int>(scoreTimer);
             //reportarScoreApiSiCorresponde();
 
             globalSpeed += speedIncrement * deltaTime;
 
-            if (globalSpeed > maxNormalSpeed) {
-                globalSpeed = maxNormalSpeed;
+            float velocidadMaximaActual = nitroActive ? maxNitroSpeed : maxNormalSpeed;
+
+            if (globalSpeed > velocidadMaximaActual) {
+                globalSpeed = velocidadMaximaActual;
             }
 
             if (player != nullptr) {
@@ -945,6 +1143,8 @@ void Game::updateGame() {
                 obs.update(deltaTime);
             }
 
+            separarObstaculos();
+
 
             for (auto &coin: coins) {
                 coin.setSpeed(globalSpeed);
@@ -963,29 +1163,49 @@ void Game::updateGame() {
 
                     if (itemType == ItemType::CREDIT) {
                         audioManager.playCoin();
-                        coinsCollectedThisRun++;
 
-                        playerData.totalCoinsCollected++;
+                        int monedasGanadas = nitroActive ? 3 : 1;
 
-                        scoreTimer += 25.0f;
+                        coinsCollectedThisRun += monedasGanadas;
+
+                        playerData.totalCoinsCollected += monedasGanadas;
+
+                        scoreTimer += 25.0f * static_cast<float>(monedasGanadas);
                         score = static_cast<int>(scoreTimer);
 
                         dataManager.registerCoinCollected(
                             playerData.userId,
-                            1
+                            monedasGanadas
                         );
+                    } else if (itemType == ItemType::NITRO) {
+                        nitroActive = true;
+                        nitroTimer = 8.0f;
+                        globalSpeed += 350.0f;
+
+                        if (globalSpeed > maxNitroSpeed) {
+                            globalSpeed = maxNitroSpeed;
+                        }
+
+                        if (player != nullptr) {
+                            player->setNitro(true);
+                        }
+
+                        scoreTimer += 75.0f;
+                        score = static_cast<int>(scoreTimer);
                     } else if (itemType == ItemType::SHIELD) {
                         hasShield = true;
 
                         audioManager.playShield();
 
-                        scoreTimer += 50.0f;
+                        scoreTimer += 50.0f * scoreMultiplier;
                         score = static_cast<int>(scoreTimer);
                     }
 
                     coin.collect();
                 }
             }
+
+            actualizarGeneracionMonedas();
 
             checkCollisions();
 

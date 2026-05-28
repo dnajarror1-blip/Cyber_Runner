@@ -25,7 +25,9 @@ void HUD::drawGameHUD(float speed, int creditos, int score, int highScore, bool 
 
     if (nitroActive)
     {
-        DrawText("NITRO ACTIVO", 600, 20, 20, SKYBLUE);
+        DrawRectangle(315, 56, 170, 32, {0, 0, 0, 180});
+        DrawRectangleLines(315, 56, 170, 32, SKYBLUE);
+        DrawText("NITRO ACTIVO", 328, 65, 15, SKYBLUE);
     }
 
     if (hasShield)
@@ -34,9 +36,6 @@ void HUD::drawGameHUD(float speed, int creditos, int score, int highScore, bool 
         DrawRectangleLines(315, 8, 170, 32, ORANGE);
         DrawText("ESCUDO ACTIVO", 328, 17, 15, ORANGE);
     }
-
-    DrawRectangle(690, 405, 92, 26, {0, 0, 0, 150});
-    DrawText(TextFormat("FPS: %i", GetFPS()), 700, 411, 14, GREEN);
 }
 
 void HUD::drawMenuHUD(int creditos) {

@@ -8,7 +8,7 @@
 #include <iostream>
 #include <string>
 
-const bool MODO_PRUEBA_SIN_API = false;
+const bool MODO_PRUEBA_SIN_API = true;
 
 int main()
 {
