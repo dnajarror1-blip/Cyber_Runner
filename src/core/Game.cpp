@@ -307,22 +307,25 @@ void Game::limpiarFinalizacionesPartidaTerminadas() {
 }
 
 void Game::consultarRankingApi() {
+    rankingActual.clear();
+
     if (!sesionIniciada || !api.tieneSesion()) {
         mensajeApi = "API: no hay sesion para ranking.";
         TraceLog(LOG_ERROR, "No hay sesion activa para consultar ranking.");
+        currentScreen = RANKING;
         return;
     }
 
-    std::vector<RankingItem> ranking;
     std::string error;
 
     bool ok = api.consultarRanking(
-        ranking,
+        rankingActual,
         error
     );
 
     if (!ok) {
         mensajeApi = "API: no se pudo consultar ranking.";
+        currentScreen = RANKING;
 
         TraceLog(
             LOG_ERROR,
@@ -334,23 +337,25 @@ void Game::consultarRankingApi() {
 
     TraceLog(LOG_INFO, "===== RANKING =====");
 
-    if (ranking.empty()) {
+    if (rankingActual.empty()) {
         mensajeApi = "API: ranking vacio.";
         TraceLog(LOG_INFO, "Ranking vacio.");
+        currentScreen = RANKING;
         return;
     }
 
-    mensajeApi = "API: ranking consultado. Revisa consola.";
+    mensajeApi = "API: ranking consultado.";
+    currentScreen = RANKING;
 
-    for (size_t i = 0; i < ranking.size(); ++i) {
+    for (size_t i = 0; i < rankingActual.size(); ++i) {
         TraceLog(
             LOG_INFO,
             TextFormat(
                 "%i. %s | Score: %i | Nivel: %i",
                 static_cast<int>(i + 1),
-                ranking[i].username.c_str(),
-                ranking[i].bestScore,
-                ranking[i].bestNivel
+                rankingActual[i].username.c_str(),
+                rankingActual[i].bestScore,
+                rankingActual[i].bestNivel
             )
         );
     }
@@ -792,6 +797,27 @@ void Game::updateGame() {
                 )
             ) {
                 currentScreen = CONFIRMAR_SALIDA;
+            }
+
+            break;
+        }
+
+        case RANKING: {
+            bool volverMenuPressed =
+                    IsKeyPressed(KEY_ESCAPE) ||
+                    IsKeyPressed(KEY_R) ||
+                    IsKeyPressed(KEY_ENTER) ||
+                    (
+                        IsGamepadAvailable(0) &&
+                        (
+                            IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN) ||
+                            IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_RIGHT) ||
+                            IsGamepadButtonPressed(0, GAMEPAD_BUTTON_MIDDLE_RIGHT)
+                        )
+                    );
+
+            if (volverMenuPressed) {
+                currentScreen = MENU;
             }
 
             break;
@@ -1274,6 +1300,125 @@ void Game::drawGame() {
 
             break;
         }
+
+        case RANKING: {
+            audioManager.stopRunning();
+
+            DrawText(
+                "RANKING",
+                330,
+                45,
+                32,
+                NEO_CYAN
+            );
+
+            DrawRectangleLines(
+                110,
+                95,
+                580,
+                265,
+                NEO_MAGENTA
+            );
+
+            DrawText(
+                "#",
+                135,
+                115,
+                18,
+                NEO_YELLOW
+            );
+
+            DrawText(
+                "JUGADOR",
+                190,
+                115,
+                18,
+                NEO_YELLOW
+            );
+
+            DrawText(
+                "SCORE",
+                440,
+                115,
+                18,
+                NEO_YELLOW
+            );
+
+            DrawText(
+                "NIVEL",
+                560,
+                115,
+                18,
+                NEO_YELLOW
+            );
+
+            if (rankingActual.empty()) {
+                DrawText(
+                    mensajeApi.c_str(),
+                    210,
+                    215,
+                    20,
+                    GRAY
+                );
+            } else {
+                int filas = std::min(
+                    static_cast<int>(rankingActual.size()),
+                    8
+                );
+
+                for (int i = 0; i < filas; ++i) {
+                    int y = 150 + i * 24;
+                    std::string usernameRanking = rankingActual[i].username;
+
+                    if (usernameRanking.size() > 20) {
+                        usernameRanking = usernameRanking.substr(0, 17) + "...";
+                    }
+
+                    DrawText(
+                        TextFormat("%i", i + 1),
+                        135,
+                        y,
+                        18,
+                        WHITE
+                    );
+
+                    DrawText(
+                        usernameRanking.c_str(),
+                        190,
+                        y,
+                        18,
+                        WHITE
+                    );
+
+                    DrawText(
+                        TextFormat("%i", rankingActual[i].bestScore),
+                        440,
+                        y,
+                        18,
+                        WHITE
+                    );
+
+                    DrawText(
+                        TextFormat("%i", rankingActual[i].bestNivel),
+                        560,
+                        y,
+                        18,
+                        WHITE
+                    );
+                }
+            }
+
+            DrawText(
+                "[ENTER/R/ESC] VOLVER AL MENU",
+                260,
+                385,
+                18,
+                GRAY
+            );
+
+            break;
+        }
+
         case CONFIRMAR_SALIDA: {
             DrawText(
                 "CYBER RUNNER",

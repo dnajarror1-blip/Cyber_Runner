@@ -18,6 +18,7 @@
 enum GameScreen {
     LOGIN,
     MENU,
+    RANKING,
     JUGANDO,
     PAUSA,
     CONFIRMAR_SALIDA,
@@ -82,6 +83,7 @@ private:
     int ultimoScoreReportado = 0;
 
     std::string mensajeApi;
+    std::vector<RankingItem> rankingActual;
 
     std::chrono::steady_clock::time_point inicioPartida;
 
