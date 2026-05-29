@@ -24,6 +24,7 @@ enum GameScreen {
     JUGANDO,
     PAUSA,
     CONFIRMAR_SALIDA,
+    IMPACTO,
     GAMEOVER
 };
 
@@ -57,6 +58,7 @@ private:
 
     // foregournd
     Texture2D foregroundTexture{};
+    Texture2D impactTextures[4] {};
 
     float foregroundOffset;
     float foregroundWidth;
@@ -134,6 +136,8 @@ private:
     float scoreTimer;
     float scorePerSecond;
     int nitroSpawnCountdown;
+    float impactTimer;
+    Vector2 impactPosition {};
 
     std::string playerName;
     std::string loginUsername;
@@ -146,6 +150,7 @@ private:
 
     void drawGame();
     void drawLoadingScreen();
+    void drawImpactAnimation();
 
     void drawBackground(); //fondo
     void drawForeground(); //foreground

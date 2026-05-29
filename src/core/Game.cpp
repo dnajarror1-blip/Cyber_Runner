@@ -114,6 +114,8 @@ Game::Game(ApiClient &apiClient, LoginManager &login)
     scorePerSecond = 55.0f;
     nitroSpawnCountdown = 0;
     coinsCollectedThisRun = 0;
+    impactTimer = 0.0f;
+    impactPosition = {0.0f, 0.0f};
 }
 
 void Game::setUsuario(
@@ -716,6 +718,8 @@ void Game::resetGame() {
 
     coinsCollectedThisRun = 0;
     nitroSpawnCountdown = GetRandomValue(2, 4);
+    impactTimer = 0.0f;
+    impactPosition = {0.0f, 0.0f};
 
     obstacles.clear();
 
@@ -1016,6 +1020,10 @@ void Game::run() {
     fondo2 = LoadTexture("assets/textures/fondocyber2.png");
     fondo3 = LoadTexture("assets/textures/fondocyber3.png");
     foregroundTexture = LoadTexture("assets/textures/foreground.png");
+    impactTextures[0] = LoadTexture("assets/explotion1.png");
+    impactTextures[1] = LoadTexture("assets/explotion2.png");
+    impactTextures[2] = LoadTexture("assets/explotion3.png");
+    impactTextures[3] = LoadTexture("assets/explotion4.png");
     hud.loadAssets();
 
     SetTextureFilter(
@@ -1074,6 +1082,14 @@ void Game::run() {
     UnloadTexture(fondo3);
 
     UnloadTexture(foregroundTexture);
+
+    for (auto &texture: impactTextures) {
+        if (texture.id) {
+            UnloadTexture(texture);
+            texture = {};
+        }
+    }
+
     hud.unloadAssets();
 
     UnloadMusicStream(backgroundMusic);
@@ -1629,6 +1645,16 @@ void Game::updateGame() {
             break;
         }
 
+        case IMPACTO: {
+            impactTimer += GetFrameTime();
+
+            if (impactTimer >= 1.05f) {
+                currentScreen = GAMEOVER;
+            }
+
+            break;
+        }
+
         case GAMEOVER: {
             bool reiniciarPressed =
                     IsKeyPressed(KEY_ONE) ||
@@ -1732,9 +1758,12 @@ void Game::checkCollisions()
                 coinsCollectedThisRun
             );
 
+            impactPosition = player->getPosition();
+            impactTimer = 0.0f;
+
             finalizarPartidaApiAsync("LOSE");
 
-            currentScreen = GAMEOVER;
+            currentScreen = IMPACTO;
 
             return;
         }
@@ -1792,6 +1821,68 @@ void Game::drawLoadingScreen()
         282,
         13,
         GRAY
+    );
+}
+
+void Game::drawImpactAnimation()
+{
+    int frame = static_cast<int>(impactTimer / 0.16f);
+
+    if (frame > 3) {
+        frame = 3;
+    }
+
+    Texture2D texture = impactTextures[frame];
+
+    if (texture.id) {
+        Rectangle source = {
+            0.0f,
+            0.0f,
+            static_cast<float>(texture.width),
+            static_cast<float>(texture.height)
+        };
+
+        Rectangle dest = {
+            impactPosition.x - 48.0f,
+            impactPosition.y - 52.0f,
+            96.0f,
+            96.0f
+        };
+
+        DrawTexturePro(
+            texture,
+            source,
+            dest,
+            {0.0f, 0.0f},
+            0.0f,
+            WHITE
+        );
+    } else {
+        DrawCircleGradient(
+            static_cast<int>(impactPosition.x),
+            static_cast<int>(impactPosition.y),
+            46.0f,
+            NEO_RED,
+            {0, 0, 0, 0}
+        );
+    }
+
+    float fadeProgress = (impactTimer - 0.55f) / 0.50f;
+
+    if (fadeProgress < 0.0f) {
+        fadeProgress = 0.0f;
+    }
+
+    if (fadeProgress > 1.0f) {
+        fadeProgress = 1.0f;
+    }
+
+    DrawRectangle(
+        0,
+        0,
+        screenWidth,
+        screenHeight,
+        {0, 0, 0, static_cast<unsigned char>(fadeProgress * 205.0f)}
     );
 }
 
@@ -2254,6 +2345,13 @@ void Game::drawGame() {
 
             break;
         }
+
+        case IMPACTO: {
+            drawImpactAnimation();
+
+            break;
+        }
+
         case PAUSA: {
             audioManager.stopRunning();
             DrawRectangle(
