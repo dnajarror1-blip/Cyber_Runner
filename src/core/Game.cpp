@@ -1,6 +1,7 @@
 #include "audio/AudioManager.h"
 #include <core/Game.h>
 #include <algorithm>
+#include <cmath>
 #include <exception>
 #include "../../api/GameApiConfig.h"
 // Paleta de Colores Neón
@@ -18,6 +19,11 @@ static bool gamepadBackPressed()
            IsGamepadButtonPressed(0, GAMEPAD_BUTTON_MIDDLE_LEFT);
 }
 
+static bool shouldAnimateScreenTransition(GameScreen screen)
+{
+    return screen != JUGANDO && screen != IMPACTO;
+}
+
 static void drawCyberText(
     const char *text,
     int x,
@@ -28,6 +34,48 @@ static void drawCyberText(
 {
     DrawText(text, x + 2, y + 2, fontSize, MENU_SHADOW);
     DrawText(text, x, y, fontSize, color);
+}
+
+static unsigned char blendChannel(
+    unsigned char start,
+    unsigned char end,
+    float amount
+)
+{
+    float value =
+            static_cast<float>(start) +
+            (static_cast<float>(end) - static_cast<float>(start)) * amount;
+
+    return static_cast<unsigned char>(value);
+}
+
+static Color blendColor(
+    Color start,
+    Color end,
+    float amount
+)
+{
+    return {
+        blendChannel(start.r, end.r, amount),
+        blendChannel(start.g, end.g, amount),
+        blendChannel(start.b, end.b, amount),
+        blendChannel(start.a, end.a, amount)
+    };
+}
+
+static Color getAnimatedAccent(Color accent)
+{
+    float time = static_cast<float>(GetTime());
+    float wave = (std::sin(time * 1.7f) + 1.0f) * 0.5f;
+    Color paletteColor = blendColor(NEO_CYAN, NEO_MAGENTA, wave);
+
+    float yellowPulse = (std::sin(time * 1.2f + 1.8f) + 1.0f) * 0.5f;
+    paletteColor = blendColor(paletteColor, NEO_YELLOW, yellowPulse * 0.35f);
+
+    Color result = blendColor(accent, paletteColor, 0.45f);
+    result.a = accent.a;
+
+    return result;
 }
 
 static void drawCyberPanel(
@@ -45,14 +93,18 @@ static void drawCyberPanel(
         static_cast<float>(height)
     };
 
+    Color animatedAccent = getAnimatedAccent(accent);
+    Color softAccent = animatedAccent;
+    softAccent.a = 95;
+
     DrawRectangleRec(panel, MENU_PANEL_FILL);
-    DrawRectangleLinesEx(panel, 2.0f, accent);
+    DrawRectangleLinesEx(panel, 2.0f, animatedAccent);
     DrawRectangleLines(
         x + 5,
         y + 5,
         width - 10,
         height - 10,
-        {accent.r, accent.g, accent.b, 90}
+        softAccent
     );
 }
 
@@ -186,7 +238,9 @@ Game::Game(ApiClient &apiClient, LoginManager &login)
     nitroTimer = 0.0f;
     shouldCloseGame = false;
 
-    currentScreen = INICIO;
+    currentScreen = CARGA_INICIAL;
+    screenTransitionAlpha = 0.0f;
+    initialLoadTimer = 0.0f;
 
     playerData = dataManager.loadPlayerData();
 
@@ -1394,14 +1448,46 @@ void Game::toggleFullscreen() {
 }
 
 void Game::updateGame() {
+    GameScreen screenBeforeUpdate = currentScreen;
+    float frameTime = GetFrameTime();
+
+    if (
+        screenTransitionAlpha > 0.0f &&
+        shouldAnimateScreenTransition(currentScreen)
+    ) {
+        screenTransitionAlpha -= frameTime * 3.2f;
+
+        if (screenTransitionAlpha < 0.0f) {
+            screenTransitionAlpha = 0.0f;
+        }
+    }
+
     limpiarFinalizacionesPartidaTerminadas();
 
     if (currentScreen == CARGANDO) {
         actualizarCarga();
+
+        if (
+            currentScreen != screenBeforeUpdate &&
+            shouldAnimateScreenTransition(currentScreen)
+        ) {
+            screenTransitionAlpha = 1.0f;
+        }
+
         return;
     }
 
     switch (currentScreen) {
+        case CARGA_INICIAL: {
+            initialLoadTimer += frameTime;
+
+            if (initialLoadTimer >= 1.45f) {
+                currentScreen = INICIO;
+            }
+
+            break;
+        }
+
         case INICIO: {
             bool startPressed =
                     IsKeyPressed(KEY_ENTER) ||
@@ -1850,6 +1936,13 @@ void Game::updateGame() {
             break;
         }
     }
+
+    if (
+        currentScreen != screenBeforeUpdate &&
+        shouldAnimateScreenTransition(currentScreen)
+    ) {
+        screenTransitionAlpha = 1.0f;
+    }
 }
 
 void Game::checkCollisions()
@@ -2038,6 +2131,59 @@ void Game::drawImpactAnimation()
 
 void Game::drawGame() {
     switch (currentScreen) {
+        case CARGA_INICIAL: {
+            audioManager.stopRunning();
+
+            drawCyberPanel(205, 135, 390, 185, NEO_CYAN);
+
+            int puntos = static_cast<int>(GetTime() * 4.0) % 4;
+            std::string titulo = "INICIANDO SISTEMA";
+
+            for (int i = 0; i < puntos; ++i) {
+                titulo += ".";
+            }
+
+            int tituloWidth = MeasureText(titulo.c_str(), 24);
+
+            drawCyberText(
+                titulo.c_str(),
+                400 - tituloWidth / 2,
+                168,
+                24,
+                NEO_CYAN
+            );
+
+            drawCyberText(
+                "Preparando interfaz neural",
+                300,
+                210,
+                16,
+                LIGHTGRAY
+            );
+
+            float progreso = initialLoadTimer / 1.45f;
+
+            if (progreso > 1.0f) {
+                progreso = 1.0f;
+            }
+
+            DrawRectangle(260, 255, 280, 12, {0, 0, 0, 220});
+            DrawRectangleLinesEx(
+                {260.0f, 255.0f, 280.0f, 12.0f},
+                1.5f,
+                NEO_MAGENTA
+            );
+            DrawRectangle(
+                262,
+                257,
+                static_cast<int>(276.0f * progreso),
+                8,
+                NEO_CYAN
+            );
+
+            break;
+        }
+
         case INICIO: {
             audioManager.stopRunning();
 
@@ -2583,6 +2729,26 @@ void Game::drawGame() {
 
             break;
         }
+    }
+
+    if (
+        screenTransitionAlpha > 0.0f &&
+        shouldAnimateScreenTransition(currentScreen)
+    ) {
+        float easedAlpha =
+                screenTransitionAlpha *
+                screenTransitionAlpha *
+                (3.0f - 2.0f * screenTransitionAlpha);
+        unsigned char fadeAlpha =
+                static_cast<unsigned char>(easedAlpha * 205.0f);
+
+        DrawRectangle(
+            0,
+            0,
+            screenWidth,
+            screenHeight,
+            {0, 0, 0, fadeAlpha}
+        );
     }
 }
 

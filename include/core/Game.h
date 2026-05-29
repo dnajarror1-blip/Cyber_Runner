@@ -16,6 +16,7 @@
 #include <future>
 
 enum GameScreen {
+    CARGA_INICIAL,
     INICIO,
     LOGIN,
     MENU,
@@ -127,6 +128,8 @@ private:
     PlayerData playerData;
 
     GameScreen currentScreen;
+    float screenTransitionAlpha = 0.0f;
+    float initialLoadTimer = 0.0f;
 
     int creditos;
     int score;
