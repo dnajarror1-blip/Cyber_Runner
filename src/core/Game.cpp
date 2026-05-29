@@ -101,7 +101,7 @@ Game::Game(ApiClient &apiClient, LoginManager &login)
     nitroTimer = 0.0f;
     shouldCloseGame = false;
 
-    currentScreen = MENU;
+    currentScreen = INICIO;
 
     playerData = dataManager.loadPlayerData();
 
@@ -1252,6 +1252,25 @@ void Game::updateGame() {
     }
 
     switch (currentScreen) {
+        case INICIO: {
+            bool startPressed =
+                    IsKeyPressed(KEY_ENTER) ||
+                    IsKeyPressed(KEY_SPACE) ||
+                    (
+                        IsGamepadAvailable(0) &&
+                        (
+                            IsGamepadButtonPressed(0, GAMEPAD_BUTTON_MIDDLE_RIGHT) ||
+                            IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)
+                        )
+                    );
+
+            if (startPressed) {
+                currentScreen = MENU;
+            }
+
+            break;
+        }
+
         case LOGIN: {
             std::string &campoActivo =
                     loginPasswordActivo ? loginPassword : loginUsername;
@@ -1778,6 +1797,54 @@ void Game::drawLoadingScreen()
 
 void Game::drawGame() {
     switch (currentScreen) {
+        case INICIO: {
+            audioManager.stopRunning();
+
+            drawCyberPanel(180, 55, 440, 340, NEO_CYAN);
+
+            DrawRectangle(275, 95, 250, 120, {0, 0, 0, 220});
+            DrawRectangleLinesEx({275.0f, 95.0f, 250.0f, 120.0f}, 2.0f, NEO_MAGENTA);
+            DrawRectangleLines(285, 105, 230, 100, {255, 0, 255, 90});
+
+            drawCyberText(
+                "ESPACIO PARA LOGO",
+                305,
+                145,
+                20,
+                LIGHTGRAY
+            );
+
+            drawCyberText(
+                "CYBER RUNNER",
+                260,
+                245,
+                42,
+                NEO_CYAN
+            );
+
+            bool mostrarStart = static_cast<int>(GetTime() * 2.0) % 2 == 0;
+
+            if (mostrarStart) {
+                drawCyberText(
+                    "PRESIONA START",
+                    305,
+                    325,
+                    24,
+                    NEO_YELLOW
+                );
+            }
+
+            drawCyberText(
+                "Enter / Espacio / A",
+                325,
+                365,
+                14,
+                GRAY
+            );
+
+            break;
+        }
+
         case LOGIN: {
             drawCyberPanel(185, 60, 430, 335, NEO_CYAN);
 

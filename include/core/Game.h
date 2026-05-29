@@ -16,6 +16,7 @@
 #include <future>
 
 enum GameScreen {
+    INICIO,
     LOGIN,
     MENU,
     RANKING,
