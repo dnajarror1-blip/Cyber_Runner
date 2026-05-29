@@ -131,6 +131,11 @@ void Game::setUsuario(
     playerData.credits = creditos;
 }
 
+void Game::setModoPruebaSinApi(bool activo)
+{
+    modoPruebaSinApi = activo;
+}
+
 bool Game::iniciarPartidaApi() {
     if (!sesionIniciada || !api.tieneSesion()) {
         mensajeApi = "API: no hay sesion activa.";
@@ -420,7 +425,12 @@ void Game::iniciarCargaPartida(GameScreen pantallaError, bool permitirModoLocal)
         return;
     }
 
-    if (!sesionIniciada || !api.tieneSesion()) {
+    if (!sesionIniciada) {
+        mensajeApi = "Debes iniciar sesion antes de jugar.";
+        return;
+    }
+
+    if (!api.tieneSesion() && !modoPruebaSinApi) {
         mensajeApi = "Debes iniciar sesion antes de jugar.";
         return;
     }
@@ -440,8 +450,13 @@ void Game::iniciarCargaPartida(GameScreen pantallaError, bool permitirModoLocal)
         [this, costoPartida]() -> LoadingResult {
             LoadingResult resultado;
 
-            if (!sesionIniciada || !api.tieneSesion()) {
+            if (!sesionIniciada || (!api.tieneSesion() && !modoPruebaSinApi)) {
                 resultado.mensaje = "API: no hay sesion activa.";
+                return resultado;
+            }
+
+            if (modoPruebaSinApi && !api.tieneSesion()) {
+                resultado.mensaje = "API: modo prueba local, partida sin servidor.";
                 return resultado;
             }
 
@@ -906,11 +921,27 @@ void Game::generarMonedasEnMatriz(float startX) {
 
     int patron = GetRandomValue(0, 2);
     bool spawnNitro = nitroSpawnCountdown <= 0;
+    bool monedasCercaDron = false;
+    Rectangle dronCercano {};
 
     if (spawnNitro) {
         nitroSpawnCountdown = GetRandomValue(4, 6);
     } else {
         nitroSpawnCountdown--;
+    }
+
+    for (auto &obs: obstacles) {
+        Rectangle rect = obs.getRect();
+
+        if (
+            obs.getType() == ObstacleType::AIR &&
+            rect.x > startX - 120.0f &&
+            rect.x < startX + 760.0f
+        ) {
+            dronCercano = rect;
+            monedasCercaDron = true;
+            break;
+        }
     }
 
     for (size_t i = 0; i < coins.size(); ++i) {
@@ -929,6 +960,19 @@ void Game::generarMonedasEnMatriz(float startX) {
                 startX + 740.0f,
                 static_cast<float>(GetRandomValue(205, 295)),
                 spawnNitro ? ItemType::NITRO : ItemType::CREDIT
+            );
+
+            continue;
+        }
+
+        if (monedasCercaDron && (i == 6 || i == 7)) {
+            float offsetX = i == 6 ? -34.0f : 34.0f;
+            float offsetY = i == 6 ? -18.0f : 20.0f;
+
+            coins[i].reset(
+                dronCercano.x + offsetX,
+                dronCercano.y + offsetY,
+                ItemType::CREDIT
             );
 
             continue;
@@ -993,6 +1037,11 @@ void Game::separarObstaculos() {
 
             size_t mover = a.x < b.x ? j : i;
             float baseX = std::max(a.x, b.x);
+            Rectangle moverRect = obstacles[mover].getRect();
+
+            if (moverRect.x < static_cast<float>(screenWidth) + 120.0f) {
+                continue;
+            }
 
             obstacles[mover].respawn(
                 baseX + minSpacing + static_cast<float>(GetRandomValue(80, 220))
@@ -1344,12 +1393,12 @@ void Game::updateGame() {
                     IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)
                 )
             ) {
-                if (!sesionIniciada) {
+                if (!sesionIniciada && !modoPruebaSinApi) {
                     mensajeApi = "LOGIN: debes loguearte antes de jugar.";
                     break;
                 }
 
-                iniciarCargaPartida(MENU, true);
+                iniciarCargaPartida(MENU, modoPruebaSinApi);
             }
 
             if (
@@ -1665,7 +1714,7 @@ void Game::updateGame() {
                     );
 
             if (reiniciarPressed) {
-                iniciarCargaPartida(GAMEOVER, false);
+                iniciarCargaPartida(GAMEOVER, modoPruebaSinApi);
 
                 break;
             }

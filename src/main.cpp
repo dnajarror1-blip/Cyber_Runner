@@ -34,6 +34,7 @@ int main()
     if (MODO_PRUEBA_SIN_API)
     {
         std::cout << "MODO PRUEBA SIN API ACTIVADO." << std::endl;
+        game.setModoPruebaSinApi(true);
 
         UsuarioApi usuarioLocal;
         usuarioLocal.username = "Jugador local";

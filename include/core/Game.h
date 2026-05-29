@@ -98,6 +98,7 @@ private:
     bool sesionIniciada = false;
     bool partidaActiva = false;
     bool partidaFinalizada = false;
+    bool modoPruebaSinApi = false;
 
     int nivelActual = 1;
     int ultimoScoreReportado = 0;
@@ -194,6 +195,8 @@ public:
     void setUsuario(
         const UsuarioApi &usuario
     );
+
+    void setModoPruebaSinApi(bool activo);
 
     void run();
 

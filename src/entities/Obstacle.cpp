@@ -65,8 +65,10 @@ Obstacle& Obstacle::operator=(Obstacle&& other) noexcept
         verticalPhase = other.verticalPhase;
         type = other.type;
         droneTexture = other.droneTexture;
+        groundTexture = other.groundTexture;
 
         other.droneTexture = {};
+        other.groundTexture = {};
     }
 
     return *this;
