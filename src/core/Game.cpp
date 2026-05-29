@@ -12,6 +12,12 @@ const Color MENU_PANEL_FILL = {3, 6, 18, 230};
 const Color MENU_BUTTON_FILL = {5, 12, 28, 225};
 const Color MENU_SHADOW = {0, 0, 0, 210};
 
+static bool gamepadBackPressed()
+{
+    return IsGamepadAvailable(0) &&
+           IsGamepadButtonPressed(0, GAMEPAD_BUTTON_MIDDLE_LEFT);
+}
+
 static void drawCyberText(
     const char *text,
     int x,
@@ -50,8 +56,81 @@ static void drawCyberPanel(
     );
 }
 
-static void drawCyberButton(
+static void drawRetroRoundButton(
+    float x,
+    float y,
+    const char *label,
+    Color accent
+)
+{
+    DrawCircle(
+        static_cast<int>(x + 2.0f),
+        static_cast<int>(y + 2.0f),
+        15.0f,
+        {0, 0, 0, 190}
+    );
+    DrawCircle(
+        static_cast<int>(x),
+        static_cast<int>(y),
+        15.0f,
+        MENU_BUTTON_FILL
+    );
+    DrawCircleLines(
+        static_cast<int>(x),
+        static_cast<int>(y),
+        15.0f,
+        accent
+    );
+    DrawCircleLines(
+        static_cast<int>(x),
+        static_cast<int>(y),
+        11.0f,
+        {255, 255, 255, 80}
+    );
+
+    int textWidth = MeasureText(label, 14);
+    drawCyberText(
+        label,
+        static_cast<int>(x - textWidth / 2.0f),
+        static_cast<int>(y - 8.0f),
+        14,
+        WHITE
+    );
+}
+
+static void drawRetroPillButton(
     Rectangle rect,
+    const char *label,
+    Color accent
+)
+{
+    DrawRectangleRec(
+        {rect.x + 2.0f, rect.y + 2.0f, rect.width, rect.height},
+        {0, 0, 0, 190}
+    );
+    DrawRectangleRec(rect, MENU_BUTTON_FILL);
+    DrawRectangleLinesEx(rect, 1.5f, accent);
+    DrawRectangleLines(
+        static_cast<int>(rect.x + 4.0f),
+        static_cast<int>(rect.y + 4.0f),
+        static_cast<int>(rect.width - 8.0f),
+        static_cast<int>(rect.height - 8.0f),
+        {255, 255, 255, 70}
+    );
+
+    int textWidth = MeasureText(label, 13);
+    drawCyberText(
+        label,
+        static_cast<int>(rect.x + (rect.width - textWidth) / 2.0f),
+        static_cast<int>(rect.y + 6.0f),
+        13,
+        WHITE
+    );
+}
+
+static void drawRetroActionButton(
+    Rectangle rect,
+    const char *buttonLabel,
     const char *text,
     Color accent
 )
@@ -63,11 +142,17 @@ static void drawCyberButton(
     );
     DrawRectangleLinesEx(rect, 1.5f, accent);
 
-    int textWidth = MeasureText(text, 18);
+    drawRetroRoundButton(
+        rect.x + 30.0f,
+        rect.y + rect.height / 2.0f,
+        buttonLabel,
+        accent
+    );
+
     drawCyberText(
         text,
-        static_cast<int>(rect.x + (rect.width - textWidth) / 2.0f),
-        static_cast<int>(rect.y + 10.0f),
+        static_cast<int>(rect.x + 62.0f),
+        static_cast<int>(rect.y + (rect.height - 18.0f) / 2.0f),
         18,
         WHITE
     );
@@ -1373,7 +1458,14 @@ void Game::updateGame() {
                 break;
             }
 
-            if (IsKeyPressed(KEY_ENTER)) {
+            bool loginPressed =
+                    IsKeyPressed(KEY_ENTER) ||
+                    (
+                        IsGamepadAvailable(0) &&
+                        IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)
+                    );
+
+            if (loginPressed) {
                 if (!loginPasswordActivo) {
                     loginPasswordActivo = true;
                     break;
@@ -1386,6 +1478,14 @@ void Game::updateGame() {
         }
 
         case MENU: {
+            if (
+                gamepadBackPressed() ||
+                IsKeyPressed(KEY_BACKSPACE)
+            ) {
+                currentScreen = INICIO;
+                break;
+            }
+
             if (
                 IsKeyPressed(KEY_ONE) ||
                 (
@@ -1460,6 +1560,7 @@ void Game::updateGame() {
 
         case CONFIRMAR_SALIDA: {
             audioManager.stopRunning();
+
             bool confirmarSalida =
                     IsKeyPressed(KEY_ENTER) ||
                     IsKeyPressed(KEY_Y) ||
@@ -1983,12 +2084,18 @@ void Game::drawGame() {
                 );
             }
 
+            drawRetroPillButton(
+                {295.0f, 360.0f, 76.0f, 28.0f},
+                "START",
+                NEO_CYAN
+            );
+            drawRetroRoundButton(400.0f, 374.0f, "A", NEO_YELLOW);
             drawCyberText(
-                "Enter / Espacio / A",
-                325,
-                365,
+                "COMENZAR",
+                425,
+                366,
                 14,
-                GRAY
+                LIGHTGRAY
             );
 
             break;
@@ -2061,21 +2168,10 @@ void Game::drawGame() {
                 WHITE
             );
 
-            drawCyberText(
-                "[TAB] CAMBIAR CAMPO   [ENTER] LOGIN   [ESC] MENU",
-                165,
-                330,
-                16,
-                LIGHTGRAY
-            );
-
-            drawCyberText(
-                "Control: B volver al menu",
-                300,
-                348,
-                14,
-                LIGHTGRAY
-            );
+            drawRetroRoundButton(285.0f, 340.0f, "A", NEO_CYAN);
+            drawCyberText("LOGIN", 310, 332, 14, LIGHTGRAY);
+            drawRetroRoundButton(385.0f, 340.0f, "B", NEO_RED);
+            drawCyberText("MENU", 410, 332, 14, LIGHTGRAY);
 
             drawCyberText(
                 mensajeApi.c_str(),
@@ -2119,27 +2215,31 @@ void Game::drawGame() {
                 sesionIniciada ? NEO_YELLOW : GRAY
             );
 
-            drawCyberButton(
+            drawRetroActionButton(
                 {250.0f, 140.0f, 300.0f, 38.0f},
-                "[1] EMPEZAR PARTIDA",
+                "A",
+                "EMPEZAR PARTIDA",
                 NEO_CYAN
             );
 
-            drawCyberButton(
+            drawRetroActionButton(
                 {250.0f, 190.0f, 300.0f, 38.0f},
-                sesionIniciada ? "[2] CAMBIAR USUARIO" : "[2] LOGUEARSE",
+                "Y",
+                sesionIniciada ? "CAMBIAR USUARIO" : "LOGUEARSE",
                 WHITE
             );
 
-            drawCyberButton(
+            drawRetroActionButton(
                 {250.0f, 240.0f, 300.0f, 38.0f},
-                "[3] VER RANKING",
+                "X",
+                "VER RANKING",
                 NEO_YELLOW
             );
 
-            drawCyberButton(
+            drawRetroActionButton(
                 {250.0f, 290.0f, 300.0f, 38.0f},
-                "[4] SALIR DEL JUEGO",
+                "B",
+                "SALIR DEL JUEGO",
                 NEO_RED
             );
 
@@ -2152,17 +2252,9 @@ void Game::drawGame() {
             );
 
             drawCyberText(
-                "Control: A jugar | Y login | X ranking | B salir",
-                230,
-                365,
-                13,
-                LIGHTGRAY
-            );
-
-            drawCyberText(
                 mensajeApi.c_str(),
                 250,
-                392,
+                402,
                 15,
                 LIGHTGRAY
             );
@@ -2287,21 +2379,9 @@ void Game::drawGame() {
                 }
             }
 
-            drawCyberText(
-                "[ENTER/R/ESC] VOLVER AL MENU",
-                260,
-                385,
-                18,
-                GRAY
-            );
-
-            drawCyberText(
-                "Control: A/B/Menu volver",
-                300,
-                408,
-                14,
-                LIGHTGRAY
-            );
+            drawRetroRoundButton(250.0f, 392.0f, "A", NEO_CYAN);
+            drawRetroRoundButton(310.0f, 392.0f, "B", NEO_RED);
+            drawCyberText("VOLVER AL MENU", 340, 384, 16, LIGHTGRAY);
 
             break;
         }
@@ -2339,21 +2419,10 @@ void Game::drawGame() {
                 WHITE
             );
 
-            drawCyberText(
-                "[ENTER/Y/A] SI",
-                235,
-                270,
-                18,
-                NEO_CYAN
-            );
-
-            drawCyberText(
-                "[ESC/N/B] NO",
-                420,
-                270,
-                18,
-                NEO_RED
-            );
+            drawRetroRoundButton(250.0f, 275.0f, "A", NEO_CYAN);
+            drawCyberText("SI", 275, 267, 18, NEO_CYAN);
+            drawRetroRoundButton(420.0f, 275.0f, "B", NEO_RED);
+            drawCyberText("NO", 445, 267, 18, NEO_RED);
 
             break;
         }
@@ -2430,24 +2499,18 @@ void Game::drawGame() {
                 NEO_YELLOW
             );
 
-            drawCyberButton(
+            drawRetroActionButton(
                 {230.0f, 190.0f, 340.0f, 45.0f},
-                "[1] CONTINUAR",
+                "A",
+                "CONTINUAR",
                 NEO_CYAN
             );
 
-            drawCyberButton(
+            drawRetroActionButton(
                 {230.0f, 255.0f, 340.0f, 45.0f},
-                "[2] SALIR AL MENU",
+                "B",
+                "SALIR AL MENU",
                 NEO_RED
-            );
-
-            drawCyberText(
-                "Control: A continuar | B salir",
-                260,
-                335,
-                15,
-                GRAY
             );
 
             break;
@@ -2489,21 +2552,24 @@ void Game::drawGame() {
                 NEO_YELLOW
             );
 
-            drawCyberButton(
+            drawRetroActionButton(
                 {235.0f, 245.0f, 330.0f, 36.0f},
-                "[1/R/A] REINICIAR",
+                "A",
+                "REINICIAR",
                 NEO_CYAN
             );
 
-            drawCyberButton(
+            drawRetroActionButton(
                 {235.0f, 290.0f, 330.0f, 36.0f},
-                "[2/ESC/B] SALIR AL MENU",
+                "B",
+                "SALIR AL MENU",
                 WHITE
             );
 
-            drawCyberButton(
+            drawRetroActionButton(
                 {235.0f, 335.0f, 330.0f, 36.0f},
-                "[3/Y] CAMBIAR USUARIO",
+                "Y",
+                "CAMBIAR USUARIO",
                 NEO_MAGENTA
             );
 
