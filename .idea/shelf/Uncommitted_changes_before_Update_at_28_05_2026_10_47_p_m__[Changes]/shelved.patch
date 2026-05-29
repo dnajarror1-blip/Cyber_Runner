@@ -1,0 +1,146 @@
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"BackendCodeEditorMiscSettings\">\r\n    <option name=\"/Default/Housekeeping/FeatureSuggestion/FeatureSuggestionManager/DisabledSuggesters/=SwitchToGoToActionSuggester/@EntryIndexedValue\" value=\"true\" type=\"bool\" />\r\n    <option name=\"/Default/Housekeeping/GlobalSettingsUpgraded/IsUpgraded/@EntryValue\" value=\"true\" type=\"bool\" />\r\n    <option name=\"/Default/RiderDebugger/RiderRestoreDecompile/RestoreDecompileSetting/@EntryValue\" value=\"false\" type=\"bool\" />\r\n  </component>\r\n  <component name=\"CMakePresetLoader\">{\r\n  &quot;useNewFormat&quot;: true\r\n}</component>\r\n  <component name=\"CMakeProjectFlavorService\">\r\n    <option name=\"flavorId\" value=\"CMakePlainProjectFlavor\" />\r\n  </component>\r\n  <component name=\"CMakeReloadState\">\r\n    <option name=\"reloaded\" value=\"true\" />\r\n  </component>\r\n  <component name=\"CMakeRunConfigurationManager\">\r\n    <generated>\r\n      <config projectName=\"Cyber_Runner\" targetName=\"Cyber_Runner\" />\r\n    </generated>\r\n  </component>\r\n  <component name=\"CMakeSettings\">\r\n    <configurations>\r\n      <configuration PROFILE_NAME=\"Debug\" ENABLED=\"true\" CONFIG_NAME=\"Debug\" GENERATION_OPTIONS=\"-G Ninja -DCMAKE_PREFIX_PATH=C:/msys64/ucrt64 -DOPENSSL_ROOT_DIR=C:/msys64/ucrt64\" />\r\n    </configurations>\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"6ddf144c-c33f-411d-9357-7ea431bb52dd\" name=\"Changes\" comment=\"\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/include/core/Game.h\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/include/core/Game.h\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/include/entities/Coin.h\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/include/entities/Coin.h\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/include/entities/Obstacle.h\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/include/entities/Obstacle.h\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/core/Game.cpp\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/core/Game.cpp\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/entities/Coin.cpp\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/entities/Coin.cpp\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/entities/Obstacle.cpp\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/entities/Obstacle.cpp\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main.cpp\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main.cpp\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/ui/HUD.cpp\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/ui/HUD.cpp\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"ClangdSettings\">\r\n    <option name=\"formatViaClangd\" value=\"false\" />\r\n  </component>\r\n  <component name=\"EmbeddingIndexingInfo\">\r\n    <option name=\"cachedIndexableFilesCount\" value=\"61\" />\r\n  </component>\r\n  <component name=\"ExecutionTargetManager\" SELECTED_TARGET=\"CMakeBuildProfile:Debug\" />\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n    <option name=\"UPDATE_TYPE\" value=\"REBASE\" />\r\n  </component>\r\n  <component name=\"GitHubPullRequestSearchHistory\">{\r\n  &quot;lastFilter&quot;: {\r\n    &quot;state&quot;: &quot;OPEN&quot;,\r\n    &quot;assignee&quot;: &quot;dnajarror1-blip&quot;\r\n  }\r\n}</component>\r\n  <component name=\"GithubPullRequestsUISettings\">{\r\n  &quot;selectedUrlAndAccountId&quot;: {\r\n    &quot;url&quot;: &quot;https://github.com/dnajarror1-blip/Cyber_Runner.git&quot;,\r\n    &quot;accountId&quot;: &quot;d16b615f-4628-4a27-ab3b-e7e135153f8a&quot;\r\n  }\r\n}</component>\r\n  <component name=\"MacroExpansionManager\">\r\n    <option name=\"directoryName\" value=\"VtVxoQfU\" />\r\n  </component>\r\n  <component name=\"McpProjectServerCommands\">\r\n    <commands />\r\n    <urls />\r\n  </component>\r\n  <component name=\"NextEditCompletionFeaturesState\">\r\n    <decayedCancelled>\r\n      <entry key=\"MS100\" value=\"1.6030055255482523\" />\r\n      <entry key=\"MS500\" value=\"3.986394529057652\" />\r\n      <entry key=\"S2\" value=\"11.735221041671222\" />\r\n      <entry key=\"S5\" value=\"28.093551754770036\" />\r\n      <entry key=\"S10\" value=\"51.69673667360961\" />\r\n      <entry key=\"S30\" value=\"103.2048040173786\" />\r\n      <entry key=\"S60\" value=\"129.91693204475655\" />\r\n      <entry key=\"M2\" value=\"147.23104434517023\" />\r\n      <entry key=\"M5\" value=\"159.59243186394792\" />\r\n      <entry key=\"M10\" value=\"172.23364792059988\" />\r\n      <entry key=\"M15\" value=\"193.75908894074863\" />\r\n      <entry key=\"M30\" value=\"297.3409223583971\" />\r\n      <entry key=\"H1\" value=\"587.6640742258395\" />\r\n      <entry key=\"H2\" value=\"1088.6572659314247\" />\r\n      <entry key=\"H4\" value=\"1610.2958672963782\" />\r\n      <entry key=\"D1\" value=\"2323.077029197729\" />\r\n      <entry key=\"W1\" value=\"2482.204220870957\" />\r\n    </decayedCancelled>\r\n    <decayedSelected>\r\n      <entry key=\"MS100\" value=\"0.0\" />\r\n      <entry key=\"MS500\" value=\"0.0\" />\r\n      <entry key=\"S2\" value=\"0.0\" />\r\n      <entry key=\"S5\" value=\"0.0\" />\r\n      <entry key=\"S10\" value=\"0.0\" />\r\n      <entry key=\"S30\" value=\"0.0\" />\r\n      <entry key=\"S60\" value=\"0.0\" />\r\n      <entry key=\"M2\" value=\"0.0\" />\r\n      <entry key=\"M5\" value=\"0.0\" />\r\n      <entry key=\"M10\" value=\"0.0\" />\r\n      <entry key=\"M15\" value=\"0.0\" />\r\n      <entry key=\"M30\" value=\"0.0\" />\r\n      <entry key=\"H1\" value=\"0.0\" />\r\n      <entry key=\"H2\" value=\"0.0\" />\r\n      <entry key=\"H4\" value=\"0.0\" />\r\n      <entry key=\"D1\" value=\"0.0\" />\r\n      <entry key=\"W1\" value=\"0.0\" />\r\n    </decayedSelected>\r\n    <decayedShown>\r\n      <entry key=\"MS100\" value=\"1.5426948080368672\" />\r\n      <entry key=\"MS500\" value=\"3.9582620105007127\" />\r\n      <entry key=\"S2\" value=\"11.71486491034653\" />\r\n      <entry key=\"S5\" value=\"28.073978454981308\" />\r\n      <entry key=\"S10\" value=\"51.67850841583621\" />\r\n      <entry key=\"S30\" value=\"103.19237810687399\" />\r\n      <entry key=\"S60\" value=\"129.90904115255833\" />\r\n      <entry key=\"M2\" value=\"147.22655150383466\" />\r\n      <entry key=\"M5\" value=\"159.59044551522547\" />\r\n      <entry key=\"M10\" value=\"172.2322011122785\" />\r\n      <entry key=\"M15\" value=\"193.75754263689865\" />\r\n      <entry key=\"M30\" value=\"297.33923136626805\" />\r\n      <entry key=\"H1\" value=\"587.6625761772366\" />\r\n      <entry key=\"H2\" value=\"1088.656146535875\" />\r\n      <entry key=\"H4\" value=\"1610.2951450406279\" />\r\n      <entry key=\"D1\" value=\"2323.0768746782255\" />\r\n      <entry key=\"W1\" value=\"2482.2041977428808\" />\r\n    </decayedShown>\r\n  </component>\r\n  <component name=\"ProjectApplicationVersion\">\r\n    <option name=\"ide\" value=\"CLion\" />\r\n    <option name=\"majorVersion\" value=\"2026\" />\r\n    <option name=\"minorVersion\" value=\"1.2\" />\r\n    <option name=\"productBranch\" value=\"Classic\" />\r\n  </component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;associatedIndex&quot;: 8,\r\n  &quot;fromUser&quot;: false\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"3EErbUdAnLbuOOsPmFnGrVi6w7q\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">{\r\n  &quot;keyToString&quot;: {\r\n    &quot;CMake Application.Cyber_Runner.executor&quot;: &quot;Run&quot;,\r\n    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.RadMigrateCodeStyle&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.west.config.association.type.startup.service&quot;: &quot;true&quot;,\r\n    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,\r\n    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,\r\n    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,\r\n    &quot;git-widget-placeholder&quot;: &quot;main&quot;,\r\n    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,\r\n    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,\r\n    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,\r\n    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,\r\n    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,\r\n    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,\r\n    &quot;settings.editor.selected.configurable&quot;: &quot;CMakeSettings&quot;,\r\n    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;\r\n  }\r\n}</component>\r\n  <component name=\"RunManager\">\r\n    <configuration default=\"true\" type=\"CMakeBoostTestRunConfigurationType\" factoryName=\"Boost Test\" REDIRECT_INPUT=\"false\" ELEVATE=\"false\" USE_EXTERNAL_CONSOLE=\"false\" EMULATE_TERMINAL=\"false\" PASS_PARENT_ENVS_2=\"true\" TEST_MODE=\"SUITE_TEST\">\r\n      <method v=\"2\">\r\n        <option name=\"BeforeTestRunTask\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration default=\"true\" type=\"CMakeCatchTestRunConfigurationType\" factoryName=\"Catch Test\" REDIRECT_INPUT=\"false\" ELEVATE=\"false\" USE_EXTERNAL_CONSOLE=\"false\" EMULATE_TERMINAL=\"false\" PASS_PARENT_ENVS_2=\"true\" TEST_MODE=\"SUITE_TEST\">\r\n      <method v=\"2\">\r\n        <option name=\"BeforeTestRunTask\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration default=\"true\" type=\"CMakeDoctestTestRunConfigurationType\" factoryName=\"doctest Test\" REDIRECT_INPUT=\"false\" ELEVATE=\"false\" USE_EXTERNAL_CONSOLE=\"false\" EMULATE_TERMINAL=\"false\" PASS_PARENT_ENVS_2=\"true\" TEST_MODE=\"SUITE_TEST\">\r\n      <method v=\"2\">\r\n        <option name=\"BeforeTestRunTask\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration default=\"true\" type=\"CMakeGoogleTestRunConfigurationType\" factoryName=\"Google Test\" REDIRECT_INPUT=\"false\" ELEVATE=\"false\" USE_EXTERNAL_CONSOLE=\"false\" EMULATE_TERMINAL=\"false\" PASS_PARENT_ENVS_2=\"true\" TEST_MODE=\"SUITE_TEST\">\r\n      <method v=\"2\">\r\n        <option name=\"BeforeTestRunTask\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"Cyber_Runner\" type=\"CMakeRunConfiguration\" factoryName=\"Application\" REDIRECT_INPUT=\"false\" ELEVATE=\"false\" USE_EXTERNAL_CONSOLE=\"false\" EMULATE_TERMINAL=\"false\" PASS_PARENT_ENVS_2=\"true\" PROJECT_NAME=\"Cyber_Runner\" TARGET_NAME=\"Cyber_Runner\" CONFIG_NAME=\"Debug\" RUN_TARGET_PROJECT_NAME=\"Cyber_Runner\" RUN_TARGET_NAME=\"Cyber_Runner\">\r\n      <method v=\"2\">\r\n        <option name=\"com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n  </component>\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"6ddf144c-c33f-411d-9357-7ea431bb52dd\" name=\"Changes\" comment=\"\" />\r\n      <created>1779754640708</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1779754640708</updated>\r\n      <workItem from=\"1779754641815\" duration=\"7000\" />\r\n      <workItem from=\"1779754800308\" duration=\"109000\" />\r\n      <workItem from=\"1779754981298\" duration=\"788000\" />\r\n      <workItem from=\"1779755777298\" duration=\"508000\" />\r\n      <workItem from=\"1779761362417\" duration=\"3199000\" />\r\n      <workItem from=\"1779841216329\" duration=\"795000\" />\r\n      <workItem from=\"1779906010889\" duration=\"982000\" />\r\n      <workItem from=\"1779921632813\" duration=\"398000\" />\r\n      <workItem from=\"1779922145319\" duration=\"757000\" />\r\n      <workItem from=\"1779922922944\" duration=\"8459000\" />\r\n      <workItem from=\"1779935277216\" duration=\"6386000\" />\r\n      <workItem from=\"1779995756346\" duration=\"3497000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"Soluciona problema de congelamiento por API\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1779925511941</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1779925511941</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"2\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"VCPKGProject\">\r\n    <isAutomaticCheckingOnLaunch value=\"false\" />\r\n    <isAutomaticFoundErrors value=\"true\" />\r\n    <isAutomaticReloadCMake value=\"true\" />\r\n    <isAutomaticBootstrapAfterUpdate value=\"false\" />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"Soluciona problema de congelamiento por API\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"Soluciona problema de congelamiento por API\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision fa3f6420aa13541d863a403d8a56a40ab7f99a77)
++++ b/.idea/workspace.xml	(date 1780030060950)
+@@ -28,16 +28,8 @@
+     </configurations>
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="6ddf144c-c33f-411d-9357-7ea431bb52dd" name="Changes" comment="">
++    <list default="true" id="6ddf144c-c33f-411d-9357-7ea431bb52dd" name="Changes" comment="Mejora la generación de objetos y añade el nitro nuevamente">
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/include/core/Game.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/core/Game.h" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/include/entities/Coin.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/entities/Coin.h" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/include/entities/Obstacle.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/entities/Obstacle.h" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/core/Game.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/Game.cpp" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/entities/Coin.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/Coin.cpp" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/entities/Obstacle.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/Obstacle.cpp" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/ui/HUD.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/HUD.cpp" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -76,23 +68,23 @@
+   </component>
+   <component name="NextEditCompletionFeaturesState">
+     <decayedCancelled>
+-      <entry key="MS100" value="1.6030055255482523" />
+-      <entry key="MS500" value="3.986394529057652" />
+-      <entry key="S2" value="11.735221041671222" />
+-      <entry key="S5" value="28.093551754770036" />
+-      <entry key="S10" value="51.69673667360961" />
+-      <entry key="S30" value="103.2048040173786" />
+-      <entry key="S60" value="129.91693204475655" />
+-      <entry key="M2" value="147.23104434517023" />
+-      <entry key="M5" value="159.59243186394792" />
+-      <entry key="M10" value="172.23364792059988" />
+-      <entry key="M15" value="193.75908894074863" />
+-      <entry key="M30" value="297.3409223583971" />
+-      <entry key="H1" value="587.6640742258395" />
+-      <entry key="H2" value="1088.6572659314247" />
+-      <entry key="H4" value="1610.2958672963782" />
+-      <entry key="D1" value="2323.077029197729" />
+-      <entry key="W1" value="2482.204220870957" />
++      <entry key="MS100" value="1.394224282989542" />
++      <entry key="MS500" value="3.7038435125575684" />
++      <entry key="S2" value="6.276813828263232" />
++      <entry key="S5" value="7.226467253285111" />
++      <entry key="S10" value="7.780464925209351" />
++      <entry key="S30" value="13.645055997639068" />
++      <entry key="S60" value="23.13383800618759" />
++      <entry key="M2" value="33.2882281517231" />
++      <entry key="M5" value="49.570541933406865" />
++      <entry key="M10" value="97.40521333194059" />
++      <entry key="M15" value="148.73309577640018" />
++      <entry key="M30" value="254.75065994319536" />
++      <entry key="H1" value="383.32778211957367" />
++      <entry key="H2" value="710.4094266604588" />
++      <entry key="H4" value="1438.971119740634" />
++      <entry key="D1" value="3400.574698493001" />
++      <entry key="W1" value="4027.5571960411853" />
+     </decayedCancelled>
+     <decayedSelected>
+       <entry key="MS100" value="0.0" />
+@@ -114,23 +106,23 @@
+       <entry key="W1" value="0.0" />
+     </decayedSelected>
+     <decayedShown>
+-      <entry key="MS100" value="1.5426948080368672" />
+-      <entry key="MS500" value="3.9582620105007127" />
+-      <entry key="S2" value="11.71486491034653" />
+-      <entry key="S5" value="28.073978454981308" />
+-      <entry key="S10" value="51.67850841583621" />
+-      <entry key="S30" value="103.19237810687399" />
+-      <entry key="S60" value="129.90904115255833" />
+-      <entry key="M2" value="147.22655150383466" />
+-      <entry key="M5" value="159.59044551522547" />
+-      <entry key="M10" value="172.2322011122785" />
+-      <entry key="M15" value="193.75754263689865" />
+-      <entry key="M30" value="297.33923136626805" />
+-      <entry key="H1" value="587.6625761772366" />
+-      <entry key="H2" value="1088.656146535875" />
+-      <entry key="H4" value="1610.2951450406279" />
+-      <entry key="D1" value="2323.0768746782255" />
+-      <entry key="W1" value="2482.2041977428808" />
++      <entry key="MS100" value="1.3426524961205903" />
++      <entry key="MS500" value="3.679428653748685" />
++      <entry key="S2" value="6.2665160349453455" />
++      <entry key="S5" value="7.221716598857568" />
++      <entry key="S10" value="7.777902722786324" />
++      <entry key="S30" value="13.64178915755696" />
++      <entry key="S60" value="23.12332981082762" />
++      <entry key="M2" value="33.27234488986586" />
++      <entry key="M5" value="49.55787262679949" />
++      <entry key="M10" value="97.3970132499978" />
++      <entry key="M15" value="148.7270252039165" />
++      <entry key="M30" value="254.74720260524668" />
++      <entry key="H1" value="383.32586156626246" />
++      <entry key="H2" value="710.4082398761661" />
++      <entry key="H4" value="1438.9702766878502" />
++      <entry key="D1" value="3400.5744496357524" />
++      <entry key="W1" value="4027.557155650268" />
+     </decayedShown>
+   </component>
+   <component name="ProjectApplicationVersion">
+@@ -220,7 +212,7 @@
+       <workItem from="1779922145319" duration="757000" />
+       <workItem from="1779922922944" duration="8459000" />
+       <workItem from="1779935277216" duration="6386000" />
+-      <workItem from="1779995756346" duration="3497000" />
++      <workItem from="1779995756346" duration="14373000" />
+     </task>
+     <task id="LOCAL-00001" summary="Soluciona problema de congelamiento por API">
+       <option name="closed" value="true" />
+@@ -230,7 +222,15 @@
+       <option name="project" value="LOCAL" />
+       <updated>1779925511941</updated>
+     </task>
+-    <option name="localTasksCounter" value="2" />
++    <task id="LOCAL-00002" summary="Mejora la generación de objetos y añade el nitro nuevamente">
++      <option name="closed" value="true" />
++      <created>1779999733954</created>
++      <option name="number" value="00002" />
++      <option name="presentableId" value="LOCAL-00002" />
++      <option name="project" value="LOCAL" />
++      <updated>1779999733955</updated>
++    </task>
++    <option name="localTasksCounter" value="3" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
+@@ -255,6 +255,7 @@
+   </component>
+   <component name="VcsManagerConfiguration">
+     <MESSAGE value="Soluciona problema de congelamiento por API" />
+-    <option name="LAST_COMMIT_MESSAGE" value="Soluciona problema de congelamiento por API" />
++    <MESSAGE value="Mejora la generación de objetos y añade el nitro nuevamente" />
++    <option name="LAST_COMMIT_MESSAGE" value="Mejora la generación de objetos y añade el nitro nuevamente" />
+   </component>
+ </project>
+\ No newline at end of file

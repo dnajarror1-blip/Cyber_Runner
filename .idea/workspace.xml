@@ -28,10 +28,10 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6ddf144c-c33f-411d-9357-7ea431bb52dd" name="Changes" comment="">
+    <list default="true" id="6ddf144c-c33f-411d-9357-7ea431bb52dd" name="Changes" comment="Mejora la generación de objetos y añade el nitro nuevamente">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/core/Game.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/core/Game.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/core/Game.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/Game.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,12 +42,11 @@
     <option name="formatViaClangd" value="false" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="61" />
+    <option name="cachedIndexableFilesCount" value="67" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -55,12 +54,12 @@
     &quot;assignee&quot;: &quot;dnajarror1-blip&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/dnajarror1-blip/Cyber_Runner.git",
-    "accountId": "a7c65cdb-9ce9-40b4-9acc-f7876f6f3266"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/dnajarror1-blip/Cyber_Runner.git&quot;,
+    &quot;accountId&quot;: &quot;d16b615f-4628-4a27-ab3b-e7e135153f8a&quot;
   }
-}]]></component>
+}</component>
   <component name="MacroExpansionManager">
     <option name="directoryName" value="VtVxoQfU" />
   </component>
@@ -70,23 +69,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.6030055255482523" />
-      <entry key="MS500" value="3.986394529057652" />
-      <entry key="S2" value="11.735221041671222" />
-      <entry key="S5" value="28.093551754770036" />
-      <entry key="S10" value="51.69673667360961" />
-      <entry key="S30" value="103.2048040173786" />
-      <entry key="S60" value="129.91693204475655" />
-      <entry key="M2" value="147.23104434517023" />
-      <entry key="M5" value="159.59243186394792" />
-      <entry key="M10" value="172.23364792059988" />
-      <entry key="M15" value="193.75908894074863" />
-      <entry key="M30" value="297.3409223583971" />
-      <entry key="H1" value="587.6640742258395" />
-      <entry key="H2" value="1088.6572659314247" />
-      <entry key="H4" value="1610.2958672963782" />
-      <entry key="D1" value="2323.077029197729" />
-      <entry key="W1" value="2482.204220870957" />
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0000199950165383" />
+      <entry key="S2" value="1.0668698643062673" />
+      <entry key="S5" value="1.3389160817006536" />
+      <entry key="S10" value="1.5821717021791386" />
+      <entry key="S30" value="2.253517179091276" />
+      <entry key="S60" value="9.824312434991274" />
+      <entry key="M2" value="42.53702923946632" />
+      <entry key="M5" value="145.04434692710703" />
+      <entry key="M10" value="272.3057123880995" />
+      <entry key="M15" value="364.96205908969364" />
+      <entry key="M30" value="560.0758708441633" />
+      <entry key="H1" value="878.7952017681464" />
+      <entry key="H2" value="1415.473778871542" />
+      <entry key="H4" value="2029.5730494842505" />
+      <entry key="D1" value="2950.844854725981" />
+      <entry key="W1" value="3167.730620563225" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -108,23 +107,23 @@
       <entry key="W1" value="0.0" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.5426948080368672" />
-      <entry key="MS500" value="3.9582620105007127" />
-      <entry key="S2" value="11.71486491034653" />
-      <entry key="S5" value="28.073978454981308" />
-      <entry key="S10" value="51.67850841583621" />
-      <entry key="S30" value="103.19237810687399" />
-      <entry key="S60" value="129.90904115255833" />
-      <entry key="M2" value="147.22655150383466" />
-      <entry key="M5" value="159.59044551522547" />
-      <entry key="M10" value="172.2322011122785" />
-      <entry key="M15" value="193.75754263689865" />
-      <entry key="M30" value="297.33923136626805" />
-      <entry key="H1" value="587.6625761772366" />
-      <entry key="H2" value="1088.656146535875" />
-      <entry key="H4" value="1610.2951450406279" />
-      <entry key="D1" value="2323.0768746782255" />
-      <entry key="W1" value="2482.2041977428808" />
+      <entry key="MS100" value="1.7402467841894144E-22" />
+      <entry key="MS500" value="5.9692063873263114E-5" />
+      <entry key="S2" value="0.14414452762739535" />
+      <entry key="S5" value="0.6969655224531521" />
+      <entry key="S10" value="1.1802342062575428" />
+      <entry key="S30" value="2.0958631884811085" />
+      <entry key="S60" value="9.741415564144347" />
+      <entry key="M2" value="42.49337966859686" />
+      <entry key="M5" value="145.02533454825635" />
+      <entry key="M10" value="272.2954620103364" />
+      <entry key="M15" value="364.9548415431373" />
+      <entry key="M30" value="560.0716406675734" />
+      <entry key="H1" value="878.7924576602029" />
+      <entry key="H2" value="1415.4719652640795" />
+      <entry key="H4" value="2029.571926394213" />
+      <entry key="D1" value="2950.844618435872" />
+      <entry key="W1" value="3167.73058522591" />
     </decayedShown>
   </component>
   <component name="ProjectApplicationVersion">
@@ -195,11 +194,6 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -220,7 +214,8 @@
       <workItem from="1779922922944" duration="8459000" />
       <workItem from="1779935277216" duration="6386000" />
       <workItem from="1779995756346" duration="3497000" />
-      <workItem from="1780022051546" duration="2226000" />
+      <workItem from="1780033888974" duration="157000" />
+      <workItem from="1780087563287" duration="2188000" />
     </task>
     <task id="LOCAL-00001" summary="Soluciona problema de congelamiento por API">
       <option name="closed" value="true" />
@@ -240,6 +235,7 @@
     <isAutomaticCheckingOnLaunch value="false" />
     <isAutomaticFoundErrors value="true" />
     <isAutomaticReloadCMake value="true" />
+    <isAutomaticBootstrapAfterUpdate value="false" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">

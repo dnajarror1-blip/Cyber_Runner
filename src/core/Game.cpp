@@ -1893,23 +1893,32 @@ void Game::drawGame() {
 
             drawCyberPanel(180, 55, 440, 340, NEO_CYAN);
 
-            DrawRectangle(275, 95, 250, 120, {0, 0, 0, 220});
-            DrawRectangleLinesEx({275.0f, 95.0f, 250.0f, 120.0f}, 2.0f, NEO_MAGENTA);
-            DrawRectangleLines(285, 105, 230, 100, {255, 0, 255, 90});
+            DrawRectangle(230, 92, 340, 170, {0, 0, 0, 225});
+            DrawRectangleLinesEx({230.0f, 92.0f, 340.0f, 170.0f}, 2.0f, NEO_MAGENTA);
+            DrawRectangleLines(240, 102, 320, 150, {0, 255, 255, 90});
+
+            DrawLine(250, 116, 550, 116, NEO_YELLOW);
+            DrawLine(248, 120, 455, 120, NEO_MAGENTA);
+            DrawLine(345, 237, 552, 237, NEO_CYAN);
+            DrawLine(250, 242, 455, 242, NEO_YELLOW);
+
+            DrawText("CYBER", 276, 127, 48, {255, 0, 255, 160});
+            DrawText("CYBER", 272, 123, 48, {0, 255, 255, 160});
+            DrawText("CYBER", 274, 125, 48, NEO_YELLOW);
+
+            DrawText("RUNNER", 318, 181, 34, {255, 0, 255, 180});
+            DrawText("RUNNER", 314, 177, 34, {0, 255, 255, 180});
+            DrawText("RUNNER", 316, 179, 34, WHITE);
+
+            DrawRectangle(272, 169, 105, 5, {0, 0, 0, 210});
+            DrawRectangle(402, 155, 88, 4, {0, 0, 0, 210});
+            DrawRectangle(318, 218, 125, 4, {0, 0, 0, 210});
 
             drawCyberText(
-                "ESPACIO PARA LOGO",
-                305,
-                145,
-                20,
-                LIGHTGRAY
-            );
-
-            drawCyberText(
-                "CYBER RUNNER",
-                260,
-                245,
-                42,
+                "SYSTEM ONLINE",
+                338,
+                234,
+                14,
                 NEO_CYAN
             );
 
