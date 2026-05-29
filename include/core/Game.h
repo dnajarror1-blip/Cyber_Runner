@@ -77,7 +77,6 @@ private:
     float speedIncrement;
 
     float maxNormalSpeed;
-    float maxNitroSpeed;
 
     bool hasShield;
     float shieldTimer;
@@ -132,6 +131,8 @@ private:
     int coinsCollectedThisRun;
 
     float scoreTimer;
+    float scorePerSecond;
+    int nitroSpawnCountdown;
 
     std::string playerName;
     std::string loginUsername;

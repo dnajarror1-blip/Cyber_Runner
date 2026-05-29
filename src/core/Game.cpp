@@ -89,12 +89,11 @@ Game::Game(ApiClient &apiClient, LoginManager &login)
     foregroundWidth = 0.0f;
 
     globalSpeed = 350.0f;
-    speedIncrement = 38.0f;
+    speedIncrement = 14.0f;
 
     gameCost = GameApiConfig::COSTO_PARTIDA;
 
     maxNormalSpeed = 1600.0f;
-    maxNitroSpeed = 2400.0f;
 
     hasShield = false;
     shieldTimer = 0.0f;
@@ -112,6 +111,8 @@ Game::Game(ApiClient &apiClient, LoginManager &login)
 
     score = 0;
     scoreTimer = 0.0f;
+    scorePerSecond = 55.0f;
+    nitroSpawnCountdown = 0;
     coinsCollectedThisRun = 0;
 }
 
@@ -714,6 +715,7 @@ void Game::resetGame() {
     scoreTimer = 0.0f;
 
     coinsCollectedThisRun = 0;
+    nitroSpawnCountdown = GetRandomValue(2, 4);
 
     obstacles.clear();
 
@@ -899,6 +901,13 @@ void Game::generarMonedasEnMatriz(float startX) {
     }
 
     int patron = GetRandomValue(0, 2);
+    bool spawnNitro = nitroSpawnCountdown <= 0;
+
+    if (spawnNitro) {
+        nitroSpawnCountdown = GetRandomValue(4, 6);
+    } else {
+        nitroSpawnCountdown--;
+    }
 
     for (size_t i = 0; i < coins.size(); ++i) {
         if (i == 8) {
@@ -915,7 +924,7 @@ void Game::generarMonedasEnMatriz(float startX) {
             coins[i].reset(
                 startX + 740.0f,
                 static_cast<float>(GetRandomValue(205, 295)),
-                ItemType::NITRO
+                spawnNitro ? ItemType::NITRO : ItemType::CREDIT
             );
 
             continue;
@@ -1457,14 +1466,14 @@ void Game::updateGame() {
 
             float scoreMultiplier = nitroActive ? 3.0f : 1.0f;
 
-            scoreTimer += 100.0f * deltaTime * scoreMultiplier;
+            scoreTimer += scorePerSecond * deltaTime * scoreMultiplier;
 
             score = static_cast<int>(scoreTimer);
             //reportarScoreApiSiCorresponde();
 
             globalSpeed += speedIncrement * deltaTime;
 
-            float velocidadMaximaActual = nitroActive ? maxNitroSpeed : maxNormalSpeed;
+            float velocidadMaximaActual = maxNormalSpeed;
 
             if (globalSpeed > velocidadMaximaActual) {
                 globalSpeed = velocidadMaximaActual;
@@ -1541,11 +1550,6 @@ void Game::updateGame() {
                     } else if (itemType == ItemType::NITRO) {
                         nitroActive = true;
                         nitroTimer = 8.0f;
-                        globalSpeed += 350.0f;
-
-                        if (globalSpeed > maxNitroSpeed) {
-                            globalSpeed = maxNitroSpeed;
-                        }
 
                         if (player != nullptr) {
                             player->setNitro(true);

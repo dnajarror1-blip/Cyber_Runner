@@ -31,13 +31,7 @@
     <list default="true" id="6ddf144c-c33f-411d-9357-7ea431bb52dd" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/include/core/Game.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/core/Game.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/entities/Coin.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/entities/Coin.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/entities/Obstacle.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/entities/Obstacle.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/core/Game.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/Game.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entities/Coin.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/Coin.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entities/Obstacle.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/Obstacle.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/HUD.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/HUD.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,12 +55,12 @@
     &quot;assignee&quot;: &quot;dnajarror1-blip&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/dnajarror1-blip/Cyber_Runner.git&quot;,
-    &quot;accountId&quot;: &quot;d16b615f-4628-4a27-ab3b-e7e135153f8a&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/dnajarror1-blip/Cyber_Runner.git",
+    "accountId": "a7c65cdb-9ce9-40b4-9acc-f7876f6f3266"
   }
-}</component>
+}]]></component>
   <component name="MacroExpansionManager">
     <option name="directoryName" value="VtVxoQfU" />
   </component>
@@ -201,6 +195,11 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -221,6 +220,7 @@
       <workItem from="1779922922944" duration="8459000" />
       <workItem from="1779935277216" duration="6386000" />
       <workItem from="1779995756346" duration="3497000" />
+      <workItem from="1780022051546" duration="2226000" />
     </task>
     <task id="LOCAL-00001" summary="Soluciona problema de congelamiento por API">
       <option name="closed" value="true" />
@@ -240,7 +240,6 @@
     <isAutomaticCheckingOnLaunch value="false" />
     <isAutomaticFoundErrors value="true" />
     <isAutomaticReloadCMake value="true" />
-    <isAutomaticBootstrapAfterUpdate value="false" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
