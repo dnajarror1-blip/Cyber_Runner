@@ -60,9 +60,18 @@ private:
     // foregournd
     Texture2D foregroundTexture{};
     Texture2D impactTextures[4] {};
+    Texture2D menuPlayerRun[3] {};
+    Texture2D menuPlayerJump {};
+    Texture2D menuPlayerDoubleJump {};
+    Texture2D menuDroneTexture {};
+    Texture2D menuObstacleTexture {};
+    Texture2D menuCoinTexture[2] {};
+    Texture2D menuNitroTexture {};
+    Texture2D menuShieldTexture {};
 
     float foregroundOffset;
     float foregroundWidth;
+    float menuPreviewTimer = 0.0f;
 
     // hitbox visual del juego
     const float groundY = 350.0f;

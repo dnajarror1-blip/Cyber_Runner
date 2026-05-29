@@ -78,6 +78,51 @@ static Color getAnimatedAccent(Color accent)
     return result;
 }
 
+static float getMenuPreviewX(
+    float startX,
+    float speed,
+    float timer
+)
+{
+    const float loopWidth = 1680.0f;
+    float x = std::fmod(startX - timer * speed, loopWidth);
+
+    if (x < -160.0f) {
+        x += loopWidth;
+    }
+
+    return x;
+}
+
+static void drawMenuPreviewTexture(
+    Texture2D texture,
+    Rectangle dest,
+    Color tint,
+    Color fallback
+)
+{
+    if (texture.id == 0) {
+        DrawRectangleRec(dest, fallback);
+        return;
+    }
+
+    Rectangle source = {
+        0.0f,
+        0.0f,
+        static_cast<float>(texture.width),
+        static_cast<float>(texture.height)
+    };
+
+    DrawTexturePro(
+        texture,
+        source,
+        dest,
+        {0.0f, 0.0f},
+        0.0f,
+        tint
+    );
+}
+
 static void drawCyberPanel(
     int x,
     int y,
@@ -253,6 +298,7 @@ Game::Game(ApiClient &apiClient, LoginManager &login)
     scorePerSecond = 55.0f;
     nitroSpawnCountdown = 0;
     coinsCollectedThisRun = 0;
+    menuPreviewTimer = 0.0f;
     impactTimer = 0.0f;
     impactPosition = {0.0f, 0.0f};
 }
@@ -1212,6 +1258,17 @@ void Game::run() {
     impactTextures[1] = LoadTexture("assets/explotion2.png");
     impactTextures[2] = LoadTexture("assets/explotion3.png");
     impactTextures[3] = LoadTexture("assets/explotion4.png");
+    menuPlayerRun[0] = LoadTexture("assets/player1.png");
+    menuPlayerRun[1] = LoadTexture("assets/player2.png");
+    menuPlayerRun[2] = LoadTexture("assets/player3.png");
+    menuPlayerJump = LoadTexture("assets/player4.png");
+    menuPlayerDoubleJump = LoadTexture("assets/playersal1.png");
+    menuDroneTexture = LoadTexture("assets/dron.png");
+    menuObstacleTexture = LoadTexture("assets/groundobstacle.png");
+    menuCoinTexture[0] = LoadTexture("assets/coin1.png");
+    menuCoinTexture[1] = LoadTexture("assets/coin2.png");
+    menuNitroTexture = LoadTexture("assets/nitro.png");
+    menuShieldTexture = LoadTexture("assets/escudo.png");
     hud.loadAssets();
 
     SetTextureFilter(
@@ -1276,6 +1333,50 @@ void Game::run() {
             UnloadTexture(texture);
             texture = {};
         }
+    }
+
+    for (auto &texture: menuPlayerRun) {
+        if (texture.id) {
+            UnloadTexture(texture);
+            texture = {};
+        }
+    }
+
+    if (menuPlayerJump.id) {
+        UnloadTexture(menuPlayerJump);
+        menuPlayerJump = {};
+    }
+
+    if (menuPlayerDoubleJump.id) {
+        UnloadTexture(menuPlayerDoubleJump);
+        menuPlayerDoubleJump = {};
+    }
+
+    if (menuDroneTexture.id) {
+        UnloadTexture(menuDroneTexture);
+        menuDroneTexture = {};
+    }
+
+    if (menuObstacleTexture.id) {
+        UnloadTexture(menuObstacleTexture);
+        menuObstacleTexture = {};
+    }
+
+    for (auto &texture: menuCoinTexture) {
+        if (texture.id) {
+            UnloadTexture(texture);
+            texture = {};
+        }
+    }
+
+    if (menuNitroTexture.id) {
+        UnloadTexture(menuNitroTexture);
+        menuNitroTexture = {};
+    }
+
+    if (menuShieldTexture.id) {
+        UnloadTexture(menuShieldTexture);
+        menuShieldTexture = {};
     }
 
     hud.unloadAssets();
@@ -1489,6 +1590,19 @@ void Game::updateGame() {
         }
 
         case INICIO: {
+            menuPreviewTimer += frameTime;
+
+            bgOffset -= 28.0f * frameTime;
+            foregroundOffset -= 220.0f * frameTime;
+
+            if (bgWidth > 0.0f && bgOffset <= -bgWidth) {
+                bgOffset = 0.0f;
+            }
+
+            if (foregroundWidth > 0.0f && foregroundOffset <= -foregroundWidth) {
+                foregroundOffset = 0.0f;
+            }
+
             bool startPressed =
                     IsKeyPressed(KEY_ENTER) ||
                     IsKeyPressed(KEY_SPACE) ||
@@ -2186,6 +2300,159 @@ void Game::drawGame() {
 
         case INICIO: {
             audioManager.stopRunning();
+
+            const float previewSpeed = 245.0f;
+            const float previewPlayerX = 105.0f;
+            auto previewCollected = [previewPlayerX](float x, float width) {
+                return x + width > previewPlayerX + 8.0f &&
+                       x < previewPlayerX + 54.0f;
+            };
+
+            float coinX = getMenuPreviewX(520.0f, previewSpeed, menuPreviewTimer);
+            float coinMatrixX = getMenuPreviewX(700.0f, previewSpeed, menuPreviewTimer);
+            float obstacleX = getMenuPreviewX(900.0f, previewSpeed, menuPreviewTimer);
+            float droneX = getMenuPreviewX(1120.0f, previewSpeed, menuPreviewTimer);
+            float droneY =
+                    145.0f +
+                    std::sin(menuPreviewTimer * 2.2f) * 18.0f;
+            float nitroX = getMenuPreviewX(1320.0f, previewSpeed, menuPreviewTimer);
+            float obstacleX2 = getMenuPreviewX(1510.0f, previewSpeed, menuPreviewTimer);
+            float droneX2 = getMenuPreviewX(1710.0f, previewSpeed, menuPreviewTimer);
+            float droneY2 =
+                    205.0f +
+                    std::sin(menuPreviewTimer * 2.8f + 1.7f) * 14.0f;
+            float shieldX = getMenuPreviewX(1890.0f, previewSpeed, menuPreviewTimer);
+            auto getObstacleJumpHeight = [previewPlayerX](float x) {
+                float distance = x - previewPlayerX;
+
+                if (distance < -88.0f || distance > 210.0f) {
+                    return 0.0f;
+                }
+
+                float normalized = (distance + 88.0f) / 298.0f;
+                float firstJump =
+                        std::sin(normalized * 3.14159265f) *
+                        62.0f;
+                float secondJump =
+                        std::sin(normalized * 6.28318530f) *
+                        34.0f;
+
+                if (secondJump < 0.0f) {
+                    secondJump = 0.0f;
+                }
+
+                return firstJump + secondJump;
+            };
+            float jumpHeight = std::max(
+                getObstacleJumpHeight(obstacleX),
+                getObstacleJumpHeight(obstacleX2)
+            );
+            bool previewDoubleJumping = jumpHeight > 82.0f;
+            bool previewJumping = jumpHeight > 5.0f;
+            Texture2D previewPlayerTexture =
+                    previewDoubleJumping
+                        ? menuPlayerDoubleJump
+                        : (
+                            previewJumping
+                                ? menuPlayerJump
+                                : menuPlayerRun[
+                                    static_cast<int>(menuPreviewTimer * 9.0f) % 3
+                                ]
+                        );
+            Rectangle previewPlayer = {
+                previewPlayerX,
+                292.0f - jumpHeight,
+                38.0f,
+                66.0f
+            };
+
+            DrawRectangle(0, 0, screenWidth, screenHeight, {0, 0, 0, 55});
+            DrawLine(70, 352, 730, 352, {0, 255, 255, 80});
+            DrawLine(90, 356, 520, 356, {253, 249, 0, 70});
+
+            drawMenuPreviewTexture(
+                menuDroneTexture,
+                {droneX, droneY, 62.0f, 38.0f},
+                {255, 255, 255, 170},
+                NEO_YELLOW
+            );
+            drawMenuPreviewTexture(
+                menuDroneTexture,
+                {droneX2, droneY2, 52.0f, 32.0f},
+                {255, 255, 255, 135},
+                NEO_YELLOW
+            );
+            drawMenuPreviewTexture(
+                menuObstacleTexture,
+                {obstacleX, 305.0f, 38.0f, 53.0f},
+                {255, 255, 255, 155},
+                NEO_MAGENTA
+            );
+            drawMenuPreviewTexture(
+                menuObstacleTexture,
+                {obstacleX2, 307.0f, 34.0f, 49.0f},
+                {255, 255, 255, 120},
+                NEO_MAGENTA
+            );
+            DrawCircleGradient(
+                120,
+                static_cast<int>(340.0f - jumpHeight),
+                42.0f,
+                {0, 255, 255, 80},
+                {0, 0, 0, 0}
+            );
+            if (!previewCollected(coinX, 22.0f)) {
+                drawMenuPreviewTexture(
+                    menuCoinTexture[
+                        static_cast<int>(menuPreviewTimer * 8.0f) % 2
+                    ],
+                    {coinX, 245.0f, 22.0f, 22.0f},
+                    {255, 255, 255, 170},
+                    NEO_YELLOW
+                );
+            }
+            for (int i = 0; i < 4; ++i) {
+                float matrixCoinX =
+                        coinMatrixX + static_cast<float>(i % 2) * 28.0f;
+
+                if (!previewCollected(matrixCoinX, 20.0f)) {
+                    drawMenuPreviewTexture(
+                        menuCoinTexture[
+                            (i + static_cast<int>(menuPreviewTimer * 8.0f)) % 2
+                        ],
+                        {
+                            matrixCoinX,
+                            230.0f + static_cast<float>(i / 2) * 28.0f,
+                            20.0f,
+                            20.0f
+                        },
+                        {255, 255, 255, 150},
+                        NEO_YELLOW
+                    );
+                }
+            }
+            if (!previewCollected(nitroX, 30.0f)) {
+                drawMenuPreviewTexture(
+                    menuNitroTexture,
+                    {nitroX, 258.0f, 30.0f, 30.0f},
+                    {255, 255, 255, 165},
+                    NEO_CYAN
+                );
+            }
+            if (!previewCollected(shieldX, 32.0f)) {
+                drawMenuPreviewTexture(
+                    menuShieldTexture,
+                    {shieldX, 220.0f, 32.0f, 32.0f},
+                    {255, 255, 255, 155},
+                    NEO_CYAN
+                );
+            }
+            drawMenuPreviewTexture(
+                previewPlayerTexture,
+                previewPlayer,
+                {255, 255, 255, 190},
+                NEO_RED
+            );
 
             drawCyberPanel(180, 55, 440, 340, NEO_CYAN);
 
