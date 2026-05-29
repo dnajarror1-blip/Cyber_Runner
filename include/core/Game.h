@@ -19,10 +19,27 @@ enum GameScreen {
     LOGIN,
     MENU,
     RANKING,
+    CARGANDO,
     JUGANDO,
     PAUSA,
     CONFIRMAR_SALIDA,
     GAMEOVER
+};
+
+enum class LoadingAction {
+    NONE,
+    LOGIN,
+    START_GAME,
+    RANKING,
+    RETURN_MENU
+};
+
+struct LoadingResult {
+    bool ok = false;
+    std::string mensaje;
+    UsuarioApi usuario;
+    PartidaApi partida;
+    std::vector<RankingItem> ranking;
 };
 
 class Game {
@@ -89,6 +106,14 @@ private:
     std::chrono::steady_clock::time_point inicioPartida;
 
     std::vector<std::future<std::string>> finalizacionesPartidaPendientes;
+    std::future<LoadingResult> cargaPendiente;
+
+    LoadingAction accionCarga = LoadingAction::NONE;
+    GameScreen pantallaErrorCarga = MENU;
+    bool cargaPermiteModoLocal = false;
+    std::string tituloCarga;
+    std::string detalleCarga;
+    std::chrono::steady_clock::time_point inicioCarga;
 
     // OWNER ARCHITECTURE
     Player *player;
@@ -118,6 +143,7 @@ private:
     void updateGame();
 
     void drawGame();
+    void drawLoadingScreen();
 
     void drawBackground(); //fondo
     void drawForeground(); //foreground
@@ -134,6 +160,18 @@ private:
     void finalizarPartidaApiAsync(const std::string &resultado);
 
     void limpiarFinalizacionesPartidaTerminadas();
+
+    void iniciarCargaLogin();
+
+    void iniciarCargaPartida(GameScreen pantallaError, bool permitirModoLocal);
+
+    void iniciarCargaRanking();
+
+    void iniciarCargaVolverMenu();
+
+    void actualizarCarga();
+
+    void aplicarResultadoCarga(const LoadingResult &resultado);
 
     int calcularTokensGanados(int scoreFinal) const;
 

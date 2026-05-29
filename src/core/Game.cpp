@@ -8,6 +8,70 @@ const Color NEO_CYAN = {0, 255, 255, 255};
 const Color NEO_MAGENTA = {255, 0, 255, 255};
 const Color NEO_YELLOW = {253, 249, 0, 255};
 const Color NEO_RED = {230, 41, 55, 255};
+const Color MENU_PANEL_FILL = {3, 6, 18, 230};
+const Color MENU_BUTTON_FILL = {5, 12, 28, 225};
+const Color MENU_SHADOW = {0, 0, 0, 210};
+
+static void drawCyberText(
+    const char *text,
+    int x,
+    int y,
+    int fontSize,
+    Color color
+)
+{
+    DrawText(text, x + 2, y + 2, fontSize, MENU_SHADOW);
+    DrawText(text, x, y, fontSize, color);
+}
+
+static void drawCyberPanel(
+    int x,
+    int y,
+    int width,
+    int height,
+    Color accent
+)
+{
+    Rectangle panel = {
+        static_cast<float>(x),
+        static_cast<float>(y),
+        static_cast<float>(width),
+        static_cast<float>(height)
+    };
+
+    DrawRectangleRec(panel, MENU_PANEL_FILL);
+    DrawRectangleLinesEx(panel, 2.0f, accent);
+    DrawRectangleLines(
+        x + 5,
+        y + 5,
+        width - 10,
+        height - 10,
+        {accent.r, accent.g, accent.b, 90}
+    );
+}
+
+static void drawCyberButton(
+    Rectangle rect,
+    const char *text,
+    Color accent
+)
+{
+    DrawRectangleRec(rect, MENU_BUTTON_FILL);
+    DrawRectangleRec(
+        {rect.x, rect.y, 5.0f, rect.height},
+        accent
+    );
+    DrawRectangleLinesEx(rect, 1.5f, accent);
+
+    int textWidth = MeasureText(text, 18);
+    drawCyberText(
+        text,
+        static_cast<int>(rect.x + (rect.width - textWidth) / 2.0f),
+        static_cast<int>(rect.y + 10.0f),
+        18,
+        WHITE
+    );
+}
 
 Game::Game(ApiClient &apiClient, LoginManager &login)
     : api(apiClient),
@@ -307,6 +371,271 @@ void Game::limpiarFinalizacionesPartidaTerminadas() {
     }
 }
 
+void Game::iniciarCargaLogin() {
+    if (cargaPendiente.valid()) {
+        return;
+    }
+
+    std::string username = loginUsername;
+    std::string password = loginPassword;
+
+    accionCarga = LoadingAction::LOGIN;
+    pantallaErrorCarga = LOGIN;
+    cargaPermiteModoLocal = false;
+    tituloCarga = "INICIANDO SESION";
+    detalleCarga = "Validando usuario con el servidor";
+    inicioCarga = std::chrono::steady_clock::now();
+    currentScreen = CARGANDO;
+
+    cargaPendiente = std::async(
+        std::launch::async,
+        [this, username, password]() -> LoadingResult {
+            LoadingResult resultado;
+            std::string error;
+
+            resultado.ok = loginManager.iniciarSesion(
+                username,
+                password,
+                error
+            );
+
+            if (!resultado.ok) {
+                resultado.mensaje = "LOGIN: " + error;
+                return resultado;
+            }
+
+            resultado.usuario = loginManager.getUsuarioActual();
+            resultado.mensaje = "API: login correcto.";
+
+            return resultado;
+        }
+    );
+}
+
+void Game::iniciarCargaPartida(GameScreen pantallaError, bool permitirModoLocal) {
+    if (cargaPendiente.valid()) {
+        return;
+    }
+
+    if (!sesionIniciada || !api.tieneSesion()) {
+        mensajeApi = "Debes iniciar sesion antes de jugar.";
+        return;
+    }
+
+    accionCarga = LoadingAction::START_GAME;
+    pantallaErrorCarga = pantallaError;
+    cargaPermiteModoLocal = permitirModoLocal;
+    tituloCarga = "PREPARANDO PARTIDA";
+    detalleCarga = "Reservando partida y sincronizando creditos";
+    inicioCarga = std::chrono::steady_clock::now();
+    currentScreen = CARGANDO;
+
+    int costoPartida = gameCost;
+
+    cargaPendiente = std::async(
+        std::launch::async,
+        [this, costoPartida]() -> LoadingResult {
+            LoadingResult resultado;
+
+            if (!sesionIniciada || !api.tieneSesion()) {
+                resultado.mensaje = "API: no hay sesion activa.";
+                return resultado;
+            }
+
+            std::string error;
+            PartidaApi partida;
+
+            resultado.ok = api.iniciarPartida(
+                partida,
+                error,
+                GameApiConfig::VERSION_JUEGO,
+                costoPartida
+            );
+
+            if (!resultado.ok) {
+                resultado.mensaje = "API: no se pudo iniciar partida.";
+                TraceLog(LOG_ERROR, TextFormat("No se pudo iniciar partida: %s", error.c_str()));
+                return resultado;
+            }
+
+            resultado.partida = partida;
+            resultado.mensaje = "API: partida iniciada correctamente.";
+
+            return resultado;
+        }
+    );
+}
+
+void Game::iniciarCargaRanking() {
+    if (cargaPendiente.valid()) {
+        return;
+    }
+
+    rankingActual.clear();
+
+    if (!sesionIniciada || !api.tieneSesion()) {
+        mensajeApi = "API: no hay sesion para ranking.";
+        TraceLog(LOG_ERROR, "No hay sesion activa para consultar ranking.");
+        currentScreen = RANKING;
+        return;
+    }
+
+    accionCarga = LoadingAction::RANKING;
+    pantallaErrorCarga = RANKING;
+    cargaPermiteModoLocal = false;
+    tituloCarga = "CARGANDO RANKING";
+    detalleCarga = "Consultando mejores corredores";
+    inicioCarga = std::chrono::steady_clock::now();
+    currentScreen = CARGANDO;
+
+    cargaPendiente = std::async(
+        std::launch::async,
+        [this]() -> LoadingResult {
+            LoadingResult resultado;
+            std::string error;
+            std::vector<RankingItem> ranking;
+
+            resultado.ok = api.consultarRanking(
+                ranking,
+                error
+            );
+
+            if (!resultado.ok) {
+                resultado.mensaje = "API: no se pudo consultar ranking.";
+                TraceLog(LOG_ERROR, TextFormat("No se pudo consultar ranking: %s", error.c_str()));
+                return resultado;
+            }
+
+            resultado.ranking = ranking;
+            resultado.mensaje = ranking.empty()
+                ? "API: ranking vacio."
+                : "API: ranking consultado.";
+
+            return resultado;
+        }
+    );
+}
+
+void Game::iniciarCargaVolverMenu() {
+    if (cargaPendiente.valid()) {
+        return;
+    }
+
+    accionCarga = LoadingAction::RETURN_MENU;
+    pantallaErrorCarga = MENU;
+    cargaPermiteModoLocal = false;
+    tituloCarga = "REGRESANDO AL MENU";
+    detalleCarga = "Cerrando la partida actual";
+    inicioCarga = std::chrono::steady_clock::now();
+    currentScreen = CARGANDO;
+
+    cargaPendiente = std::async(
+        std::launch::async,
+        []() -> LoadingResult {
+            LoadingResult resultado;
+            resultado.ok = true;
+            resultado.mensaje = "API: regresando al menu.";
+            return resultado;
+        }
+    );
+}
+
+void Game::actualizarCarga() {
+    if (!cargaPendiente.valid()) {
+        currentScreen = pantallaErrorCarga;
+        accionCarga = LoadingAction::NONE;
+        return;
+    }
+
+    if (cargaPendiente.wait_for(std::chrono::seconds(0)) != std::future_status::ready) {
+        return;
+    }
+
+    auto ahora = std::chrono::steady_clock::now();
+    auto duracionMs = std::chrono::duration_cast<std::chrono::milliseconds>(
+        ahora - inicioCarga
+    ).count();
+
+    if (duracionMs < 350) {
+        return;
+    }
+
+    LoadingResult resultado = cargaPendiente.get();
+    aplicarResultadoCarga(resultado);
+}
+
+void Game::aplicarResultadoCarga(const LoadingResult &resultado) {
+    switch (accionCarga) {
+        case LoadingAction::LOGIN: {
+            if (!resultado.ok) {
+                mensajeApi = resultado.mensaje;
+                currentScreen = LOGIN;
+                break;
+            }
+
+            setUsuario(resultado.usuario);
+            mensajeApi = resultado.mensaje;
+            currentScreen = MENU;
+            break;
+        }
+
+        case LoadingAction::START_GAME: {
+            if (!resultado.ok) {
+                if (cargaPermiteModoLocal) {
+                    mensajeApi = "API: modo prueba local, partida sin servidor.";
+                    resetGame();
+                    currentScreen = JUGANDO;
+                } else {
+                    mensajeApi = resultado.mensaje;
+                    currentScreen = pantallaErrorCarga;
+                }
+
+                break;
+            }
+
+            partidaActual = resultado.partida;
+            partidaActiva = true;
+            partidaFinalizada = false;
+            ultimoScoreReportado = 0;
+            nivelActual = 1;
+            creditos = partidaActual.saldoDespues;
+            playerData.credits = creditos;
+            inicioPartida = std::chrono::steady_clock::now();
+            mensajeApi = resultado.mensaje;
+
+            TraceLog(
+                LOG_INFO,
+                TextFormat("Partida iniciada en API. ID: %lld", partidaActual.idPartida)
+            );
+
+            resetGame();
+            currentScreen = JUGANDO;
+            break;
+        }
+
+        case LoadingAction::RANKING: {
+            rankingActual = resultado.ranking;
+            mensajeApi = resultado.mensaje;
+            currentScreen = RANKING;
+            break;
+        }
+
+        case LoadingAction::RETURN_MENU: {
+            mensajeApi = resultado.mensaje;
+            currentScreen = MENU;
+            break;
+        }
+
+        case LoadingAction::NONE: {
+            currentScreen = pantallaErrorCarga;
+            break;
+        }
+    }
+
+    accionCarga = LoadingAction::NONE;
+    cargaPermiteModoLocal = false;
+}
+
 void Game::consultarRankingApi() {
     rankingActual.clear();
 
@@ -508,6 +837,46 @@ void Game::resetGame() {
         )
     );
 
+    obstacles.push_back(
+        Obstacle(
+            7550,
+            310,
+            30,
+            45,
+            globalSpeed
+        )
+    );
+
+    obstacles.push_back(
+        Obstacle(
+            8100,
+            220,
+            40,
+            25,
+            globalSpeed
+        )
+    );
+
+    obstacles.push_back(
+        Obstacle(
+            8650,
+            310,
+            30,
+            45,
+            globalSpeed
+        )
+    );
+
+    obstacles.push_back(
+        Obstacle(
+            9200,
+            205,
+            40,
+            25,
+            globalSpeed
+        )
+    );
+
     coins.clear();
 
     for (int i = 0; i < 10; ++i) {
@@ -596,7 +965,7 @@ void Game::actualizarGeneracionMonedas() {
 }
 
 void Game::separarObstaculos() {
-    const float minSpacing = 440.0f;
+    const float minSpacing = 390.0f;
 
     for (size_t i = 0; i < obstacles.size(); ++i) {
         for (size_t j = i + 1; j < obstacles.size(); ++j) {
@@ -868,6 +1237,11 @@ void Game::toggleFullscreen() {
 void Game::updateGame() {
     limpiarFinalizacionesPartidaTerminadas();
 
+    if (currentScreen == CARGANDO) {
+        actualizarCarga();
+        return;
+    }
+
     switch (currentScreen) {
         case LOGIN: {
             std::string &campoActivo =
@@ -912,23 +1286,7 @@ void Game::updateGame() {
                     break;
                 }
 
-                std::string error;
-
-                bool ok = loginManager.iniciarSesion(
-                    loginUsername,
-                    loginPassword,
-                    error
-                );
-
-                if (!ok) {
-                    mensajeApi = "LOGIN: " + error;
-                    break;
-                }
-
-                setUsuario(loginManager.getUsuarioActual());
-
-                mensajeApi = "API: login correcto.";
-                currentScreen = MENU;
+                iniciarCargaLogin();
             }
 
             break;
@@ -947,17 +1305,7 @@ void Game::updateGame() {
                     break;
                 }
 
-                if (iniciarPartidaApi()) {
-                    resetGame();
-
-                    currentScreen = JUGANDO;
-                } else {
-                    mensajeApi = "API: modo prueba local, partida sin servidor.";
-
-                    resetGame();
-
-                    currentScreen = JUGANDO;
-                }
+                iniciarCargaPartida(MENU, true);
             }
 
             if (
@@ -980,7 +1328,7 @@ void Game::updateGame() {
                     IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_LEFT)
                 )
             ) {
-                consultarRankingApi();
+                iniciarCargaRanking();
             }
 
             if (
@@ -1251,8 +1599,8 @@ void Game::updateGame() {
                     );
 
             if (salirMenuPressed) {
-                finalizarPartidaApi("EXIT");
-                currentScreen = MENU;
+                finalizarPartidaApiAsync("EXIT");
+                iniciarCargaVolverMenu();
             }
 
             break;
@@ -1268,12 +1616,7 @@ void Game::updateGame() {
                     );
 
             if (reiniciarPressed) {
-                if (iniciarPartidaApi()) {
-                    resetGame();
-                    currentScreen = JUGANDO;
-                } else {
-                    mensajeApi = "API: no se pudo iniciar nueva partida.";
-                }
+                iniciarCargaPartida(GAMEOVER, false);
 
                 break;
             }
@@ -1375,26 +1718,66 @@ void Game::checkCollisions()
     }
 }
 
+void Game::drawLoadingScreen()
+{
+    drawCyberPanel(210, 140, 380, 175, NEO_CYAN);
+
+    int puntos = static_cast<int>(GetTime() * 4.0) % 4;
+    std::string titulo = tituloCarga;
+
+    for (int i = 0; i < puntos; ++i) {
+        titulo += ".";
+    }
+
+    int tituloWidth = MeasureText(titulo.c_str(), 24);
+
+    drawCyberText(
+        titulo.c_str(),
+        400 - tituloWidth / 2,
+        170,
+        24,
+        NEO_CYAN
+    );
+
+    int detalleWidth = MeasureText(detalleCarga.c_str(), 15);
+
+    drawCyberText(
+        detalleCarga.c_str(),
+        400 - detalleWidth / 2,
+        210,
+        15,
+        LIGHTGRAY
+    );
+
+    float progreso = static_cast<float>(
+        std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::steady_clock::now() - inicioCarga
+        ).count()
+    ) / 900.0f;
+
+    if (progreso > 1.0f) {
+        progreso = 1.0f;
+    }
+
+    DrawRectangle(260, 255, 280, 12, {0, 0, 0, 220});
+    DrawRectangleLinesEx({260.0f, 255.0f, 280.0f, 12.0f}, 1.5f, NEO_MAGENTA);
+    DrawRectangle(262, 257, static_cast<int>(276.0f * progreso), 8, NEO_CYAN);
+
+    drawCyberText(
+        "Conectando con servicios del juego",
+        278,
+        282,
+        13,
+        GRAY
+    );
+}
+
 void Game::drawGame() {
     switch (currentScreen) {
         case LOGIN: {
-            DrawRectangle(
-                185,
-                60,
-                430,
-                335,
-                {0, 0, 0, 225}
-            );
+            drawCyberPanel(185, 60, 430, 335, NEO_CYAN);
 
-            DrawRectangleLines(
-                185,
-                60,
-                430,
-                335,
-                NEO_CYAN
-            );
-
-            DrawText(
+            drawCyberText(
                 "CYBER-RUNNER",
                 250,
                 80,
@@ -1402,7 +1785,7 @@ void Game::drawGame() {
                 NEO_CYAN
             );
 
-            DrawText(
+            drawCyberText(
                 "LOGIN",
                 360,
                 135,
@@ -1410,7 +1793,7 @@ void Game::drawGame() {
                 NEO_MAGENTA
             );
 
-            DrawText(
+            drawCyberText(
                 "Usuario",
                 250,
                 158,
@@ -1418,23 +1801,14 @@ void Game::drawGame() {
                 LIGHTGRAY
             );
 
-            DrawRectangle(
-                250,
-                180,
-                300,
-                38,
-                {0, 0, 0, 210}
-            );
-
-            DrawRectangleLines(
-                250,
-                180,
-                300,
-                38,
+            DrawRectangle(250, 180, 300, 38, {0, 0, 0, 225});
+            DrawRectangleLinesEx(
+                {250.0f, 180.0f, 300.0f, 38.0f},
+                2.0f,
                 loginPasswordActivo ? WHITE : NEO_CYAN
             );
 
-            DrawText(
+            drawCyberText(
                 loginUsername.empty() ? "_" : loginUsername.c_str(),
                 262,
                 190,
@@ -1442,7 +1816,7 @@ void Game::drawGame() {
                 WHITE
             );
 
-            DrawText(
+            drawCyberText(
                 "Password",
                 250,
                 238,
@@ -1450,25 +1824,16 @@ void Game::drawGame() {
                 LIGHTGRAY
             );
 
-            DrawRectangle(
-                250,
-                260,
-                300,
-                38,
-                {0, 0, 0, 210}
-            );
-
-            DrawRectangleLines(
-                250,
-                260,
-                300,
-                38,
+            DrawRectangle(250, 260, 300, 38, {0, 0, 0, 225});
+            DrawRectangleLinesEx(
+                {250.0f, 260.0f, 300.0f, 38.0f},
+                2.0f,
                 loginPasswordActivo ? NEO_CYAN : WHITE
             );
 
             std::string passwordOculto(loginPassword.size(), '*');
 
-            DrawText(
+            drawCyberText(
                 loginPassword.empty() ? "_" : passwordOculto.c_str(),
                 262,
                 270,
@@ -1476,7 +1841,7 @@ void Game::drawGame() {
                 WHITE
             );
 
-            DrawText(
+            drawCyberText(
                 "[TAB] CAMBIAR CAMPO   [ENTER] LOGIN   [ESC] MENU",
                 165,
                 330,
@@ -1484,7 +1849,7 @@ void Game::drawGame() {
                 LIGHTGRAY
             );
 
-            DrawText(
+            drawCyberText(
                 "Control: B volver al menu",
                 300,
                 348,
@@ -1492,7 +1857,7 @@ void Game::drawGame() {
                 LIGHTGRAY
             );
 
-            DrawText(
+            drawCyberText(
                 mensajeApi.c_str(),
                 250,
                 365,
@@ -1506,23 +1871,9 @@ void Game::drawGame() {
         case MENU: {
             audioManager.stopRunning();
 
-            DrawRectangle(
-                185,
-                25,
-                430,
-                395,
-                {0, 0, 0, 225}
-            );
+            drawCyberPanel(185, 25, 430, 395, NEO_MAGENTA);
 
-            DrawRectangleLines(
-                185,
-                25,
-                430,
-                395,
-                NEO_MAGENTA
-            );
-
-            DrawText(
+            drawCyberText(
                 "ACCESO CONCEDIDO",
                 300,
                 40,
@@ -1530,15 +1881,15 @@ void Game::drawGame() {
                 GREEN
             );
 
-            DrawText(
-                "--- TERMINAL DE CONTROL ---",
-                220,
+            drawCyberText(
+                "TERMINAL DE CONTROL",
+                238,
                 80,
                 25,
                 NEO_MAGENTA
             );
 
-            DrawText(
+            drawCyberText(
                 sesionIniciada
                     ? TextFormat("JUGADOR: %s", playerName.c_str())
                     : "JUGADOR: sin login",
@@ -1548,98 +1899,50 @@ void Game::drawGame() {
                 sesionIniciada ? NEO_YELLOW : GRAY
             );
 
-            DrawRectangle(250, 140, 300, 40, {0, 0, 0, 210});
-
-            DrawRectangleLines(
-                250,
-                140,
-                300,
-                40,
+            drawCyberButton(
+                {250.0f, 140.0f, 300.0f, 38.0f},
+                "[1] EMPEZAR PARTIDA",
                 NEO_CYAN
             );
 
-            DrawText(
-                "[1] EMPEZAR PARTIDA",
-                280,
-                150,
-                20,
-                WHITE
-            );
-
-            DrawRectangle(250, 200, 300, 40, {0, 0, 0, 210});
-
-            DrawRectangleLines(
-                250,
-                200,
-                300,
-                40,
-                WHITE
-            );
-
-            DrawText(
+            drawCyberButton(
+                {250.0f, 190.0f, 300.0f, 38.0f},
                 sesionIniciada ? "[2] CAMBIAR USUARIO" : "[2] LOGUEARSE",
-                280,
-                210,
-                20,
                 WHITE
             );
 
-            DrawRectangle(250, 260, 300, 40, {0, 0, 0, 210});
-
-            DrawRectangleLines(
-                250,
-                260,
-                300,
-                40,
-                WHITE
-            );
-
-            DrawText(
+            drawCyberButton(
+                {250.0f, 240.0f, 300.0f, 38.0f},
                 "[3] VER RANKING",
-                280,
-                270,
-                20,
-                WHITE
+                NEO_YELLOW
             );
 
-            DrawRectangle(250, 320, 300, 40, {0, 0, 0, 210});
-
-            DrawRectangleLines(
-                250,
-                320,
-                300,
-                40,
+            drawCyberButton(
+                {250.0f, 290.0f, 300.0f, 38.0f},
+                "[4] SALIR DEL JUEGO",
                 NEO_RED
             );
 
-            DrawText(
-                "[4] SALIR DEL JUEGO",
-                280,
-                330,
-                20,
-                WHITE
-            );
-
-            DrawText(
+            drawCyberText(
                 TextFormat("COSTO POR PARTIDA: %i CREDITO(S)", gameCost),
                 250,
-                380,
+                345,
                 15,
                 NEO_YELLOW
             );
 
-            DrawText(
+            drawCyberText(
                 "Control: A jugar | Y login | X ranking | B salir",
                 230,
-                362,
+                365,
                 13,
                 LIGHTGRAY
             );
 
-            DrawText(
+            drawCyberText(
                 mensajeApi.c_str(),
                 250,
-                405,
+                392,
                 15,
                 LIGHTGRAY
             );
@@ -1652,23 +1955,9 @@ void Game::drawGame() {
         case RANKING: {
             audioManager.stopRunning();
 
-            DrawRectangle(
-                80,
-                30,
-                640,
-                385,
-                {0, 0, 0, 225}
-            );
+            drawCyberPanel(80, 30, 640, 385, NEO_CYAN);
 
-            DrawRectangleLines(
-                80,
-                30,
-                640,
-                385,
-                NEO_CYAN
-            );
-
-            DrawText(
+            drawCyberText(
                 "RANKING",
                 330,
                 45,
@@ -1676,17 +1965,17 @@ void Game::drawGame() {
                 NEO_CYAN
             );
 
-            DrawRectangle(110, 95, 580, 265, {0, 0, 0, 210});
+            DrawRectangle(110, 95, 580, 265, {0, 0, 0, 225});
 
-            DrawRectangleLines(
-                110,
-                95,
-                580,
-                265,
+            DrawRectangleLinesEx(
+                {110.0f, 95.0f, 580.0f, 265.0f},
+                1.5f,
                 NEO_MAGENTA
             );
 
-            DrawText(
+            DrawRectangle(110, 95, 580, 42, {0, 255, 255, 35});
+
+            drawCyberText(
                 "#",
                 135,
                 115,
@@ -1694,7 +1983,7 @@ void Game::drawGame() {
                 NEO_YELLOW
             );
 
-            DrawText(
+            drawCyberText(
                 "JUGADOR",
                 190,
                 115,
@@ -1702,7 +1991,7 @@ void Game::drawGame() {
                 NEO_YELLOW
             );
 
-            DrawText(
+            drawCyberText(
                 "SCORE",
                 440,
                 115,
@@ -1710,7 +1999,7 @@ void Game::drawGame() {
                 NEO_YELLOW
             );
 
-            DrawText(
+            drawCyberText(
                 "NIVEL",
                 560,
                 115,
@@ -1719,7 +2008,7 @@ void Game::drawGame() {
             );
 
             if (rankingActual.empty()) {
-                DrawText(
+                drawCyberText(
                     mensajeApi.c_str(),
                     210,
                     215,
@@ -1736,11 +2025,15 @@ void Game::drawGame() {
                     int y = 150 + i * 24;
                     std::string usernameRanking = rankingActual[i].username;
 
+                    if (i % 2 == 0) {
+                        DrawRectangle(120, y - 4, 560, 23, {255, 255, 255, 18});
+                    }
+
                     if (usernameRanking.size() > 20) {
                         usernameRanking = usernameRanking.substr(0, 17) + "...";
                     }
 
-                    DrawText(
+                    drawCyberText(
                         TextFormat("%i", i + 1),
                         135,
                         y,
@@ -1748,7 +2041,7 @@ void Game::drawGame() {
                         WHITE
                     );
 
-                    DrawText(
+                    drawCyberText(
                         usernameRanking.c_str(),
                         190,
                         y,
@@ -1756,7 +2049,7 @@ void Game::drawGame() {
                         WHITE
                     );
 
-                    DrawText(
+                    drawCyberText(
                         TextFormat("%i", rankingActual[i].bestScore),
                         440,
                         y,
@@ -1764,7 +2057,7 @@ void Game::drawGame() {
                         WHITE
                     );
 
-                    DrawText(
+                    drawCyberText(
                         TextFormat("%i", rankingActual[i].bestNivel),
                         560,
                         y,
@@ -1774,7 +2067,7 @@ void Game::drawGame() {
                 }
             }
 
-            DrawText(
+            drawCyberText(
                 "[ENTER/R/ESC] VOLVER AL MENU",
                 260,
                 385,
@@ -1782,7 +2075,7 @@ void Game::drawGame() {
                 GRAY
             );
 
-            DrawText(
+            drawCyberText(
                 "Control: A/B/Menu volver",
                 300,
                 408,
@@ -1793,8 +2086,14 @@ void Game::drawGame() {
             break;
         }
 
+        case CARGANDO: {
+            audioManager.stopRunning();
+            drawLoadingScreen();
+            break;
+        }
+
         case CONFIRMAR_SALIDA: {
-            DrawText(
+            drawCyberText(
                 "CYBER RUNNER",
                 245,
                 80,
@@ -1802,23 +2101,9 @@ void Game::drawGame() {
                 NEO_CYAN
             );
 
-            DrawRectangle(
-                170,
-                145,
-                460,
-                170,
-                {0, 0, 0, 220}
-            );
+            drawCyberPanel(170, 145, 460, 170, NEO_RED);
 
-            DrawRectangleLines(
-                170,
-                145,
-                460,
-                170,
-                NEO_RED
-            );
-
-            DrawText(
+            drawCyberText(
                 "CONFIRMAR SALIDA",
                 255,
                 170,
@@ -1826,7 +2111,7 @@ void Game::drawGame() {
                 NEO_YELLOW
             );
 
-            DrawText(
+            drawCyberText(
                 "Seguro que quieres cerrar el juego?",
                 215,
                 220,
@@ -1834,7 +2119,7 @@ void Game::drawGame() {
                 WHITE
             );
 
-            DrawText(
+            drawCyberText(
                 "[ENTER/Y/A] SI",
                 235,
                 270,
@@ -1842,7 +2127,7 @@ void Game::drawGame() {
                 NEO_CYAN
             );
 
-            DrawText(
+            drawCyberText(
                 "[ESC/N/B] NO",
                 420,
                 270,
@@ -1908,7 +2193,9 @@ void Game::drawGame() {
                 {0, 0, 0, 180}
             );
 
-            DrawText(
+            drawCyberPanel(210, 100, 380, 255, NEO_YELLOW);
+
+            drawCyberText(
                 "JUEGO EN PAUSA",
                 255,
                 120,
@@ -1916,39 +2203,19 @@ void Game::drawGame() {
                 NEO_YELLOW
             );
 
-            DrawRectangleLines(
-                230,
-                190,
-                340,
-                45,
+            drawCyberButton(
+                {230.0f, 190.0f, 340.0f, 45.0f},
+                "[1] CONTINUAR",
                 NEO_CYAN
             );
 
-            DrawText(
-                "[1] CONTINUAR",
-                300,
-                202,
-                20,
-                WHITE
-            );
-
-            DrawRectangleLines(
-                230,
-                255,
-                340,
-                45,
+            drawCyberButton(
+                {230.0f, 255.0f, 340.0f, 45.0f},
+                "[2] SALIR AL MENU",
                 NEO_RED
             );
 
-            DrawText(
-                "[2] SALIR AL MENU",
-                285,
-                267,
-                20,
-                WHITE
-            );
-
-            DrawText(
+            drawCyberText(
                 "Control: A continuar | B salir",
                 260,
                 335,
@@ -1961,23 +2228,9 @@ void Game::drawGame() {
 
         case GAMEOVER: {
             audioManager.stopRunning();
-            DrawRectangle(
-                145,
-                55,
-                510,
-                340,
-                {0, 0, 0, 225}
-            );
+            drawCyberPanel(145, 55, 510, 340, NEO_RED);
 
-            DrawRectangleLines(
-                145,
-                55,
-                510,
-                340,
-                NEO_RED
-            );
-
-            DrawText(
+            drawCyberText(
                 "RESUMEN DE PARTIDA",
                 225,
                 80,
@@ -1985,7 +2238,7 @@ void Game::drawGame() {
                 NEO_RED
             );
 
-            DrawText(
+            drawCyberText(
                 TextFormat("PUNTAJE FINAL: %i", score),
                 250,
                 135,
@@ -1993,7 +2246,7 @@ void Game::drawGame() {
                 WHITE
             );
 
-            DrawText(
+            drawCyberText(
                 TextFormat("RECORD: %i", highScore),
                 250,
                 165,
@@ -2001,7 +2254,7 @@ void Game::drawGame() {
                 GREEN
             );
 
-            DrawText(
+            drawCyberText(
                 TextFormat("MONEDAS: %i", coinsCollectedThisRun),
                 250,
                 195,
@@ -2009,19 +2262,25 @@ void Game::drawGame() {
                 NEO_YELLOW
             );
 
-            DrawRectangle(235, 245, 330, 36, {0, 0, 0, 210});
-            DrawRectangleLines(235, 245, 330, 36, NEO_CYAN);
-            DrawText("[1/R/A] REINICIAR", 300, 255, 18, WHITE);
+            drawCyberButton(
+                {235.0f, 245.0f, 330.0f, 36.0f},
+                "[1/R/A] REINICIAR",
+                NEO_CYAN
+            );
 
-            DrawRectangle(235, 290, 330, 36, {0, 0, 0, 210});
-            DrawRectangleLines(235, 290, 330, 36, WHITE);
-            DrawText("[2/ESC/B] SALIR AL MENU", 270, 300, 18, WHITE);
+            drawCyberButton(
+                {235.0f, 290.0f, 330.0f, 36.0f},
+                "[2/ESC/B] SALIR AL MENU",
+                WHITE
+            );
 
-            DrawRectangle(235, 335, 330, 36, {0, 0, 0, 210});
-            DrawRectangleLines(235, 335, 330, 36, NEO_MAGENTA);
-            DrawText("[3/Y] CAMBIAR USUARIO", 280, 345, 18, WHITE);
+            drawCyberButton(
+                {235.0f, 335.0f, 330.0f, 36.0f},
+                "[3/Y] CAMBIAR USUARIO",
+                NEO_MAGENTA
+            );
 
-            DrawText(
+            drawCyberText(
                 mensajeApi.c_str(),
                 215,
                 405,

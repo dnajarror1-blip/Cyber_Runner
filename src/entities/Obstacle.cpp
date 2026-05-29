@@ -74,14 +74,16 @@ Obstacle& Obstacle::operator=(Obstacle&& other) noexcept
 
 void Obstacle::update(float deltaTime) {
     // 1. El movimiento constante a la izquierda
-    rect.x -= speed * deltaTime;
+    float speedMultiplier = type == ObstacleType::AIR ? 1.18f : 1.0f;
+
+    rect.x -= speed * speedMultiplier * deltaTime;
 
     if (type == ObstacleType::AIR)
     {
         verticalTimer += deltaTime;
         rect.y = baseY + static_cast<float>(
-            std::sin(verticalTimer * 2.4f + verticalPhase)
-        ) * 18.0f;
+            std::sin(verticalTimer * 4.0f + verticalPhase)
+        ) * 30.0f;
     }
 
     // 2. Si sale de la pantalla, lo "teletransportamos" y cambiamos su forma
