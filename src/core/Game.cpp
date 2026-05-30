@@ -1831,9 +1831,12 @@ void Game::updateGame() {
 
             //scrolling imp
 
+            float speedMultiplier = nitroActive ? 1.35f : 1.0f;
+            float gameplaySpeed = globalSpeed * speedMultiplier;
+
             bgOffset -= 25.0f * deltaTime;
 
-            foregroundOffset -= globalSpeed * 0.35f * deltaTime;
+            foregroundOffset -= gameplaySpeed * 0.35f * deltaTime;
 
             if (bgOffset <= -bgWidth) {
                 bgOffset = 0.0f;
@@ -1867,6 +1870,8 @@ void Game::updateGame() {
                 globalSpeed = velocidadMaximaActual;
             }
 
+            gameplaySpeed = globalSpeed * speedMultiplier;
+
             if (player != nullptr) {
                 player->update(deltaTime);
             }
@@ -1896,7 +1901,7 @@ void Game::updateGame() {
             }
 
             for (auto &obs: obstacles) {
-                obs.setSpeed(globalSpeed);
+                obs.setSpeed(gameplaySpeed);
 
                 obs.update(deltaTime);
             }
@@ -1905,7 +1910,7 @@ void Game::updateGame() {
 
 
             for (auto &coin: coins) {
-                coin.setSpeed(globalSpeed);
+                coin.setSpeed(gameplaySpeed);
 
                 coin.update(deltaTime);
 
@@ -2894,7 +2899,7 @@ void Game::drawGame() {
             //);
 
             hud.drawGameHUD(
-                globalSpeed,
+                nitroActive ? globalSpeed * 1.35f : globalSpeed,
                 score,
                 highScore,
                 nitroActive,
@@ -2902,15 +2907,90 @@ void Game::drawGame() {
                 nitroTimer / 8.0f,
                 shieldTimer / 10.0f
             );
+            if (nitroActive && player != nullptr) {
+                Vector2 playerCenter = player->getPosition();
+                Rectangle playerRect = player->getRect();
+                float pulse =
+                        (std::sin(static_cast<float>(GetTime()) * 12.0f) + 1.0f) *
+                        0.5f;
+
+                DrawCircleGradient(
+                    static_cast<int>(playerCenter.x - 18.0f),
+                    static_cast<int>(playerCenter.y + 8.0f),
+                    24.0f + pulse * 6.0f,
+                    {0, 255, 255, 110},
+                    {0, 0, 0, 0}
+                );
+                DrawRing(
+                    playerCenter,
+                    29.0f + pulse * 3.0f,
+                    32.0f + pulse * 3.0f,
+                    -25.0f,
+                    210.0f,
+                    48,
+                    {0, 255, 255, 170}
+                );
+                DrawLineEx(
+                    {playerRect.x - 52.0f, playerCenter.y - 13.0f},
+                    {playerRect.x - 6.0f, playerCenter.y - 5.0f},
+                    3.0f,
+                    {253, 249, 0, 150}
+                );
+                DrawLineEx(
+                    {playerRect.x - 62.0f, playerCenter.y + 10.0f},
+                    {playerRect.x - 5.0f, playerCenter.y + 6.0f},
+                    4.0f,
+                    {0, 255, 255, 155}
+                );
+                DrawLineEx(
+                    {playerRect.x - 40.0f, playerCenter.y + 24.0f},
+                    {playerRect.x - 5.0f, playerCenter.y + 16.0f},
+                    2.0f,
+                    {255, 255, 255, 125}
+                );
+            }
+
             if (hasShield) {
                 if (player != nullptr) {
                     Vector2 playerCenter = player->getPosition();
+                    float time = static_cast<float>(GetTime());
+                    float pulse = (std::sin(time * 5.5f) + 1.0f) * 0.5f;
+                    float radius = 38.0f + pulse * 5.0f;
 
-                    DrawCircleLines(
-                        playerCenter.x,
-                        playerCenter.y,
-                        35,
-                        ORANGE
+                    DrawCircleGradient(
+                        static_cast<int>(playerCenter.x),
+                        static_cast<int>(playerCenter.y),
+                        radius + 12.0f,
+                        {0, 140, 255, 90},
+                        {0, 0, 0, 0}
+                    );
+
+                    DrawRing(
+                        playerCenter,
+                        radius,
+                        radius + 3.0f,
+                        time * 95.0f,
+                        time * 95.0f + 275.0f,
+                        72,
+                        {0, 210, 255, 190}
+                    );
+                    DrawRing(
+                        playerCenter,
+                        radius - 7.0f,
+                        radius - 4.0f,
+                        -time * 130.0f,
+                        -time * 130.0f + 135.0f,
+                        72,
+                        {253, 249, 0, 150}
+                    );
+                    DrawRing(
+                        playerCenter,
+                        radius + 5.0f,
+                        radius + 6.5f,
+                        0.0f,
+                        360.0f,
+                        72,
+                        {255, 255, 255, 70}
                     );
                 }
             }
