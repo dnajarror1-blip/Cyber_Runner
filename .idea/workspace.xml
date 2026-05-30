@@ -28,8 +28,14 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6ddf144c-c33f-411d-9357-7ea431bb52dd" name="Changes" comment="Mejora la interfaz">
+    <list default="true" id="6ddf144c-c33f-411d-9357-7ea431bb52dd" name="Changes" comment="Documenta flujo de gameplay y colisiones">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/entities/Coin.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/entities/Coin.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/entities/Obstacle.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/entities/Obstacle.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/entities/Player.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/entities/Player.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/core/Game.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/Game.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/Obstacle.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/Obstacle.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entities/Player.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/Player.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,23 +74,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0405388319402002" />
-      <entry key="MS500" value="3.2502352510132333" />
-      <entry key="S2" value="11.47261664751668" />
-      <entry key="S5" value="23.385024827537574" />
-      <entry key="S10" value="42.26576053228473" />
-      <entry key="S30" value="81.12277561684375" />
-      <entry key="S60" value="106.69197566570638" />
-      <entry key="M2" value="149.6738917117786" />
-      <entry key="M5" value="269.4511139639852" />
-      <entry key="M10" value="432.8167203779023" />
-      <entry key="M15" value="599.597889147824" />
-      <entry key="M30" value="1082.7528640014532" />
-      <entry key="H1" value="1770.3552357766575" />
-      <entry key="H2" value="2687.973750293638" />
-      <entry key="H4" value="3901.435777932386" />
-      <entry key="D1" value="6437.49846299099" />
-      <entry key="W1" value="7183.143817374653" />
+      <entry key="MS100" value="1.2306385966780256" />
+      <entry key="MS500" value="3.166064544017892" />
+      <entry key="S2" value="10.00538745060461" />
+      <entry key="S5" value="16.146529485357675" />
+      <entry key="S10" value="19.526875205474724" />
+      <entry key="S30" value="22.370554685645182" />
+      <entry key="S60" value="23.665787159226568" />
+      <entry key="M2" value="32.19814476196997" />
+      <entry key="M5" value="90.81720984295723" />
+      <entry key="M10" value="198.34019335190442" />
+      <entry key="M15" value="318.7052300096637" />
+      <entry key="M30" value="734.1136284692384" />
+      <entry key="H1" value="1467.0418518437116" />
+      <entry key="H2" value="2502.3994928223037" />
+      <entry key="H4" value="3845.594736432376" />
+      <entry key="D1" value="6664.490704771659" />
+      <entry key="W1" value="7504.189820734797" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -106,23 +112,23 @@
       <entry key="W1" value="0.0" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.0191226831351183" />
-      <entry key="MS500" value="3.236227399181095" />
-      <entry key="S2" value="11.459953972400859" />
-      <entry key="S5" value="23.374601856619012" />
-      <entry key="S10" value="42.25635083830165" />
-      <entry key="S30" value="81.11681996697416" />
-      <entry key="S60" value="106.68806713219507" />
-      <entry key="M2" value="149.67112802476015" />
-      <entry key="M5" value="269.4490758055133" />
-      <entry key="M10" value="432.81505780622604" />
-      <entry key="M15" value="599.596339186102" />
-      <entry key="M30" value="1082.7514390422057" />
-      <entry key="H1" value="1770.3539882152083" />
-      <entry key="H2" value="2687.972595955538" />
-      <entry key="H4" value="3901.4347654754624" />
-      <entry key="D1" value="6437.498136707154" />
-      <entry key="W1" value="7183.143764220295" />
+      <entry key="MS100" value="1.2068819574846326" />
+      <entry key="MS500" value="3.155095600434904" />
+      <entry key="S2" value="9.996145943987901" />
+      <entry key="S5" value="16.140397020579538" />
+      <entry key="S10" value="19.52313178992814" />
+      <entry key="S30" value="22.36911619147737" />
+      <entry key="S60" value="23.665023963591555" />
+      <entry key="M2" value="32.19761257302888" />
+      <entry key="M5" value="90.81657882953604" />
+      <entry key="M10" value="198.33948537325227" />
+      <entry key="M15" value="318.7044549615057" />
+      <entry key="M30" value="734.112698962316" />
+      <entry key="H1" value="1467.0408525355067" />
+      <entry key="H2" value="2502.398461011916" />
+      <entry key="H4" value="3845.5937752795985" />
+      <entry key="D1" value="6664.49037579631" />
+      <entry key="W1" value="7504.189766523766" />
     </decayedShown>
   </component>
   <component name="ProjectApplicationVersion">
@@ -325,7 +331,39 @@
       <option name="project" value="LOCAL" />
       <updated>1780127834554</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Mejora la interfaz">
+      <option name="closed" value="true" />
+      <created>1780128133269</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1780128133269</updated>
+    </task>
+    <task id="LOCAL-00015" summary="JUEGO TERMINADO">
+      <option name="closed" value="true" />
+      <created>1780128183983</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1780128183983</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Documenta estructura y ajustes visuales del juego">
+      <option name="closed" value="true" />
+      <created>1780129643176</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1780129643176</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Documenta flujo de gameplay y colisiones">
+      <option name="closed" value="true" />
+      <created>1780129959338</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1780129959338</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -357,6 +395,9 @@
     <MESSAGE value="Añade pop us de avisos para iniciar partida antes de iniciar sesión y campos vacios o incorrectos para el login" />
     <MESSAGE value="Mejora la interfaz e indica la conversión de monedas a los tokens" />
     <MESSAGE value="Mejora la interfaz" />
-    <option name="LAST_COMMIT_MESSAGE" value="Mejora la interfaz" />
+    <MESSAGE value="JUEGO TERMINADO" />
+    <MESSAGE value="Documenta estructura y ajustes visuales del juego" />
+    <MESSAGE value="Documenta flujo de gameplay y colisiones" />
+    <option name="LAST_COMMIT_MESSAGE" value="Documenta flujo de gameplay y colisiones" />
   </component>
 </project>
