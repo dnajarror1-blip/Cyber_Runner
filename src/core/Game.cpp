@@ -1183,14 +1183,20 @@ void Game::consultarRankingApi() {
     }
 }
 
+// FUNCION: Reinicia los valores de una nueva partida.
+// IMPORTANTE: Este punto deja listo jugador, score, poderes, obstaculos y monedas.
 void Game::resetGame() {
     if (player != nullptr) {
         delete player;
         player = nullptr;
     }
 
+    // SECCION: Jugador
+    // Se crea un jugador nuevo para limpiar posicion, saltos y estado interno.
     player = new Player();
 
+    // SECCION: Gameplay
+    // Valores base de velocidad, poderes y contadores al comenzar una partida.
     globalSpeed = 350.0f;
 
     hasShield = false;
@@ -1395,6 +1401,8 @@ void Game::resetGame() {
     generarMonedasEnMatriz(900.0f);
 }
 
+// FUNCION: Genera el grupo actual de monedas, escudo y posible nitro.
+// IMPORTANTE: No mueve el jugador; solo decide posiciones y tipos de items.
 void Game::generarMonedasEnMatriz(float startX) {
     if (coins.empty()) {
         return;
@@ -1407,12 +1415,14 @@ void Game::generarMonedasEnMatriz(float startX) {
     bool monedasCercaDron = false;
     Rectangle dronCercano {};
 
+    // Controla cada cuantos grupos puede aparecer nitro.
     if (spawnNitro) {
         nitroSpawnCountdown = GetRandomValue(4, 6);
     } else {
         nitroSpawnCountdown--;
     }
 
+    // Busca drones cercanos para colocar algunas monedas alrededor de ellos.
     for (auto &obs: obstacles) {
         Rectangle rect = obs.getRect();
 
@@ -1486,6 +1496,7 @@ void Game::generarMonedasEnMatriz(float startX) {
     }
 }
 
+// FUNCION: Regenera monedas cuando todas las monedas anteriores ya desaparecieron o fueron tomadas.
 void Game::actualizarGeneracionMonedas() {
     for (auto &coin: coins) {
         if (coin.isActive()) {
@@ -1496,6 +1507,7 @@ void Game::actualizarGeneracionMonedas() {
     // startX define desde donde aparece el siguiente grupo de monedas fuera de pantalla.
     float startX = 850.0f + static_cast<float>(GetRandomValue(180, 360));
 
+    // Si hay un obstaculo adelante, el grupo de monedas se ajusta cerca de ese obstaculo.
     for (auto &obs: obstacles) {
         Rectangle rect = obs.getRect();
 
@@ -1512,6 +1524,7 @@ void Game::actualizarGeneracionMonedas() {
     generarMonedasEnMatriz(startX);
 }
 
+// FUNCION: Evita que obstaculos reaparezcan demasiado juntos.
 void Game::separarObstaculos() {
     // SECCION: Obstaculos
     // minSpacing controla la distancia minima entre obstaculos para evitar apariciones injustas.
@@ -1543,7 +1556,10 @@ void Game::separarObstaculos() {
     }
 }
 
+// FUNCION: Inicia Raylib, carga recursos y ejecuta el loop principal.
 void Game::run() {
+    // SECCION: Ventana
+    // screenWidth y screenHeight definen el lienzo logico del juego.
     InitWindow(
         screenWidth,
         screenHeight,
@@ -1551,6 +1567,8 @@ void Game::run() {
     );
     SetExitKey(KEY_NULL);
 
+    // SECCION: Audio
+    // El dispositivo de audio debe existir antes de cargar musica y sonidos.
     InitAudioDevice();
 
     audioManager.load();
@@ -1559,6 +1577,8 @@ void Game::run() {
 
     PlayMusicStream(backgroundMusic);
 
+    // SECCION: Assets visuales
+    // Carga fondos, foreground, impacto y sprites usados por menus.
     fondo1 = LoadTexture("assets/textures/fondocyber.png");
     fondo2 = LoadTexture("assets/textures/fondocyber2.png");
     fondo3 = LoadTexture("assets/textures/fondocyber3.png");
@@ -1602,6 +1622,8 @@ void Game::run() {
         TEXTURE_FILTER_POINT
     );
 
+    // SECCION: Loop principal
+    // Cada frame actualiza musica, entrada, logica, dibujo interno y escalado final.
     while (!WindowShouldClose() && !shouldCloseGame) {
         //music
         UpdateMusicStream(backgroundMusic);
@@ -1610,12 +1632,14 @@ void Game::run() {
 
         toggleFullscreen();
 
+        // Actualiza estado, controles y reglas antes de dibujar.
         updateGame();
 
         BeginTextureMode(target);
 
         ClearBackground(BLACK);
 
+        // Orden de dibujo: fondo, piso, pantalla actual y escalado final.
         drawBackground(); //fondo imp
 
         drawForeground(); // foregorung
@@ -1627,10 +1651,13 @@ void Game::run() {
         drawScaledGame(target);
     }
 
+    // IMPORTANTE: Si el usuario cierra la ventana en plena partida, se reporta salida.
     if (partidaActiva && !partidaFinalizada) {
         finalizarPartidaApi("EXIT");
     }
 
+    // SECCION: Limpieza de recursos
+    // Cada recurso cargado en run() se libera antes de cerrar Raylib.
     UnloadTexture(fondo1);
     UnloadTexture(fondo2);
     UnloadTexture(fondo3);
@@ -1864,10 +1891,15 @@ void Game::toggleFullscreen() {
     }
 }
 
+// FUNCION: Actualiza el estado principal del juego.
+// SECCION: Flujo de pantalla
+// Este switch decide que entrada y que logica se ejecutan segun la pantalla actual.
 void Game::updateGame() {
     GameScreen screenBeforeUpdate = currentScreen;
     float frameTime = GetFrameTime();
 
+    // SECCION: Popup
+    // Mientras hay popup activo, se bloquea la logica de la pantalla de fondo.
     if (popupActivo) {
         bool cerrarPopupPressed =
                 IsKeyPressed(KEY_ENTER) ||
@@ -1884,6 +1916,7 @@ void Game::updateGame() {
         return;
     }
 
+    // Atajo oculto para mostrar u ocultar mensajes de API durante pruebas.
     if (IsGamepadAvailable(0)) {
         bool toggleMensajesApi =
                 (
@@ -1911,8 +1944,11 @@ void Game::updateGame() {
         }
     }
 
+    // Revisa si alguna finalizacion de partida asincrona ya respondio.
     limpiarFinalizacionesPartidaTerminadas();
 
+    // SECCION: Cargando
+    // La pantalla de carga solo espera resultados de operaciones asincronas.
     if (currentScreen == CARGANDO) {
         actualizarCarga();
 
@@ -1928,6 +1964,7 @@ void Game::updateGame() {
 
     switch (currentScreen) {
         case CARGA_INICIAL: {
+            // Pantalla breve antes del inicio, usada para dar entrada visual al juego.
             initialLoadTimer += frameTime;
 
             if (initialLoadTimer >= 1.45f) {
@@ -1938,6 +1975,8 @@ void Game::updateGame() {
         }
 
         case INICIO: {
+            // SECCION: Menu inicial
+            // Actualiza animacion de fondo y espera START/ENTER/A para entrar al menu.
             menuPreviewTimer += frameTime;
 
             bgOffset -= 28.0f * frameTime;
@@ -1970,6 +2009,8 @@ void Game::updateGame() {
         }
 
         case LOGIN: {
+            // SECCION: Login
+            // Captura texto para usuario o password segun el campo activo.
             std::string &campoActivo =
                     loginPasswordActivo ? loginPassword : loginUsername;
 
@@ -1987,6 +2028,7 @@ void Game::updateGame() {
                 campoActivo.pop_back();
             }
 
+            // Cambia entre usuario y password.
             if (
                 IsKeyPressed(KEY_TAB) ||
                 IsKeyPressed(KEY_UP) ||
@@ -2006,6 +2048,7 @@ void Game::updateGame() {
                 break;
             }
 
+            // Aceptar primero enfoca password; si ya esta activo, intenta login.
             bool loginPressed =
                     IsKeyPressed(KEY_ENTER) ||
                     (
@@ -2035,8 +2078,11 @@ void Game::updateGame() {
         }
 
         case MENU: {
+            // SECCION: Menu principal
+            // Centraliza las acciones principales: jugar, login, ranking, ayuda y salir.
             menuEasterEggTimer += frameTime;
 
+            // Popup visual interno para obligar login antes de iniciar partida.
             if (mensajeApi == "LOGIN: debes loguearte antes de jugar.") {
                 bool abrirLoginPressed =
                         IsKeyPressed(KEY_TWO) ||
@@ -2055,6 +2101,7 @@ void Game::updateGame() {
                 break;
             }
 
+            // Volver desde menu al inicio.
             if (
                 gamepadBackPressed() ||
                 IsKeyPressed(KEY_BACKSPACE)
@@ -2063,6 +2110,7 @@ void Game::updateGame() {
                 break;
             }
 
+            // Iniciar partida: valida sesion y tokens antes de cargar gameplay.
             if (
                 IsKeyPressed(KEY_ONE) ||
                 (
@@ -2091,6 +2139,7 @@ void Game::updateGame() {
                 iniciarCargaPartida(MENU, modoPruebaSinApi);
             }
 
+            // Cambiar o iniciar usuario.
             if (
                 IsKeyPressed(KEY_TWO) ||
                 (
@@ -2104,6 +2153,7 @@ void Game::updateGame() {
                 currentScreen = LOGIN;
             }
 
+            // Consultar ranking desde API.
             if (
                 IsKeyPressed(KEY_THREE) ||
                 (
@@ -2114,6 +2164,7 @@ void Game::updateGame() {
                 iniciarCargaRanking();
             }
 
+            // Abrir pantalla de instrucciones.
             if (
                 IsKeyPressed(KEY_FOUR) ||
                 IsKeyPressed(KEY_H) ||
@@ -2126,6 +2177,7 @@ void Game::updateGame() {
                 currentScreen = COMO_JUGAR;
             }
 
+            // Ir a confirmacion de salida.
             if (
                 IsKeyPressed(KEY_FIVE) ||
                 (
@@ -2140,6 +2192,8 @@ void Game::updateGame() {
         }
 
         case COMO_JUGAR: {
+            // SECCION: Como jugar
+            // Solo actualiza animaciones de ejemplo y escucha botones para volver.
             menuPreviewTimer += frameTime;
 
             bool volverMenuPressed =
@@ -2166,6 +2220,8 @@ void Game::updateGame() {
         }
 
         case RANKING: {
+            // SECCION: Ranking
+            // La consulta ya se hizo en carga; aqui solo se espera volver al menu.
             bool volverMenuPressed =
                     IsKeyPressed(KEY_ESCAPE) ||
                     IsKeyPressed(KEY_R) ||
@@ -2187,6 +2243,8 @@ void Game::updateGame() {
         }
 
         case CONFIRMAR_SALIDA: {
+            // SECCION: Confirmacion de salida
+            // Evita cerrar de inmediato por error y permite cancelar.
             audioManager.stopRunning();
 
             bool confirmarSalida =
@@ -2217,6 +2275,8 @@ void Game::updateGame() {
         }
 
         case JUGANDO: {
+            // SECCION: Gameplay
+            // En esta pantalla corren fisica, score, velocidad, entidades, items y colisiones.
             bool pausaPressed =
                     IsKeyPressed(KEY_ESCAPE) ||
                     IsKeyPressed(KEY_P) ||
@@ -2232,6 +2292,8 @@ void Game::updateGame() {
 
             float deltaTime = GetFrameTime();
 
+            // SECCION: Nitro
+            // Reduce el temporizador y desactiva el poder cuando se agota.
             if (nitroActive) {
                 nitroTimer -= deltaTime;
 
@@ -2245,6 +2307,8 @@ void Game::updateGame() {
                 }
             }
 
+            // SECCION: Escudo
+            // Reduce el temporizador y apaga el escudo cuando termina.
             if (hasShield) {
                 shieldTimer -= deltaTime;
 
@@ -2254,6 +2318,8 @@ void Game::updateGame() {
                 }
             }
 
+            // SECCION: Scroll del escenario
+            // El fondo se mueve lento y el foreground sigue la velocidad del gameplay.
             //scrolling imp
 
             float speedMultiplier = nitroActive ? 1.35f : 1.0f;
@@ -2280,6 +2346,8 @@ void Game::updateGame() {
                 }
             }
 
+            // SECCION: Score
+            // El nitro multiplica el avance de puntaje mientras esta activo.
             float scoreMultiplier = nitroActive ? 3.0f : 1.0f;
 
             scoreTimer += scorePerSecond * deltaTime * scoreMultiplier;
@@ -2287,6 +2355,7 @@ void Game::updateGame() {
             score = static_cast<int>(scoreTimer);
             //reportarScoreApiSiCorresponde();
 
+            // La velocidad sube con el tiempo hasta llegar al limite normal.
             globalSpeed += speedIncrement * deltaTime;
 
             float velocidadMaximaActual = maxNormalSpeed;
@@ -2297,6 +2366,7 @@ void Game::updateGame() {
 
             gameplaySpeed = globalSpeed * speedMultiplier;
 
+            // Actualiza movimiento del jugador y detecta eventos para audio.
             if (player != nullptr) {
                 player->update(deltaTime);
             }
@@ -2325,6 +2395,8 @@ void Game::updateGame() {
                 audioManager.stopRunning();
             }
 
+            // SECCION: Obstaculos
+            // Todos los obstaculos reciben la velocidad actual antes de moverse.
             for (auto &obs: obstacles) {
                 obs.setSpeed(gameplaySpeed);
 
@@ -2334,6 +2406,8 @@ void Game::updateGame() {
             separarObstaculos();
 
 
+            // SECCION: Monedas e items
+            // Actualiza items y revisa recoleccion contra el rectangulo del jugador.
             for (auto &coin: coins) {
                 coin.setSpeed(gameplaySpeed);
 
@@ -2350,6 +2424,7 @@ void Game::updateGame() {
                     ItemType itemType = coin.getType();
 
                     if (itemType == ItemType::CREDIT) {
+                        // Moneda normal: suma monedas, score y registro local.
                         audioManager.playCoin();
 
                         int monedasGanadas = nitroActive ? 3 : 1;
@@ -2366,6 +2441,7 @@ void Game::updateGame() {
                             monedasGanadas
                         );
                     } else if (itemType == ItemType::NITRO) {
+                        // Nitro: activa velocidad/score temporal y cambia el salto del jugador.
                         nitroActive = true;
                         nitroTimer = 8.0f;
 
@@ -2376,6 +2452,7 @@ void Game::updateGame() {
                         scoreTimer += 75.0f;
                         score = static_cast<int>(scoreTimer);
                     } else if (itemType == ItemType::SHIELD) {
+                        // Escudo: permite absorber un choque antes del game over.
                         hasShield = true;
                         shieldTimer = 10.0f;
 
@@ -2389,6 +2466,7 @@ void Game::updateGame() {
                 }
             }
 
+            // Regenera items y luego revisa choques con obstaculos.
             actualizarGeneracionMonedas();
 
             checkCollisions();
@@ -2397,6 +2475,8 @@ void Game::updateGame() {
         }
 
         case PAUSA: {
+            // SECCION: Pausa
+            // Permite continuar o salir al menu finalizando la partida en segundo plano.
             bool continuarPressed =
                     IsKeyPressed(KEY_ESCAPE) ||
                     IsKeyPressed(KEY_P) ||
@@ -2429,6 +2509,8 @@ void Game::updateGame() {
         }
 
         case IMPACTO: {
+            // SECCION: Impacto
+            // Pantalla intermedia corta antes de mostrar Game Over.
             impactTimer += GetFrameTime();
 
             if (impactTimer >= 1.05f) {
@@ -2439,6 +2521,8 @@ void Game::updateGame() {
         }
 
         case GAMEOVER: {
+            // SECCION: Game Over
+            // Desde aqui se puede intentar otra partida o volver al menu.
             bool reiniciarPressed =
                     IsKeyPressed(KEY_ONE) ||
                     IsKeyPressed(KEY_R) ||
@@ -2470,6 +2554,7 @@ void Game::updateGame() {
         }
     }
 
+    // Activa fade cuando el update cambio de pantalla.
     if (
         currentScreen != screenBeforeUpdate &&
         shouldAnimateScreenTransition(currentScreen)
@@ -2478,6 +2563,9 @@ void Game::updateGame() {
     }
 }
 
+// FUNCION: Revisa choques entre jugador y obstaculos.
+// SECCION: Colisiones
+// Esta funcion decide si el escudo absorbe el golpe o si la partida termina.
 void Game::checkCollisions()
 {
     if (player == nullptr)
@@ -2485,6 +2573,7 @@ void Game::checkCollisions()
         return;
     }
 
+    // Recorre obstaculos activos y compara sus rectangulos contra el hitbox del jugador.
     for (auto &obs: obstacles)
     {
         if (
@@ -2494,6 +2583,7 @@ void Game::checkCollisions()
             )
         )
         {
+            // El sonido depende del tipo de obstaculo que golpeo al jugador.
             if (obs.getType() == ObstacleType::AIR)
             {
                 audioManager.playDroneImpact();
@@ -2503,6 +2593,7 @@ void Game::checkCollisions()
                 audioManager.playBoxImpact();
             }
 
+            // IMPORTANTE: El escudo consume el golpe, elimina el escudo y reposiciona el obstaculo.
             if (hasShield)
             {
                 hasShield = false;
@@ -2517,6 +2608,7 @@ void Game::checkCollisions()
 
             audioManager.playGameOver();
 
+            // Actualiza record local si esta partida supero el mejor puntaje guardado.
             if (score > highScore)
             {
                 highScore = score;
@@ -2537,6 +2629,7 @@ void Game::checkCollisions()
             impactPosition = player->getPosition();
             impactTimer = 0.0f;
 
+            // Reporta el resultado final sin congelar la transicion a impacto/game over.
             finalizarPartidaApiAsync("LOSE");
 
             currentScreen = IMPACTO;
