@@ -205,11 +205,17 @@ static Vector2 getBorderPoint(Rectangle rect, float progress)
 static void drawMovingBorderGlow(
     Rectangle rect,
     Color color,
-    float phase
+    float phase,
+    float direction = 1.0f
 )
 {
     float time = static_cast<float>(GetTime());
-    float progress = std::fmod(time * 0.23f + phase, 1.0f);
+    float progress = std::fmod(time * 0.23f * direction + phase, 1.0f);
+
+    if (progress < 0.0f) {
+        progress += 1.0f;
+    }
+
     Vector2 glow = getBorderPoint(rect, progress);
 
     Color soft = color;
@@ -2879,6 +2885,12 @@ void Game::drawGame() {
                 2.0f,
                 loginPasswordActivo ? WHITE : NEO_CYAN
             );
+            drawMovingBorderGlow(
+                {250.0f, 180.0f, 300.0f, 38.0f},
+                loginPasswordActivo ? WHITE : NEO_CYAN,
+                0.05f,
+                1.0f
+            );
 
             drawCyberText(
                 loginUsername.empty() ? "_" : loginUsername.c_str(),
@@ -2901,6 +2913,12 @@ void Game::drawGame() {
                 {250.0f, 260.0f, 300.0f, 38.0f},
                 2.0f,
                 loginPasswordActivo ? NEO_CYAN : WHITE
+            );
+            drawMovingBorderGlow(
+                {250.0f, 260.0f, 300.0f, 38.0f},
+                loginPasswordActivo ? NEO_CYAN : WHITE,
+                0.55f,
+                -1.0f
             );
 
             std::string passwordOculto(loginPassword.size(), '*');
@@ -3083,6 +3101,7 @@ void Game::drawGame() {
 
             DrawRectangle(105, 92, 260, 250, {0, 0, 0, 225});
             DrawRectangleLinesEx({105.0f, 92.0f, 260.0f, 250.0f}, 1.5f, NEO_MAGENTA);
+            drawMovingBorderGlow({105.0f, 92.0f, 260.0f, 250.0f}, NEO_MAGENTA, 0.94f, -1.0f);
             DrawLine(120, 190, 350, 190, {0, 255, 255, 100});
 
             Texture2D runnerTexture =
@@ -3216,6 +3235,7 @@ void Game::drawGame() {
                 1.5f,
                 NEO_MAGENTA
             );
+            drawMovingBorderGlow({110.0f, 95.0f, 580.0f, 265.0f}, NEO_MAGENTA, 0.08f, -1.0f);
 
             DrawRectangle(110, 95, 580, 42, {0, 255, 255, 35});
 
@@ -3352,6 +3372,7 @@ void Game::drawGame() {
                 DrawLine(120, 318, 680, 318, {0, 255, 255, 90});
                 DrawRectangle(120, 325, 560, 28, {0, 0, 0, 190});
                 DrawRectangleLines(120, 325, 560, 28, NEO_YELLOW);
+                drawMovingBorderGlow({120.0f, 325.0f, 560.0f, 28.0f}, NEO_YELLOW, 0.63f, 1.0f);
 
                 if (puestoUsuario > 0) {
                     std::string nombreUsuario = playerName;
@@ -3627,7 +3648,7 @@ void Game::drawGame() {
             DrawRectangleRec(scoreBox, {0, 0, 0, 175});
             DrawRectangleLinesEx(scoreBox, 2.0f, NEO_CYAN);
             DrawRectangleLines(192, 127, 191, 60, {255, 255, 255, 55});
-            drawMovingBorderGlow(scoreBox, NEO_CYAN, 0.0f);
+            drawMovingBorderGlow(scoreBox, NEO_CYAN, 0.0f, 1.0f);
 
             drawCenteredCyberText(
                 "PUNTAJE",
@@ -3648,7 +3669,7 @@ void Game::drawGame() {
             DrawRectangleRec(recordBox, {0, 0, 0, 175});
             DrawRectangleLinesEx(recordBox, 2.0f, GREEN);
             DrawRectangleLines(417, 127, 191, 60, {255, 255, 255, 55});
-            drawMovingBorderGlow(recordBox, GREEN, 0.34f);
+            drawMovingBorderGlow(recordBox, GREEN, 0.34f, -1.0f);
 
             drawCenteredCyberText(
                 "RECORD",
@@ -3671,7 +3692,7 @@ void Game::drawGame() {
             DrawRectangleLines(192, 212, 416, 80, {0, 255, 255, 75});
             DrawLine(400, 229, 400, 263, {255, 255, 255, 75});
             DrawLine(210, 271, 590, 271, {253, 249, 0, 75});
-            drawMovingBorderGlow(conversionBox, NEO_YELLOW, 0.68f);
+            drawMovingBorderGlow(conversionBox, NEO_YELLOW, 0.68f, 1.0f);
 
             drawCenteredCyberText(
                 "MONEDAS",

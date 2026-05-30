@@ -29,9 +29,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6ddf144c-c33f-411d-9357-7ea431bb52dd" name="Changes" comment="Mejora la interfaz">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/core/Game.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/Game.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/HUD.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/HUD.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,23 +68,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.286618425781294" />
-      <entry key="MS500" value="4.932870335605919" />
-      <entry key="S2" value="15.013554670982481" />
-      <entry key="S5" value="30.618925027267693" />
-      <entry key="S10" value="53.103973407043405" />
-      <entry key="S30" value="124.6406899176493" />
-      <entry key="S60" value="191.47671626190922" />
-      <entry key="M2" value="251.81833256260927" />
-      <entry key="M5" value="314.1826921929176" />
-      <entry key="M10" value="429.69113834369574" />
-      <entry key="M15" value="589.3294014264948" />
-      <entry key="M30" value="1062.0796907760518" />
-      <entry key="H1" value="1709.1276185619847" />
-      <entry key="H2" value="2579.48497900116" />
-      <entry key="H4" value="3751.1181953765936" />
-      <entry key="D1" value="6204.311825127231" />
-      <entry key="W1" value="6923.221128931314" />
+      <entry key="MS100" value="1.0405388319402002" />
+      <entry key="MS500" value="3.2502352510132333" />
+      <entry key="S2" value="11.47261664751668" />
+      <entry key="S5" value="23.385024827537574" />
+      <entry key="S10" value="42.26576053228473" />
+      <entry key="S30" value="81.12277561684375" />
+      <entry key="S60" value="106.69197566570638" />
+      <entry key="M2" value="149.6738917117786" />
+      <entry key="M5" value="269.4511139639852" />
+      <entry key="M10" value="432.8167203779023" />
+      <entry key="M15" value="599.597889147824" />
+      <entry key="M30" value="1082.7528640014532" />
+      <entry key="H1" value="1770.3552357766575" />
+      <entry key="H2" value="2687.973750293638" />
+      <entry key="H4" value="3901.435777932386" />
+      <entry key="D1" value="6437.49846299099" />
+      <entry key="W1" value="7183.143817374653" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -108,23 +106,23 @@
       <entry key="W1" value="0.0" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.2632505874167208" />
-      <entry key="MS500" value="4.896757559613113" />
-      <entry key="S2" value="14.989780345013472" />
-      <entry key="S5" value="30.601697908160066" />
-      <entry key="S10" value="53.08970091642203" />
-      <entry key="S30" value="124.63012697796206" />
-      <entry key="S60" value="191.46882442836488" />
-      <entry key="M2" value="251.81322690064724" />
-      <entry key="M5" value="314.1801734474225" />
-      <entry key="M10" value="429.6894251062506" />
-      <entry key="M15" value="589.3278350903678" />
-      <entry key="M30" value="1062.078268132148" />
-      <entry key="H1" value="1709.1263893203948" />
-      <entry key="H2" value="2579.483838014536" />
-      <entry key="H4" value="3751.117193550585" />
-      <entry key="D1" value="6204.3115040480525" />
-      <entry key="W1" value="6923.221076716426" />
+      <entry key="MS100" value="1.0191226831351183" />
+      <entry key="MS500" value="3.236227399181095" />
+      <entry key="S2" value="11.459953972400859" />
+      <entry key="S5" value="23.374601856619012" />
+      <entry key="S10" value="42.25635083830165" />
+      <entry key="S30" value="81.11681996697416" />
+      <entry key="S60" value="106.68806713219507" />
+      <entry key="M2" value="149.67112802476015" />
+      <entry key="M5" value="269.4490758055133" />
+      <entry key="M10" value="432.81505780622604" />
+      <entry key="M15" value="599.596339186102" />
+      <entry key="M30" value="1082.7514390422057" />
+      <entry key="H1" value="1770.3539882152083" />
+      <entry key="H2" value="2687.972595955538" />
+      <entry key="H4" value="3901.4347654754624" />
+      <entry key="D1" value="6437.498136707154" />
+      <entry key="W1" value="7183.143764220295" />
     </decayedShown>
   </component>
   <component name="ProjectApplicationVersion">
@@ -311,7 +309,23 @@
       <option name="project" value="LOCAL" />
       <updated>1780126468459</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Mejora la interfaz">
+      <option name="closed" value="true" />
+      <created>1780127545476</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1780127545476</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Mejora la interfaz">
+      <option name="closed" value="true" />
+      <created>1780127834553</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1780127834554</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
