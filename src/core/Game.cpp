@@ -2741,59 +2741,46 @@ void Game::drawGame() {
                 NEO_RED
             );
 
-            drawCyberPanel(180, 55, 440, 340, NEO_CYAN);
+            DrawText("CYBER", 280, 122, 52, {0, 0, 0, 210});
+            DrawText("CYBER", 276, 118, 52, {255, 0, 255, 150});
+            DrawText("CYBER", 272, 114, 52, {0, 255, 255, 150});
+            DrawText("CYBER", 274, 116, 52, NEO_YELLOW);
 
-            DrawRectangle(230, 92, 340, 170, {0, 0, 0, 225});
-            DrawRectangleLinesEx({230.0f, 92.0f, 340.0f, 170.0f}, 2.0f, NEO_MAGENTA);
-            DrawRectangleLines(240, 102, 320, 150, {0, 255, 255, 90});
+            DrawText("RUNNER", 315, 183, 38, {0, 0, 0, 220});
+            DrawText("RUNNER", 311, 179, 38, {255, 0, 255, 175});
+            DrawText("RUNNER", 307, 175, 38, {0, 255, 255, 175});
+            DrawText("RUNNER", 309, 177, 38, WHITE);
 
-            DrawLine(250, 116, 550, 116, NEO_YELLOW);
-            DrawLine(248, 120, 455, 120, NEO_MAGENTA);
-            DrawLine(345, 237, 552, 237, NEO_CYAN);
-            DrawLine(250, 242, 455, 242, NEO_YELLOW);
-
-            DrawText("CYBER", 276, 127, 48, {255, 0, 255, 160});
-            DrawText("CYBER", 272, 123, 48, {0, 255, 255, 160});
-            DrawText("CYBER", 274, 125, 48, NEO_YELLOW);
-
-            DrawText("RUNNER", 318, 181, 34, {255, 0, 255, 180});
-            DrawText("RUNNER", 314, 177, 34, {0, 255, 255, 180});
-            DrawText("RUNNER", 316, 179, 34, WHITE);
-
-            DrawRectangle(272, 169, 105, 5, {0, 0, 0, 210});
-            DrawRectangle(402, 155, 88, 4, {0, 0, 0, 210});
-            DrawRectangle(318, 218, 125, 4, {0, 0, 0, 210});
-
-            drawCyberText(
-                "SYSTEM ONLINE",
-                338,
-                234,
-                14,
-                NEO_CYAN
-            );
+            DrawLine(252, 174, 382, 174, {0, 0, 0, 210});
+            DrawLine(252, 170, 382, 170, NEO_MAGENTA);
+            DrawLine(400, 160, 500, 160, {0, 0, 0, 210});
+            DrawLine(400, 156, 500, 156, NEO_CYAN);
+            DrawLine(318, 220, 454, 220, {0, 0, 0, 210});
+            DrawLine(318, 216, 454, 216, NEO_YELLOW);
 
             bool mostrarStart = static_cast<int>(GetTime() * 2.0) % 2 == 0;
 
             if (mostrarStart) {
-                drawCyberText(
+                drawCenteredCyberText(
                     "PRESIONA START",
+                    400,
                     305,
-                    325,
-                    24,
+                    25,
                     NEO_YELLOW
                 );
             }
 
+            DrawRectangle(324, 352, 152, 1, {0, 255, 255, 120});
             drawRetroPillButton(
-                {295.0f, 360.0f, 76.0f, 28.0f},
+                {295.0f, 368.0f, 76.0f, 28.0f},
                 "START",
                 NEO_CYAN
             );
-            drawRetroRoundButton(400.0f, 374.0f, "A", NEO_YELLOW);
+            drawRetroRoundButton(400.0f, 382.0f, "A", NEO_YELLOW);
             drawCyberText(
                 "COMENZAR",
                 425,
-                366,
+                374,
                 14,
                 LIGHTGRAY
             );
@@ -3239,25 +3226,41 @@ void Game::drawGame() {
                     }
 
                     if (i == 0) {
-                        DrawTriangle(
-                            {135.0f, static_cast<float>(y + 8)},
-                            {143.0f, static_cast<float>(y - 5)},
-                            {151.0f, static_cast<float>(y + 8)},
-                            NEO_YELLOW
+                        int crownX = 143;
+                        int crownY = y - 4;
+                        int pixel = 3;
+                        int shineStep = static_cast<int>(GetTime() * 6.0f) % 5;
+                        Color crownShadow = {0, 0, 0, 180};
+                        Color crownGold = NEO_YELLOW;
+                        Color crownDeep = {224, 155, 20, 255};
+                        Color crownShine = {255, 255, 255, 230};
+
+                        DrawRectangle(crownX - 2, crownY - 2, 37, 21, crownShadow);
+
+                        DrawRectangle(crownX, crownY + pixel * 4, pixel * 11, pixel * 3, crownGold);
+                        DrawRectangle(crownX + pixel, crownY + pixel * 3, pixel * 2, pixel, crownGold);
+                        DrawRectangle(crownX + pixel * 4, crownY + pixel * 2, pixel * 3, pixel * 2, crownGold);
+                        DrawRectangle(crownX + pixel * 8, crownY + pixel * 3, pixel * 2, pixel, crownGold);
+                        DrawRectangle(crownX + pixel, crownY + pixel * 6, pixel * 9, pixel, crownDeep);
+
+                        DrawRectangle(crownX, crownY + pixel * 2, pixel, pixel * 3, crownGold);
+                        DrawRectangle(crownX + pixel * 2, crownY, pixel, pixel * 4, crownGold);
+                        DrawRectangle(crownX + pixel * 5, crownY - pixel, pixel, pixel * 5, crownGold);
+                        DrawRectangle(crownX + pixel * 8, crownY, pixel, pixel * 4, crownGold);
+                        DrawRectangle(crownX + pixel * 10, crownY + pixel * 2, pixel, pixel * 3, crownGold);
+
+                        DrawRectangle(crownX + pixel * 2, crownY - pixel, pixel, pixel, crownShine);
+                        DrawRectangle(crownX + pixel * 5, crownY - pixel * 2, pixel, pixel, crownShine);
+                        DrawRectangle(crownX + pixel * 8, crownY - pixel, pixel, pixel, crownShine);
+
+                        DrawRectangle(
+                            crownX + pixel * (1 + shineStep * 2),
+                            crownY + pixel * 4,
+                            pixel,
+                            pixel,
+                            crownShine
                         );
-                        DrawTriangle(
-                            {149.0f, static_cast<float>(y + 8)},
-                            {157.0f, static_cast<float>(y - 8)},
-                            {165.0f, static_cast<float>(y + 8)},
-                            NEO_YELLOW
-                        );
-                        DrawTriangle(
-                            {163.0f, static_cast<float>(y + 8)},
-                            {171.0f, static_cast<float>(y - 5)},
-                            {179.0f, static_cast<float>(y + 8)},
-                            NEO_YELLOW
-                        );
-                        DrawRectangle(135, y + 7, 44, 5, NEO_YELLOW);
+                        DrawRectangleLines(crownX - 1, crownY + pixel * 4 - 1, pixel * 11 + 2, pixel * 3 + 2, {255, 255, 255, 90});
                     } else {
                         drawCyberText(
                             TextFormat("%i", i + 1),
@@ -3428,6 +3431,25 @@ void Game::drawGame() {
                 hasShield,
                 nitroTimer / 8.0f,
                 shieldTimer / 10.0f
+            );
+
+            DrawCircleGradient(682, 410, 34.0f, {0, 0, 0, 135}, {0, 0, 0, 0});
+            drawMenuPreviewTexture(
+                menuCoinTexture[static_cast<int>(GetTime() * 8.0f) % 2],
+                {642.0f, 398.0f, 20.0f, 20.0f},
+                WHITE,
+                NEO_YELLOW
+            );
+
+            DrawText("x", 667, 400, 16, {0, 0, 0, 210});
+            DrawText(TextFormat("%i", coinsCollectedThisRun), 690, 400, 16, {0, 0, 0, 210});
+            drawCyberText("x", 666, 399, 16, LIGHTGRAY);
+            drawCyberText(
+                TextFormat("%i", coinsCollectedThisRun),
+                689,
+                399,
+                16,
+                WHITE
             );
 
             if (hasShield) {
