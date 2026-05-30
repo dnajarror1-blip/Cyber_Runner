@@ -1569,6 +1569,22 @@ void Game::updateGame() {
     GameScreen screenBeforeUpdate = currentScreen;
     float frameTime = GetFrameTime();
 
+    if (IsGamepadAvailable(0)) {
+        bool toggleMensajesApi =
+                (
+                    IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_TRIGGER_1) &&
+                    IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_1)
+                ) ||
+                (
+                    IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_1) &&
+                    IsGamepadButtonPressed(0, GAMEPAD_BUTTON_LEFT_TRIGGER_1)
+                );
+
+        if (toggleMensajesApi) {
+            mostrarMensajesApi = !mostrarMensajesApi;
+        }
+    }
+
     if (
         screenTransitionAlpha > 0.0f &&
         shouldAnimateScreenTransition(currentScreen)
@@ -1748,7 +1764,8 @@ void Game::updateGame() {
                 IsKeyPressed(KEY_H) ||
                 (
                     IsGamepadAvailable(0) &&
-                    IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_1)
+                    IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_1) &&
+                    !IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_TRIGGER_1)
                 )
             ) {
                 currentScreen = COMO_JUGAR;
@@ -1778,7 +1795,10 @@ void Game::updateGame() {
                         IsGamepadAvailable(0) &&
                         (
                             IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_RIGHT) ||
-                            IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_1) ||
+                            (
+                                IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_1) &&
+                                !IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_TRIGGER_1)
+                            ) ||
                             IsGamepadButtonPressed(0, GAMEPAD_BUTTON_MIDDLE_LEFT)
                         )
                     );
@@ -2089,20 +2109,6 @@ void Game::updateGame() {
             if (volverMenuPressed) {
                 currentScreen = MENU;
                 break;
-            }
-
-            bool cambiarUsuarioPressed =
-                    IsKeyPressed(KEY_THREE) ||
-                    (
-                        IsGamepadAvailable(0) &&
-                        IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_UP)
-                    );
-
-            if (cambiarUsuarioPressed) {
-                loginUsername.clear();
-                loginPassword.clear();
-                loginPasswordActivo = false;
-                currentScreen = LOGIN;
             }
 
             break;
@@ -2644,13 +2650,15 @@ void Game::drawGame() {
             drawRetroRoundButton(385.0f, 340.0f, "B", NEO_RED);
             drawCyberText("MENU", 410, 332, 14, LIGHTGRAY);
 
-            drawCyberText(
-                mensajeApi.c_str(),
-                250,
-                365,
-                20,
-                LIGHTGRAY
-            );
+            if (mostrarMensajesApi) {
+                drawCyberText(
+                    mensajeApi.c_str(),
+                    250,
+                    365,
+                    20,
+                    LIGHTGRAY
+                );
+            }
 
             break;
         }
@@ -2758,15 +2766,34 @@ void Game::drawGame() {
                 NEO_YELLOW
             );
 
-            drawCyberText(
-                mensajeApi.c_str(),
-                250,
-                405,
-                13,
-                LIGHTGRAY
-            );
+            if (mostrarMensajesApi) {
+                drawCyberText(
+                    mensajeApi.c_str(),
+                    250,
+                    405,
+                    13,
+                    LIGHTGRAY
+                );
+            }
 
             hud.drawMenuHUD(creditos);
+
+            if (mensajeApi == "LOGIN: debes loguearte antes de jugar.") {
+                DrawRectangle(165, 165, 470, 92, {0, 0, 0, 235});
+                DrawRectangleLinesEx({165.0f, 165.0f, 470.0f, 92.0f}, 2.0f, NEO_RED);
+                DrawRectangleLines(175, 175, 450, 72, {255, 255, 255, 75});
+
+                drawCenteredCyberText(
+                    "DEBES LOGUEARTE ANTES DE JUGAR",
+                    400,
+                    188,
+                    19,
+                    NEO_YELLOW
+                );
+                drawCyberText("PRESIONA", 282, 218, 16, LIGHTGRAY);
+                drawRetroRoundButton(386.0f, 226.0f, "Y", WHITE);
+                drawCyberText("PARA LOGUEARTE", 412, 218, 16, LIGHTGRAY);
+            }
 
             break;
         }
@@ -2854,12 +2881,23 @@ void Game::drawGame() {
             drawCyberText("DOBLE SALTO", 520, 162, 18, WHITE);
 
             drawRetroRoundButton(435.0f, 220.0f, "", NEO_MAGENTA);
-            DrawLineEx({435.0f, 212.0f}, {435.0f, 222.0f}, 3.0f, WHITE);
             DrawTriangle(
-                {435.0f, 228.0f},
-                {427.0f, 219.0f},
-                {443.0f, 219.0f},
+                {435.0f, 230.0f},
+                {424.0f, 211.0f},
+                {446.0f, 211.0f},
+                {0, 0, 0, 210}
+            );
+            DrawTriangle(
+                {435.0f, 227.0f},
+                {425.0f, 212.0f},
+                {445.0f, 212.0f},
                 WHITE
+            );
+            DrawTriangleLines(
+                {435.0f, 227.0f},
+                {425.0f, 212.0f},
+                {445.0f, 212.0f},
+                NEO_CYAN
             );
             drawCyberText("CAIDA RAPIDA", 475, 212, 18, WHITE);
 
@@ -2935,13 +2973,15 @@ void Game::drawGame() {
             );
 
             if (rankingActual.empty()) {
-                drawCyberText(
-                    mensajeApi.c_str(),
-                    210,
-                    215,
-                    20,
-                    GRAY
-                );
+                if (mostrarMensajesApi) {
+                    drawCyberText(
+                        mensajeApi.c_str(),
+                        210,
+                        215,
+                        20,
+                        GRAY
+                    );
+                }
             } else {
                 int filas = std::min(
                     static_cast<int>(rankingActual.size()),
@@ -3234,20 +3274,15 @@ void Game::drawGame() {
                 WHITE
             );
 
-            drawRetroActionButton(
-                {235.0f, 335.0f, 330.0f, 36.0f},
-                "Y",
-                "CAMBIAR USUARIO",
-                NEO_MAGENTA
-            );
-
-            drawCyberText(
-                mensajeApi.c_str(),
-                215,
-                405,
-                15,
-                LIGHTGRAY
-            );
+            if (mostrarMensajesApi) {
+                drawCyberText(
+                    mensajeApi.c_str(),
+                    215,
+                    405,
+                    15,
+                    LIGHTGRAY
+                );
+            }
 
             break;
         }

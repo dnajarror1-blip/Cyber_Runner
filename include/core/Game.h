@@ -117,6 +117,7 @@ private:
 
     std::string mensajeApi;
     std::vector<RankingItem> rankingActual;
+    bool mostrarMensajesApi = false;
 
     std::chrono::steady_clock::time_point inicioPartida;
 
