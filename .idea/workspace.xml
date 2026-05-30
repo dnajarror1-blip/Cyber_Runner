@@ -28,9 +28,8 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6ddf144c-c33f-411d-9357-7ea431bb52dd" name="Changes" comment="Se aumento el costo de la partida a 10 tokens">
+    <list default="true" id="6ddf144c-c33f-411d-9357-7ea431bb52dd" name="Changes" comment="Añade pop us de avisos para iniciar partida antes de iniciar sesión y campos vacios o incorrectos para el login">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/core/Game.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/core/Game.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/core/Game.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/Game.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -70,23 +69,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.000000002259508" />
-      <entry key="MS500" value="1.0627659953874917" />
-      <entry key="S2" value="3.9016361991068003" />
-      <entry key="S5" value="11.880699371990161" />
-      <entry key="S10" value="26.93645591471836" />
-      <entry key="S30" value="85.31455705842322" />
-      <entry key="S60" value="135.15140256131244" />
-      <entry key="M2" value="188.06687448838824" />
-      <entry key="M5" value="299.20608998496795" />
-      <entry key="M10" value="396.4817352067362" />
-      <entry key="M15" value="444.5287659495718" />
-      <entry key="M30" value="522.0753018784271" />
-      <entry key="H1" value="729.6736602228709" />
-      <entry key="H2" value="1309.4203774458824" />
-      <entry key="H4" value="2248.7908480507967" />
-      <entry key="D1" value="4174.942216452171" />
-      <entry key="W1" value="4716.100313347603" />
+      <entry key="MS100" value="1.7100362413594985" />
+      <entry key="MS500" value="4.420213769726644" />
+      <entry key="S2" value="11.34350588218305" />
+      <entry key="S5" value="24.127848141245664" />
+      <entry key="S10" value="41.769854664651966" />
+      <entry key="S30" value="79.01366514187586" />
+      <entry key="S60" value="101.56978847141522" />
+      <entry key="M2" value="136.25250482413045" />
+      <entry key="M5" value="240.6292022742109" />
+      <entry key="M10" value="392.60906139713836" />
+      <entry key="M15" value="504.7728342723171" />
+      <entry key="M30" value="701.1626989768191" />
+      <entry key="H1" value="977.3020617857231" />
+      <entry key="H2" value="1578.2737853343508" />
+      <entry key="H4" value="2541.7945786180817" />
+      <entry key="D1" value="4563.247730148306" />
+      <entry key="W1" value="5140.204115923779" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -108,23 +107,23 @@
       <entry key="W1" value="0.0" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.9726549496128639" />
-      <entry key="MS500" value="1.0569053869265645" />
-      <entry key="S2" value="3.8965396335942684" />
-      <entry key="S5" value="11.87470443836274" />
-      <entry key="S10" value="26.929675190139108" />
-      <entry key="S30" value="85.30745348553833" />
-      <entry key="S60" value="135.14581591589695" />
-      <entry key="M2" value="188.06296083610863" />
-      <entry key="M5" value="299.2034979278844" />
-      <entry key="M10" value="396.4799759812164" />
-      <entry key="M15" value="444.5274390675453" />
-      <entry key="M30" value="522.0744861164834" />
-      <entry key="H1" value="729.6729078990087" />
-      <entry key="H2" value="1309.4194701308327" />
-      <entry key="H4" value="2248.7899864139326" />
-      <entry key="D1" value="4174.941944677461" />
-      <entry key="W1" value="4716.100269625132" />
+      <entry key="MS100" value="1.677468161252081" />
+      <entry key="MS500" value="4.400494208804091" />
+      <entry key="S2" value="11.330574715738543" />
+      <entry key="S5" value="24.116981640271945" />
+      <entry key="S10" value="41.7606108882247" />
+      <entry key="S30" value="79.0079322465676" />
+      <entry key="S60" value="101.56611761440652" />
+      <entry key="M2" value="136.25003498761004" />
+      <entry key="M5" value="240.62741098102236" />
+      <entry key="M10" value="392.6075387778695" />
+      <entry key="M15" value="504.7714985166588" />
+      <entry key="M30" value="701.1617254661867" />
+      <entry key="H1" value="977.3012196935675" />
+      <entry key="H2" value="1578.272851148846" />
+      <entry key="H4" value="2541.7937013124015" />
+      <entry key="D1" value="4563.247449954128" />
+      <entry key="W1" value="5140.2040706712305" />
     </decayedShown>
   </component>
   <component name="ProjectApplicationVersion">
@@ -271,7 +270,15 @@
       <option name="project" value="LOCAL" />
       <updated>1780121254042</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Añade pop us de avisos para iniciar partida antes de iniciar sesión y campos vacios o incorrectos para el login">
+      <option name="closed" value="true" />
+      <created>1780122567722</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1780122567722</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -300,6 +307,7 @@
     <MESSAGE value="Mejora la recolección de tokens" />
     <MESSAGE value="Tokens funcionando perfectamente" />
     <MESSAGE value="Se aumento el costo de la partida a 10 tokens" />
-    <option name="LAST_COMMIT_MESSAGE" value="Se aumento el costo de la partida a 10 tokens" />
+    <MESSAGE value="Añade pop us de avisos para iniciar partida antes de iniciar sesión y campos vacios o incorrectos para el login" />
+    <option name="LAST_COMMIT_MESSAGE" value="Añade pop us de avisos para iniciar partida antes de iniciar sesión y campos vacios o incorrectos para el login" />
   </component>
 </project>

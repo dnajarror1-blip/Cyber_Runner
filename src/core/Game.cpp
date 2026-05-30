@@ -1943,6 +1943,19 @@ void Game::updateGame() {
                     break;
                 }
 
+                if (!modoPruebaSinApi && creditos < gameCost) {
+                    mostrarPopup(
+                        "CREDITOS INSUFICIENTES",
+                        TextFormat(
+                            "Necesitas %i creditos para jugar. Tienes %i.",
+                            gameCost,
+                            creditos
+                        ),
+                        "ACEPTAR"
+                    );
+                    break;
+                }
+
                 iniciarCargaPartida(MENU, modoPruebaSinApi);
             }
 
@@ -3438,6 +3451,9 @@ void Game::drawGame() {
             audioManager.stopRunning();
             drawCyberPanel(145, 55, 510, 340, NEO_RED);
 
+            int tokensResumen = calcularTokensGanados(score);
+            const char *tokenLabel = tokensResumen == 1 ? "TOKEN" : "TOKENS";
+
             drawCyberText(
                 "RESUMEN DE PARTIDA",
                 225,
@@ -3470,15 +3486,57 @@ void Game::drawGame() {
                 NEO_YELLOW
             );
 
+            Rectangle conversionBox = {222.0f, 218.0f, 356.0f, 60.0f};
+            DrawRectangleRec(conversionBox, {0, 0, 0, 185});
+            DrawRectangleLinesEx(conversionBox, 2.0f, NEO_YELLOW);
+            DrawRectangleLines(228, 224, 344, 48, {0, 255, 255, 80});
+            DrawLine(398, 233, 398, 263, {255, 255, 255, 70});
+
+            DrawCircle(260, 248, 15.0f, {253, 249, 0, 45});
+            DrawCircleLines(260, 248, 15.0f, NEO_YELLOW);
+            drawCyberText("C", 254, 238, 20, NEO_YELLOW);
+
+            drawCyberText("MONEDAS", 285, 232, 12, NEO_CYAN);
+            drawCyberText(
+                TextFormat("%i", coinsCollectedThisRun),
+                288,
+                248,
+                22,
+                WHITE
+            );
+
+            drawCyberText("=", 389, 242, 18, LIGHTGRAY);
+
+            DrawCircle(436, 248, 15.0f, {0, 255, 255, 45});
+            DrawCircleLines(436, 248, 15.0f, NEO_CYAN);
+            drawCyberText("T", 430, 238, 20, NEO_CYAN);
+
+            drawCyberText(tokenLabel, 462, 232, 12, NEO_YELLOW);
+            drawCyberText(
+                TextFormat("%i", tokensResumen),
+                466,
+                248,
+                22,
+                WHITE
+            );
+
+            drawCenteredCyberText(
+                "5 MONEDAS = 1 TOKEN",
+                400,
+                280,
+                12,
+                LIGHTGRAY
+            );
+
             drawRetroActionButton(
-                {235.0f, 245.0f, 330.0f, 36.0f},
+                {235.0f, 292.0f, 330.0f, 36.0f},
                 "A",
                 "REINICIAR",
                 NEO_CYAN
             );
 
             drawRetroActionButton(
-                {235.0f, 290.0f, 330.0f, 36.0f},
+                {235.0f, 337.0f, 330.0f, 36.0f},
                 "B",
                 "SALIR AL MENU",
                 WHITE

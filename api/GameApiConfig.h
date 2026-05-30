@@ -29,7 +29,7 @@ namespace GameApiConfig { // Agrupa toda la configuración del juego en un solo 
     // COSTO DE PARTIDA
     // =========================
 
-    const int COSTO_PARTIDA = 10;
+    const int COSTO_PARTIDA = 1;
     // Cantidad de tokens que se le descuentan al usuario cuando inicia una partida.
     // Cada grupo puede cambiar este valor.
     // El backend actualmente acepta de 0 a 1000.
