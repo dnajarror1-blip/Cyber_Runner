@@ -3206,30 +3206,67 @@ void Game::drawGame() {
                     );
                 }
             } else {
+                int puestoUsuario = -1;
+                int scoreUsuario = 0;
+
+                for (size_t i = 0; i < rankingActual.size(); ++i) {
+                    if (rankingActual[i].username == playerName) {
+                        puestoUsuario = static_cast<int>(i + 1);
+                        scoreUsuario = rankingActual[i].bestScore;
+                        break;
+                    }
+                }
+
                 int filas = std::min(
                     static_cast<int>(rankingActual.size()),
-                    8
+                    7
                 );
 
                 for (int i = 0; i < filas; ++i) {
-                    int y = 150 + i * 24;
+                    int y = 148 + i * 24;
                     std::string usernameRanking = rankingActual[i].username;
+                    bool esUsuarioActual = usernameRanking == playerName;
 
-                    if (i % 2 == 0) {
+                    if (esUsuarioActual) {
+                        DrawRectangle(120, y - 4, 560, 23, {0, 255, 255, 45});
+                        DrawRectangleLines(120, y - 4, 560, 23, NEO_CYAN);
+                    } else if (i % 2 == 0) {
                         DrawRectangle(120, y - 4, 560, 23, {255, 255, 255, 18});
                     }
 
-                    if (usernameRanking.size() > 20) {
-                        usernameRanking = usernameRanking.substr(0, 17) + "...";
+                    if (usernameRanking.size() > 18) {
+                        usernameRanking = usernameRanking.substr(0, 15) + "...";
                     }
 
-                    drawCyberText(
-                        TextFormat("%i", i + 1),
-                        135,
-                        y,
-                        18,
-                        WHITE
-                    );
+                    if (i == 0) {
+                        DrawTriangle(
+                            {135.0f, static_cast<float>(y + 8)},
+                            {143.0f, static_cast<float>(y - 5)},
+                            {151.0f, static_cast<float>(y + 8)},
+                            NEO_YELLOW
+                        );
+                        DrawTriangle(
+                            {149.0f, static_cast<float>(y + 8)},
+                            {157.0f, static_cast<float>(y - 8)},
+                            {165.0f, static_cast<float>(y + 8)},
+                            NEO_YELLOW
+                        );
+                        DrawTriangle(
+                            {163.0f, static_cast<float>(y + 8)},
+                            {171.0f, static_cast<float>(y - 5)},
+                            {179.0f, static_cast<float>(y + 8)},
+                            NEO_YELLOW
+                        );
+                        DrawRectangle(135, y + 7, 44, 5, NEO_YELLOW);
+                    } else {
+                        drawCyberText(
+                            TextFormat("%i", i + 1),
+                            145,
+                            y,
+                            18,
+                            WHITE
+                        );
+                    }
 
                     drawCyberText(
                         usernameRanking.c_str(),
@@ -3245,6 +3282,43 @@ void Game::drawGame() {
                         y,
                         18,
                         WHITE
+                    );
+                }
+
+                DrawLine(120, 318, 680, 318, {0, 255, 255, 90});
+                DrawRectangle(120, 325, 560, 28, {0, 0, 0, 190});
+                DrawRectangleLines(120, 325, 560, 28, NEO_YELLOW);
+
+                if (puestoUsuario > 0) {
+                    std::string nombreUsuario = playerName;
+
+                    if (nombreUsuario.size() > 13) {
+                        nombreUsuario = nombreUsuario.substr(0, 10) + "...";
+                    }
+
+                    drawCyberText("TU PUESTO", 135, 333, 14, NEO_CYAN);
+                    drawCyberText(
+                        TextFormat("#%i", puestoUsuario),
+                        265,
+                        333,
+                        14,
+                        NEO_YELLOW
+                    );
+                    drawCyberText(nombreUsuario.c_str(), 325, 333, 14, WHITE);
+                    drawCyberText(
+                        TextFormat("%i", scoreUsuario),
+                        555,
+                        333,
+                        14,
+                        WHITE
+                    );
+                } else {
+                    drawCenteredCyberText(
+                        "TU PUESTO: SIN REGISTRO EN RANKING",
+                        400,
+                        333,
+                        14,
+                        LIGHTGRAY
                     );
                 }
             }
@@ -3455,7 +3529,7 @@ void Game::drawGame() {
             const char *tokenLabel = tokensResumen == 1 ? "TOKEN" : "TOKENS";
             Rectangle scoreBox = {185.0f, 120.0f, 205.0f, 74.0f};
             Rectangle recordBox = {410.0f, 120.0f, 205.0f, 74.0f};
-            Rectangle conversionBox = {185.0f, 210.0f, 430.0f, 78.0f};
+            Rectangle conversionBox = {185.0f, 205.0f, 430.0f, 94.0f};
 
             drawCenteredCyberText(
                 "RESUMEN DE PARTIDA",
@@ -3507,47 +3581,48 @@ void Game::drawGame() {
 
             DrawRectangleRec(conversionBox, {0, 0, 0, 185});
             DrawRectangleLinesEx(conversionBox, 2.0f, NEO_YELLOW);
-            DrawRectangleLines(192, 217, 416, 64, {0, 255, 255, 75});
-            DrawLine(400, 235, 400, 270, {255, 255, 255, 75});
+            DrawRectangleLines(192, 212, 416, 80, {0, 255, 255, 75});
+            DrawLine(400, 229, 400, 263, {255, 255, 255, 75});
+            DrawLine(210, 271, 590, 271, {253, 249, 0, 75});
 
             drawCenteredCyberText(
                 "MONEDAS",
                 294,
-                222,
+                216,
                 13,
                 NEO_YELLOW
             );
 
-            DrawCircle(236, 252, 16.0f, {253, 249, 0, 45});
-            DrawCircleLines(236, 252, 16.0f, NEO_YELLOW);
-            drawCyberText("C", 230, 242, 20, NEO_YELLOW);
+            DrawCircle(236, 246, 16.0f, {253, 249, 0, 45});
+            DrawCircleLines(236, 246, 16.0f, NEO_YELLOW);
+            drawCyberText("C", 230, 236, 20, NEO_YELLOW);
 
             drawCenteredCyberText(
                 TextFormat("%i", coinsCollectedThisRun),
                 294,
-                244,
+                238,
                 25,
                 WHITE
             );
 
-            drawCenteredCyberText("=", 400, 244, 24, LIGHTGRAY);
+            drawCenteredCyberText("=", 400, 238, 24, LIGHTGRAY);
 
             drawCenteredCyberText(
                 tokenLabel,
                 506,
-                222,
+                216,
                 13,
                 NEO_CYAN
             );
 
-            DrawCircle(448, 252, 16.0f, {0, 255, 255, 45});
-            DrawCircleLines(448, 252, 16.0f, NEO_CYAN);
-            drawCyberText("T", 442, 242, 20, NEO_CYAN);
+            DrawCircle(448, 246, 16.0f, {0, 255, 255, 45});
+            DrawCircleLines(448, 246, 16.0f, NEO_CYAN);
+            drawCyberText("T", 442, 236, 20, NEO_CYAN);
 
             drawCenteredCyberText(
                 TextFormat("%i", tokensResumen),
                 506,
-                244,
+                238,
                 25,
                 WHITE
             );
@@ -3555,13 +3630,13 @@ void Game::drawGame() {
             drawCenteredCyberText(
                 "5 MONEDAS = 1 TOKEN",
                 400,
-                289,
+                279,
                 12,
                 LIGHTGRAY
             );
 
             drawRetroActionButton(
-                {235.0f, 314.0f, 330.0f, 36.0f},
+                {235.0f, 318.0f, 330.0f, 34.0f},
                 "A",
                 "REINICIAR",
                 NEO_CYAN
