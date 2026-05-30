@@ -1,0 +1,136 @@
+Index: src/main.cpp
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>#include \"core/Game.h\"\r\n\r\n#include \"../api/ApiClient.h\"\r\n#include \"../api/GameApiConfig.h\"\r\n\r\n#include \"../auth/LoginManager.h\"\r\n\r\n#include <iostream>\r\n#include <string>\r\n\r\nconst bool MODO_PRUEBA_SIN_API = true;\r\n\r\nint main()\r\n{\r\n    ApiClient api(\r\n        GameApiConfig::BASE_URL,\r\n        GameApiConfig::API_KEY,\r\n        GameApiConfig::CODIGO_JUEGO\r\n    );\r\n\r\n    std::string errorConexion;\r\n\r\n    if (!MODO_PRUEBA_SIN_API && !api.probarConexion(errorConexion)) {\r\n        std::cout << \"No se pudo conectar con la API.\" << std::endl;\r\n        std::cout << \"URL: \" << GameApiConfig::BASE_URL << std::endl;\r\n        std::cout << \"Detalle: \" << errorConexion << std::endl;\r\n        return 0;\r\n    }\r\n\r\n    LoginManager login(api);\r\n\r\n    Game game(api, login);\r\n\r\n    if (MODO_PRUEBA_SIN_API)\r\n    {\r\n        std::cout << \"MODO PRUEBA SIN API ACTIVADO.\" << std::endl;\r\n        game.setModoPruebaSinApi(true);\r\n\r\n        UsuarioApi usuarioLocal;\r\n        usuarioLocal.username = \"Jugador local\";\r\n        usuarioLocal.saldoTokens = 0;\r\n\r\n        game.setUsuario(usuarioLocal);\r\n    }\r\n\r\n    game.run();\r\n\r\n    return 0;\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main.cpp b/src/main.cpp
+--- a/src/main.cpp	(revision a88c9ce8cdd75dc89d8418cfe0570d2457d9ac25)
++++ b/src/main.cpp	(date 1780108554684)
+@@ -8,7 +8,7 @@
+ #include <iostream>
+ #include <string>
+ 
+-const bool MODO_PRUEBA_SIN_API = true;
++const bool MODO_PRUEBA_SIN_API = false;
+ 
+ int main()
+ {
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"BackendCodeEditorMiscSettings\">\r\n    <option name=\"/Default/Housekeeping/FeatureSuggestion/FeatureSuggestionManager/DisabledSuggesters/=SwitchToGoToActionSuggester/@EntryIndexedValue\" value=\"true\" type=\"bool\" />\r\n    <option name=\"/Default/Housekeeping/GlobalSettingsUpgraded/IsUpgraded/@EntryValue\" value=\"true\" type=\"bool\" />\r\n    <option name=\"/Default/RiderDebugger/RiderRestoreDecompile/RestoreDecompileSetting/@EntryValue\" value=\"false\" type=\"bool\" />\r\n  </component>\r\n  <component name=\"CMakePresetLoader\">{\r\n  &quot;useNewFormat&quot;: true\r\n}</component>\r\n  <component name=\"CMakeProjectFlavorService\">\r\n    <option name=\"flavorId\" value=\"CMakePlainProjectFlavor\" />\r\n  </component>\r\n  <component name=\"CMakeReloadState\">\r\n    <option name=\"reloaded\" value=\"true\" />\r\n  </component>\r\n  <component name=\"CMakeRunConfigurationManager\">\r\n    <generated>\r\n      <config projectName=\"Cyber_Runner\" targetName=\"Cyber_Runner\" />\r\n    </generated>\r\n  </component>\r\n  <component name=\"CMakeSettings\">\r\n    <configurations>\r\n      <configuration PROFILE_NAME=\"Debug\" ENABLED=\"true\" CONFIG_NAME=\"Debug\" GENERATION_OPTIONS=\"-G Ninja -DCMAKE_PREFIX_PATH=C:/msys64/ucrt64 -DOPENSSL_ROOT_DIR=C:/msys64/ucrt64\" />\r\n    </configurations>\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"6ddf144c-c33f-411d-9357-7ea431bb52dd\" name=\"Changes\" comment=\"Mejora la generación de objetos y añade el nitro nuevamente\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/core/Game.cpp\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/core/Game.cpp\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main.cpp\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main.cpp\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"ClangdSettings\">\r\n    <option name=\"formatViaClangd\" value=\"false\" />\r\n  </component>\r\n  <component name=\"EmbeddingIndexingInfo\">\r\n    <option name=\"cachedIndexableFilesCount\" value=\"67\" />\r\n  </component>\r\n  <component name=\"ExecutionTargetManager\" SELECTED_TARGET=\"CMakeBuildProfile:Debug\" />\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"GitHubPullRequestSearchHistory\">{\r\n  &quot;lastFilter&quot;: {\r\n    &quot;state&quot;: &quot;OPEN&quot;,\r\n    &quot;assignee&quot;: &quot;dnajarror1-blip&quot;\r\n  }\r\n}</component>\r\n  <component name=\"GithubPullRequestsUISettings\">{\r\n  &quot;selectedUrlAndAccountId&quot;: {\r\n    &quot;url&quot;: &quot;https://github.com/dnajarror1-blip/Cyber_Runner.git&quot;,\r\n    &quot;accountId&quot;: &quot;d16b615f-4628-4a27-ab3b-e7e135153f8a&quot;\r\n  }\r\n}</component>\r\n  <component name=\"MacroExpansionManager\">\r\n    <option name=\"directoryName\" value=\"VtVxoQfU\" />\r\n  </component>\r\n  <component name=\"McpProjectServerCommands\">\r\n    <commands />\r\n    <urls />\r\n  </component>\r\n  <component name=\"NextEditCompletionFeaturesState\">\r\n    <decayedCancelled>\r\n      <entry key=\"MS100\" value=\"1.0\" />\r\n      <entry key=\"MS500\" value=\"1.0000199950165383\" />\r\n      <entry key=\"S2\" value=\"1.0668698643062673\" />\r\n      <entry key=\"S5\" value=\"1.3389160817006536\" />\r\n      <entry key=\"S10\" value=\"1.5821717021791386\" />\r\n      <entry key=\"S30\" value=\"2.253517179091276\" />\r\n      <entry key=\"S60\" value=\"9.824312434991274\" />\r\n      <entry key=\"M2\" value=\"42.53702923946632\" />\r\n      <entry key=\"M5\" value=\"145.04434692710703\" />\r\n      <entry key=\"M10\" value=\"272.3057123880995\" />\r\n      <entry key=\"M15\" value=\"364.96205908969364\" />\r\n      <entry key=\"M30\" value=\"560.0758708441633\" />\r\n      <entry key=\"H1\" value=\"878.7952017681464\" />\r\n      <entry key=\"H2\" value=\"1415.473778871542\" />\r\n      <entry key=\"H4\" value=\"2029.5730494842505\" />\r\n      <entry key=\"D1\" value=\"2950.844854725981\" />\r\n      <entry key=\"W1\" value=\"3167.730620563225\" />\r\n    </decayedCancelled>\r\n    <decayedSelected>\r\n      <entry key=\"MS100\" value=\"0.0\" />\r\n      <entry key=\"MS500\" value=\"0.0\" />\r\n      <entry key=\"S2\" value=\"0.0\" />\r\n      <entry key=\"S5\" value=\"0.0\" />\r\n      <entry key=\"S10\" value=\"0.0\" />\r\n      <entry key=\"S30\" value=\"0.0\" />\r\n      <entry key=\"S60\" value=\"0.0\" />\r\n      <entry key=\"M2\" value=\"0.0\" />\r\n      <entry key=\"M5\" value=\"0.0\" />\r\n      <entry key=\"M10\" value=\"0.0\" />\r\n      <entry key=\"M15\" value=\"0.0\" />\r\n      <entry key=\"M30\" value=\"0.0\" />\r\n      <entry key=\"H1\" value=\"0.0\" />\r\n      <entry key=\"H2\" value=\"0.0\" />\r\n      <entry key=\"H4\" value=\"0.0\" />\r\n      <entry key=\"D1\" value=\"0.0\" />\r\n      <entry key=\"W1\" value=\"0.0\" />\r\n    </decayedSelected>\r\n    <decayedShown>\r\n      <entry key=\"MS100\" value=\"1.7402467841894144E-22\" />\r\n      <entry key=\"MS500\" value=\"5.9692063873263114E-5\" />\r\n      <entry key=\"S2\" value=\"0.14414452762739535\" />\r\n      <entry key=\"S5\" value=\"0.6969655224531521\" />\r\n      <entry key=\"S10\" value=\"1.1802342062575428\" />\r\n      <entry key=\"S30\" value=\"2.0958631884811085\" />\r\n      <entry key=\"S60\" value=\"9.741415564144347\" />\r\n      <entry key=\"M2\" value=\"42.49337966859686\" />\r\n      <entry key=\"M5\" value=\"145.02533454825635\" />\r\n      <entry key=\"M10\" value=\"272.2954620103364\" />\r\n      <entry key=\"M15\" value=\"364.9548415431373\" />\r\n      <entry key=\"M30\" value=\"560.0716406675734\" />\r\n      <entry key=\"H1\" value=\"878.7924576602029\" />\r\n      <entry key=\"H2\" value=\"1415.4719652640795\" />\r\n      <entry key=\"H4\" value=\"2029.571926394213\" />\r\n      <entry key=\"D1\" value=\"2950.844618435872\" />\r\n      <entry key=\"W1\" value=\"3167.73058522591\" />\r\n    </decayedShown>\r\n  </component>\r\n  <component name=\"ProjectApplicationVersion\">\r\n    <option name=\"ide\" value=\"CLion\" />\r\n    <option name=\"majorVersion\" value=\"2026\" />\r\n    <option name=\"minorVersion\" value=\"1.2\" />\r\n    <option name=\"productBranch\" value=\"Classic\" />\r\n  </component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;associatedIndex&quot;: 8,\r\n  &quot;fromUser&quot;: false\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"3EErbUdAnLbuOOsPmFnGrVi6w7q\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">{\r\n  &quot;keyToString&quot;: {\r\n    &quot;CMake Application.Cyber_Runner.executor&quot;: &quot;Run&quot;,\r\n    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.RadMigrateCodeStyle&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.west.config.association.type.startup.service&quot;: &quot;true&quot;,\r\n    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,\r\n    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,\r\n    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,\r\n    &quot;git-widget-placeholder&quot;: &quot;main&quot;,\r\n    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,\r\n    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,\r\n    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,\r\n    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,\r\n    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,\r\n    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,\r\n    &quot;settings.editor.selected.configurable&quot;: &quot;CMakeSettings&quot;,\r\n    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;\r\n  }\r\n}</component>\r\n  <component name=\"RunManager\">\r\n    <configuration default=\"true\" type=\"CMakeBoostTestRunConfigurationType\" factoryName=\"Boost Test\" REDIRECT_INPUT=\"false\" ELEVATE=\"false\" USE_EXTERNAL_CONSOLE=\"false\" EMULATE_TERMINAL=\"false\" PASS_PARENT_ENVS_2=\"true\" TEST_MODE=\"SUITE_TEST\">\r\n      <method v=\"2\">\r\n        <option name=\"BeforeTestRunTask\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration default=\"true\" type=\"CMakeCatchTestRunConfigurationType\" factoryName=\"Catch Test\" REDIRECT_INPUT=\"false\" ELEVATE=\"false\" USE_EXTERNAL_CONSOLE=\"false\" EMULATE_TERMINAL=\"false\" PASS_PARENT_ENVS_2=\"true\" TEST_MODE=\"SUITE_TEST\">\r\n      <method v=\"2\">\r\n        <option name=\"BeforeTestRunTask\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration default=\"true\" type=\"CMakeDoctestTestRunConfigurationType\" factoryName=\"doctest Test\" REDIRECT_INPUT=\"false\" ELEVATE=\"false\" USE_EXTERNAL_CONSOLE=\"false\" EMULATE_TERMINAL=\"false\" PASS_PARENT_ENVS_2=\"true\" TEST_MODE=\"SUITE_TEST\">\r\n      <method v=\"2\">\r\n        <option name=\"BeforeTestRunTask\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration default=\"true\" type=\"CMakeGoogleTestRunConfigurationType\" factoryName=\"Google Test\" REDIRECT_INPUT=\"false\" ELEVATE=\"false\" USE_EXTERNAL_CONSOLE=\"false\" EMULATE_TERMINAL=\"false\" PASS_PARENT_ENVS_2=\"true\" TEST_MODE=\"SUITE_TEST\">\r\n      <method v=\"2\">\r\n        <option name=\"BeforeTestRunTask\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"Cyber_Runner\" type=\"CMakeRunConfiguration\" factoryName=\"Application\" REDIRECT_INPUT=\"false\" ELEVATE=\"false\" USE_EXTERNAL_CONSOLE=\"false\" EMULATE_TERMINAL=\"false\" PASS_PARENT_ENVS_2=\"true\" PROJECT_NAME=\"Cyber_Runner\" TARGET_NAME=\"Cyber_Runner\" CONFIG_NAME=\"Debug\" RUN_TARGET_PROJECT_NAME=\"Cyber_Runner\" RUN_TARGET_NAME=\"Cyber_Runner\">\r\n      <method v=\"2\">\r\n        <option name=\"com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n  </component>\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"6ddf144c-c33f-411d-9357-7ea431bb52dd\" name=\"Changes\" comment=\"\" />\r\n      <created>1779754640708</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1779754640708</updated>\r\n      <workItem from=\"1779754641815\" duration=\"7000\" />\r\n      <workItem from=\"1779754800308\" duration=\"109000\" />\r\n      <workItem from=\"1779754981298\" duration=\"788000\" />\r\n      <workItem from=\"1779755777298\" duration=\"508000\" />\r\n      <workItem from=\"1779761362417\" duration=\"3199000\" />\r\n      <workItem from=\"1779841216329\" duration=\"795000\" />\r\n      <workItem from=\"1779906010889\" duration=\"982000\" />\r\n      <workItem from=\"1779921632813\" duration=\"398000\" />\r\n      <workItem from=\"1779922145319\" duration=\"757000\" />\r\n      <workItem from=\"1779922922944\" duration=\"8459000\" />\r\n      <workItem from=\"1779935277216\" duration=\"6386000\" />\r\n      <workItem from=\"1779995756346\" duration=\"3497000\" />\r\n      <workItem from=\"1780033888974\" duration=\"157000\" />\r\n      <workItem from=\"1780087563287\" duration=\"2188000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"Soluciona problema de congelamiento por API\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1779925511941</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1779925511941</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"2\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"VCPKGProject\">\r\n    <isAutomaticCheckingOnLaunch value=\"false\" />\r\n    <isAutomaticFoundErrors value=\"true\" />\r\n    <isAutomaticReloadCMake value=\"true\" />\r\n    <isAutomaticBootstrapAfterUpdate value=\"false\" />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"Soluciona problema de congelamiento por API\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"Soluciona problema de congelamiento por API\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision a88c9ce8cdd75dc89d8418cfe0570d2457d9ac25)
++++ b/.idea/workspace.xml	(date 1780108950712)
+@@ -28,9 +28,8 @@
+     </configurations>
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="6ddf144c-c33f-411d-9357-7ea431bb52dd" name="Changes" comment="Mejora la generación de objetos y añade el nitro nuevamente">
++    <list default="true" id="6ddf144c-c33f-411d-9357-7ea431bb52dd" name="Changes" comment="Pulido">
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/core/Game.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/Game.cpp" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+@@ -47,6 +46,7 @@
+   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+   <component name="Git.Settings">
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
++    <option name="UPDATE_TYPE" value="REBASE" />
+   </component>
+   <component name="GitHubPullRequestSearchHistory">{
+   &quot;lastFilter&quot;: {
+@@ -70,22 +70,22 @@
+   <component name="NextEditCompletionFeaturesState">
+     <decayedCancelled>
+       <entry key="MS100" value="1.0" />
+-      <entry key="MS500" value="1.0000199950165383" />
+-      <entry key="S2" value="1.0668698643062673" />
+-      <entry key="S5" value="1.3389160817006536" />
+-      <entry key="S10" value="1.5821717021791386" />
+-      <entry key="S30" value="2.253517179091276" />
+-      <entry key="S60" value="9.824312434991274" />
+-      <entry key="M2" value="42.53702923946632" />
+-      <entry key="M5" value="145.04434692710703" />
+-      <entry key="M10" value="272.3057123880995" />
+-      <entry key="M15" value="364.96205908969364" />
+-      <entry key="M30" value="560.0758708441633" />
+-      <entry key="H1" value="878.7952017681464" />
+-      <entry key="H2" value="1415.473778871542" />
+-      <entry key="H4" value="2029.5730494842505" />
+-      <entry key="D1" value="2950.844854725981" />
+-      <entry key="W1" value="3167.730620563225" />
++      <entry key="MS500" value="1.0" />
++      <entry key="S2" value="1.0" />
++      <entry key="S5" value="1.0" />
++      <entry key="S10" value="1.0" />
++      <entry key="S30" value="1.0000000000132812" />
++      <entry key="S60" value="1.0000331926551518" />
++      <entry key="M2" value="1.0604936010240067" />
++      <entry key="M5" value="8.223435488200675" />
++      <entry key="M10" value="49.522559254949044" />
++      <entry key="M15" value="107.1433312482349" />
++      <entry key="M30" value="316.4235008541729" />
++      <entry key="H1" value="794.1528876524786" />
++      <entry key="H2" value="1636.291736555818" />
++      <entry key="H4" value="2700.8184558815474" />
++      <entry key="D1" value="4570.619069228039" />
++      <entry key="W1" value="5059.772018403469" />
+     </decayedCancelled>
+     <decayedSelected>
+       <entry key="MS100" value="0.0" />
+@@ -107,23 +107,23 @@
+       <entry key="W1" value="0.0" />
+     </decayedSelected>
+     <decayedShown>
+-      <entry key="MS100" value="1.7402467841894144E-22" />
+-      <entry key="MS500" value="5.9692063873263114E-5" />
+-      <entry key="S2" value="0.14414452762739535" />
+-      <entry key="S5" value="0.6969655224531521" />
+-      <entry key="S10" value="1.1802342062575428" />
+-      <entry key="S30" value="2.0958631884811085" />
+-      <entry key="S60" value="9.741415564144347" />
+-      <entry key="M2" value="42.49337966859686" />
+-      <entry key="M5" value="145.02533454825635" />
+-      <entry key="M10" value="272.2954620103364" />
+-      <entry key="M15" value="364.9548415431373" />
+-      <entry key="M30" value="560.0716406675734" />
+-      <entry key="H1" value="878.7924576602029" />
+-      <entry key="H2" value="1415.4719652640795" />
+-      <entry key="H4" value="2029.571926394213" />
+-      <entry key="D1" value="2950.844618435872" />
+-      <entry key="W1" value="3167.73058522591" />
++      <entry key="MS100" value="1.6473310006904992E-26" />
++      <entry key="MS500" value="6.971980668864441E-6" />
++      <entry key="S2" value="0.05138531741419972" />
++      <entry key="S5" value="0.30502512756805583" />
++      <entry key="S10" value="0.5522907998220284" />
++      <entry key="S30" value="0.8204572107429843" />
++      <entry key="S60" value="0.9058241101468123" />
++      <entry key="M2" value="1.0122151373495425" />
++      <entry key="M5" value="8.203555730197428" />
++      <entry key="M10" value="49.512037407429396" />
++      <entry key="M15" value="107.13594934694994" />
++      <entry key="M30" value="316.41929203811816" />
++      <entry key="H1" value="794.1501308016669" />
++      <entry key="H2" value="1636.289707726646" />
++      <entry key="H4" value="2700.817032414479" />
++      <entry key="D1" value="4570.6187183247985" />
++      <entry key="W1" value="5059.77196417601" />
+     </decayedShown>
+   </component>
+   <component name="ProjectApplicationVersion">
+@@ -216,6 +216,7 @@
+       <workItem from="1779995756346" duration="3497000" />
+       <workItem from="1780033888974" duration="157000" />
+       <workItem from="1780087563287" duration="2188000" />
++      <workItem from="1780102293256" duration="5701000" />
+     </task>
+     <task id="LOCAL-00001" summary="Soluciona problema de congelamiento por API">
+       <option name="closed" value="true" />

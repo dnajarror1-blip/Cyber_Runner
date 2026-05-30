@@ -29,10 +29,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6ddf144c-c33f-411d-9357-7ea431bb52dd" name="Changes" comment="Mejora la generación de objetos y añade el nitro nuevamente">
+      <change beforePath="$PROJECT_DIR$/.idea/editor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/editor.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/core/Game.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/core/Game.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/core/Game.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/Game.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,11 +41,12 @@
     <option name="formatViaClangd" value="false" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="68" />
+    <option name="cachedIndexableFilesCount" value="70" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -55,12 +54,12 @@
     &quot;assignee&quot;: &quot;dnajarror1-blip&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/dnajarror1-blip/Cyber_Runner.git",
-    "accountId": "a7c65cdb-9ce9-40b4-9acc-f7876f6f3266"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/dnajarror1-blip/Cyber_Runner.git&quot;,
+    &quot;accountId&quot;: &quot;d16b615f-4628-4a27-ab3b-e7e135153f8a&quot;
   }
-}]]></component>
+}</component>
   <component name="MacroExpansionManager">
     <option name="directoryName" value="VtVxoQfU" />
   </component>
@@ -70,23 +69,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.0000199950165383" />
-      <entry key="S2" value="1.0668698643062673" />
-      <entry key="S5" value="1.3389160817006536" />
-      <entry key="S10" value="1.5821717021791386" />
-      <entry key="S30" value="2.253517179091276" />
-      <entry key="S60" value="9.824312434991274" />
-      <entry key="M2" value="42.53702923946632" />
-      <entry key="M5" value="145.04434692710703" />
-      <entry key="M10" value="272.3057123880995" />
-      <entry key="M15" value="364.96205908969364" />
-      <entry key="M30" value="560.0758708441633" />
-      <entry key="H1" value="878.7952017681464" />
-      <entry key="H2" value="1415.473778871542" />
-      <entry key="H4" value="2029.5730494842505" />
-      <entry key="D1" value="2950.844854725981" />
-      <entry key="W1" value="3167.730620563225" />
+      <entry key="MS100" value="1.18257520342625" />
+      <entry key="MS500" value="4.438590395508529" />
+      <entry key="S2" value="14.265779102221478" />
+      <entry key="S5" value="26.146927519591248" />
+      <entry key="S10" value="40.62254251647559" />
+      <entry key="S30" value="76.32657585847043" />
+      <entry key="S60" value="101.69868174153805" />
+      <entry key="M2" value="127.31286582496317" />
+      <entry key="M5" value="186.7906356376444" />
+      <entry key="M10" value="337.54800426905" />
+      <entry key="M15" value="487.0633986260308" />
+      <entry key="M30" value="835.1167300011798" />
+      <entry key="H1" value="1304.9594844911878" />
+      <entry key="H2" value="1963.6237651761392" />
+      <entry key="H4" value="2705.990966630107" />
+      <entry key="D1" value="3861.341351766497" />
+      <entry key="W1" value="4141.298281475314" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -108,23 +107,23 @@
       <entry key="W1" value="0.0" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.7402467841894144E-22" />
-      <entry key="MS500" value="5.9692063873263114E-5" />
-      <entry key="S2" value="0.14414452762739535" />
-      <entry key="S5" value="0.6969655224531521" />
-      <entry key="S10" value="1.1802342062575428" />
-      <entry key="S30" value="2.0958631884811085" />
-      <entry key="S60" value="9.741415564144347" />
-      <entry key="M2" value="42.49337966859686" />
-      <entry key="M5" value="145.02533454825635" />
-      <entry key="M10" value="272.2954620103364" />
-      <entry key="M15" value="364.9548415431373" />
-      <entry key="M30" value="560.0716406675734" />
-      <entry key="H1" value="878.7924576602029" />
-      <entry key="H2" value="1415.4719652640795" />
-      <entry key="H4" value="2029.571926394213" />
-      <entry key="D1" value="2950.844618435872" />
-      <entry key="W1" value="3167.73058522591" />
+      <entry key="MS100" value="1.1498277902373708" />
+      <entry key="MS500" value="4.412993933756369" />
+      <entry key="S2" value="14.244989130113295" />
+      <entry key="S5" value="26.131550345382333" />
+      <entry key="S10" value="40.610440983881496" />
+      <entry key="S30" value="76.31858687392204" />
+      <entry key="S60" value="101.69308604586108" />
+      <entry key="M2" value="127.30922939068122" />
+      <entry key="M5" value="186.78841009586455" />
+      <entry key="M10" value="337.5456321295357" />
+      <entry key="M15" value="487.06075705860496" />
+      <entry key="M30" value="835.1139663013487" />
+      <entry key="H1" value="1304.9570649029215" />
+      <entry key="H2" value="1963.621922736052" />
+      <entry key="H4" value="2705.989743326778" />
+      <entry key="D1" value="3861.341078501592" />
+      <entry key="W1" value="4141.298240171266" />
     </decayedShown>
   </component>
   <component name="ProjectApplicationVersion">
@@ -142,36 +141,33 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "CMake Application.Cyber_Runner.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "RunOnceActivity.RadMigrateCodeStyle": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.readMode.enableVisualFormatting": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "RunOnceActivity.west.config.association.type.startup.service": "true",
-    "cf.first.check.clang-format": "false",
-    "cidr.known.project.marker": "true",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "junie.onboarding.icon.badge.shown": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "CMakeSettings",
-    "to.speed.mode.migration.done": "true",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;CMake Application.Cyber_Runner.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.RadMigrateCodeStyle&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.west.config.association.type.startup.service&quot;: &quot;true&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;CMakeSettings&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration default="true" type="CMakeBoostTestRunConfigurationType" factoryName="Boost Test" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" TEST_MODE="SUITE_TEST">
       <method v="2">
@@ -225,7 +221,6 @@
       <workItem from="1779995756346" duration="3497000" />
       <workItem from="1780033888974" duration="157000" />
       <workItem from="1780087563287" duration="2188000" />
-      <workItem from="1780103760024" duration="5146000" />
     </task>
     <task id="LOCAL-00001" summary="Soluciona problema de congelamiento por API">
       <option name="closed" value="true" />
@@ -245,6 +240,7 @@
     <isAutomaticCheckingOnLaunch value="false" />
     <isAutomaticFoundErrors value="true" />
     <isAutomaticReloadCMake value="true" />
+    <isAutomaticBootstrapAfterUpdate value="false" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
