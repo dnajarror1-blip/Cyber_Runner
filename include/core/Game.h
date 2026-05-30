@@ -166,6 +166,10 @@ private:
     std::string loginUsername;
     std::string loginPassword;
     bool loginPasswordActivo = false;
+    bool popupActivo = false;
+    std::string popupTitulo;
+    std::string popupMensaje;
+    std::string popupBoton;
 
     void toggleFullscreen();
 
@@ -174,6 +178,7 @@ private:
     void drawGame();
     void drawLoadingScreen();
     void drawImpactAnimation();
+    void drawPopupModal();
 
     void drawBackground(); //fondo
     void drawForeground(); //foreground
@@ -202,6 +207,14 @@ private:
     void actualizarCarga();
 
     void aplicarResultadoCarga(const LoadingResult &resultado);
+
+    void mostrarPopup(
+        const std::string &titulo,
+        const std::string &mensaje,
+        const std::string &boton
+    );
+
+    void cerrarPopup();
 
     int calcularTokensGanados(int scoreFinal) const;
 

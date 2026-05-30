@@ -28,8 +28,10 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6ddf144c-c33f-411d-9357-7ea431bb52dd" name="Changes" comment="Tokens funcionando perfectamente">
+    <list default="true" id="6ddf144c-c33f-411d-9357-7ea431bb52dd" name="Changes" comment="Se aumento el costo de la partida a 10 tokens">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/core/Game.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/core/Game.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/Game.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/Game.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,23 +70,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0000402251372327" />
-      <entry key="MS500" value="1.2097843841752565" />
-      <entry key="S2" value="3.351909164991842" />
-      <entry key="S5" value="5.717990350987083" />
-      <entry key="S10" value="7.101891375035255" />
-      <entry key="S30" value="8.298118859961859" />
-      <entry key="S60" value="8.64002329303037" />
-      <entry key="M2" value="8.898353839413383" />
-      <entry key="M5" value="10.692408660213857" />
-      <entry key="M10" value="15.529156148801446" />
-      <entry key="M15" value="26.84371844471314" />
-      <entry key="M30" value="135.41896373762324" />
-      <entry key="H1" value="505.48323195249924" />
-      <entry key="H2" value="1220.17824765977" />
-      <entry key="H4" value="2141.883369146615" />
-      <entry key="D1" value="3749.717308623995" />
-      <entry key="W1" value="4166.090603274776" />
+      <entry key="MS100" value="1.000000002259508" />
+      <entry key="MS500" value="1.0627659953874917" />
+      <entry key="S2" value="3.9016361991068003" />
+      <entry key="S5" value="11.880699371990161" />
+      <entry key="S10" value="26.93645591471836" />
+      <entry key="S30" value="85.31455705842322" />
+      <entry key="S60" value="135.15140256131244" />
+      <entry key="M2" value="188.06687448838824" />
+      <entry key="M5" value="299.20608998496795" />
+      <entry key="M10" value="396.4817352067362" />
+      <entry key="M15" value="444.5287659495718" />
+      <entry key="M30" value="522.0753018784271" />
+      <entry key="H1" value="729.6736602228709" />
+      <entry key="H2" value="1309.4203774458824" />
+      <entry key="H4" value="2248.7908480507967" />
+      <entry key="D1" value="4174.942216452171" />
+      <entry key="W1" value="4716.100313347603" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -106,23 +108,23 @@
       <entry key="W1" value="0.0" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.9726943447263541" />
-      <entry key="MS500" value="1.2033624232142182" />
-      <entry key="S2" value="3.3477626647093297" />
-      <entry key="S5" value="5.715131899206543" />
-      <entry key="S10" value="7.100102927978171" />
-      <entry key="S30" value="8.297418132123115" />
-      <entry key="S60" value="8.639657908041249" />
-      <entry key="M2" value="8.898165412967247" />
-      <entry key="M5" value="10.692316541305676" />
-      <entry key="M10" value="15.52908181438175" />
-      <entry key="M15" value="26.843610965066006" />
-      <entry key="M30" value="135.41855382554886" />
-      <entry key="H1" value="505.48232474417074" />
-      <entry key="H2" value="1220.1771203562646" />
-      <entry key="H4" value="2141.8824095504056" />
-      <entry key="D1" value="3749.717044581036" />
-      <entry key="W1" value="4166.090561907763" />
+      <entry key="MS100" value="0.9726549496128639" />
+      <entry key="MS500" value="1.0569053869265645" />
+      <entry key="S2" value="3.8965396335942684" />
+      <entry key="S5" value="11.87470443836274" />
+      <entry key="S10" value="26.929675190139108" />
+      <entry key="S30" value="85.30745348553833" />
+      <entry key="S60" value="135.14581591589695" />
+      <entry key="M2" value="188.06296083610863" />
+      <entry key="M5" value="299.2034979278844" />
+      <entry key="M10" value="396.4799759812164" />
+      <entry key="M15" value="444.5274390675453" />
+      <entry key="M30" value="522.0744861164834" />
+      <entry key="H1" value="729.6729078990087" />
+      <entry key="H2" value="1309.4194701308327" />
+      <entry key="H4" value="2248.7899864139326" />
+      <entry key="D1" value="4174.941944677461" />
+      <entry key="W1" value="4716.100269625132" />
     </decayedShown>
   </component>
   <component name="ProjectApplicationVersion">
@@ -261,7 +263,15 @@
       <option name="project" value="LOCAL" />
       <updated>1780117106705</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Se aumento el costo de la partida a 10 tokens">
+      <option name="closed" value="true" />
+      <created>1780121254042</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1780121254042</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -289,6 +299,7 @@
     <MESSAGE value="Arreglar las cagadas del server" />
     <MESSAGE value="Mejora la recolección de tokens" />
     <MESSAGE value="Tokens funcionando perfectamente" />
-    <option name="LAST_COMMIT_MESSAGE" value="Tokens funcionando perfectamente" />
+    <MESSAGE value="Se aumento el costo de la partida a 10 tokens" />
+    <option name="LAST_COMMIT_MESSAGE" value="Se aumento el costo de la partida a 10 tokens" />
   </component>
 </project>

@@ -663,6 +663,24 @@ void Game::limpiarFinalizacionesPartidaTerminadas() {
     }
 }
 
+void Game::mostrarPopup(
+    const std::string &titulo,
+    const std::string &mensaje,
+    const std::string &boton
+) {
+    popupTitulo = titulo;
+    popupMensaje = mensaje;
+    popupBoton = boton;
+    popupActivo = true;
+}
+
+void Game::cerrarPopup() {
+    popupActivo = false;
+    popupTitulo.clear();
+    popupMensaje.clear();
+    popupBoton.clear();
+}
+
 void Game::iniciarCargaLogin() {
     if (cargaPendiente.valid()) {
         return;
@@ -884,6 +902,11 @@ void Game::aplicarResultadoCarga(const LoadingResult &resultado) {
             if (!resultado.ok) {
                 mensajeApi = resultado.mensaje;
                 currentScreen = LOGIN;
+                mostrarPopup(
+                    "LOGIN RECHAZADO",
+                    "Usuario o contrasena incorrectos. Verifica tus datos.",
+                    "ACEPTAR"
+                );
                 break;
             }
 
@@ -1713,6 +1736,22 @@ void Game::updateGame() {
     GameScreen screenBeforeUpdate = currentScreen;
     float frameTime = GetFrameTime();
 
+    if (popupActivo) {
+        bool cerrarPopupPressed =
+                IsKeyPressed(KEY_ENTER) ||
+                IsKeyPressed(KEY_SPACE) ||
+                (
+                    IsGamepadAvailable(0) &&
+                    IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)
+                );
+
+        if (cerrarPopupPressed) {
+            cerrarPopup();
+        }
+
+        return;
+    }
+
     if (IsGamepadAvailable(0)) {
         bool toggleMensajesApi =
                 (
@@ -1848,6 +1887,15 @@ void Game::updateGame() {
                     break;
                 }
 
+                if (loginUsername.empty() || loginPassword.empty()) {
+                    mostrarPopup(
+                        "DATOS INCOMPLETOS",
+                        "Ingresa usuario y contrasena para continuar.",
+                        "ACEPTAR"
+                    );
+                    break;
+                }
+
                 iniciarCargaLogin();
             }
 
@@ -1856,6 +1904,24 @@ void Game::updateGame() {
 
         case MENU: {
             menuEasterEggTimer += frameTime;
+
+            if (mensajeApi == "LOGIN: debes loguearte antes de jugar.") {
+                bool abrirLoginPressed =
+                        IsKeyPressed(KEY_TWO) ||
+                        (
+                            IsGamepadAvailable(0) &&
+                            IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_UP)
+                        );
+
+                if (abrirLoginPressed) {
+                    loginUsername.clear();
+                    loginPassword.clear();
+                    loginPasswordActivo = false;
+                    currentScreen = LOGIN;
+                }
+
+                break;
+            }
 
             if (
                 gamepadBackPressed() ||
@@ -3451,6 +3517,43 @@ void Game::drawGame() {
             {0, 0, 0, fadeAlpha}
         );
     }
+
+    drawPopupModal();
+}
+
+void Game::drawPopupModal() {
+    if (!popupActivo) {
+        return;
+    }
+
+    DrawRectangle(0, 0, screenWidth, screenHeight, {0, 0, 0, 175});
+    drawCyberPanel(150, 135, 500, 180, NEO_RED);
+
+    drawCenteredCyberText(
+        popupTitulo.c_str(),
+        400,
+        160,
+        26,
+        NEO_YELLOW
+    );
+
+    int messageWidth = MeasureText(popupMensaje.c_str(), 17);
+    drawCyberText(
+        popupMensaje.c_str(),
+        400 - messageWidth / 2,
+        210,
+        17,
+        WHITE
+    );
+
+    drawRetroRoundButton(315.0f, 270.0f, "A", NEO_CYAN);
+    drawCyberText(
+        popupBoton.c_str(),
+        345,
+        262,
+        18,
+        LIGHTGRAY
+    );
 }
 
 void Game::drawScaledGame(RenderTexture2D &target) {
