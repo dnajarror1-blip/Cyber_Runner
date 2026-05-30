@@ -355,6 +355,8 @@ bool Game::iniciarPartidaApi() {
         return false;
     }
 
+    int saldoAntesLocal = creditos;
+
     std::string error;
 
     bool ok = api.iniciarPartida(
@@ -376,12 +378,39 @@ bool Game::iniciarPartidaApi() {
     ultimoScoreReportado = 0;
     nivelActual = 1;
 
-    creditos = partidaActual.saldoDespues;
+    int saldoDespuesCalculado = partidaActual.saldoDespues;
+
+    if (
+        partidaActual.saldoAntes == 0 &&
+        partidaActual.saldoDespues == 0 &&
+        saldoAntesLocal > 0
+    )
+    {
+        saldoDespuesCalculado = saldoAntesLocal - gameCost;
+
+        if (saldoDespuesCalculado < 0)
+        {
+            saldoDespuesCalculado = 0;
+        }
+    }
+
+    creditos = saldoDespuesCalculado;
     saldoBasePartida = creditos;
     usuarioActual.saldoTokens = creditos;
 
     playerData.credits = creditos;
     dataManager.savePlayerData(playerData);
+
+    TraceLog(
+        LOG_INFO,
+        TextFormat(
+            "Creditos al iniciar partida. Local antes: %i | API antes: %i | API despues: %i | Usado: %i",
+            saldoAntesLocal,
+            partidaActual.saldoAntes,
+            partidaActual.saldoDespues,
+            creditos
+        )
+    );
 
     inicioPartida = std::chrono::steady_clock::now();
 
@@ -607,7 +636,9 @@ void Game::limpiarFinalizacionesPartidaTerminadas() {
             mensajeApi = resultado.mensaje;
 
             if (resultado.ok) {
-                creditos = saldoBasePartida + resultado.tokensGanados;
+                int saldoBaseAntesFinalizar = saldoBasePartida;
+
+                creditos = saldoBaseAntesFinalizar + resultado.tokensGanados;
                 usuarioActual.saldoTokens = creditos;
                 saldoBasePartida = creditos;
 
@@ -618,7 +649,7 @@ void Game::limpiarFinalizacionesPartidaTerminadas() {
                     LOG_INFO,
                     TextFormat(
                         "Creditos sincronizados. Saldo base: %i | Tokens ganados: %i | Creditos actuales: %i",
-                        saldoBasePartida - resultado.tokensGanados,
+                        saldoBaseAntesFinalizar,
                         resultado.tokensGanados,
                         creditos
                     )
@@ -876,18 +907,47 @@ void Game::aplicarResultadoCarga(const LoadingResult &resultado) {
                 break;
             }
 
+                int saldoAntesLocal = creditos;
+
             partidaActual = resultado.partida;
             partidaActiva = true;
             partidaFinalizada = false;
             ultimoScoreReportado = 0;
             nivelActual = 1;
 
-                creditos = partidaActual.saldoDespues;
+                int saldoDespuesCalculado = partidaActual.saldoDespues;
+
+                if (
+                    partidaActual.saldoAntes == 0 &&
+                    partidaActual.saldoDespues == 0 &&
+                    saldoAntesLocal > 0
+                )
+                {
+                    saldoDespuesCalculado = saldoAntesLocal - gameCost;
+
+                    if (saldoDespuesCalculado < 0)
+                    {
+                        saldoDespuesCalculado = 0;
+                    }
+                }
+
+                creditos = saldoDespuesCalculado;
                 saldoBasePartida = creditos;
                 usuarioActual.saldoTokens = creditos;
 
                 playerData.credits = creditos;
                 dataManager.savePlayerData(playerData);
+
+                TraceLog(
+                    LOG_INFO,
+                    TextFormat(
+                        "Creditos al iniciar partida. Local antes: %i | API antes: %i | API despues: %i | Usado: %i",
+                        saldoAntesLocal,
+                        partidaActual.saldoAntes,
+                        partidaActual.saldoDespues,
+                        creditos
+                    )
+                );
 
             if (!resultado.ranking.empty()) {
                 rankingActual = resultado.ranking;
