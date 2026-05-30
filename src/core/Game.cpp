@@ -36,6 +36,18 @@ static void drawCyberText(
     DrawText(text, x, y, fontSize, color);
 }
 
+static void drawCenteredCyberText(
+    const char *text,
+    int centerX,
+    int y,
+    int fontSize,
+    Color color
+)
+{
+    int textWidth = MeasureText(text, fontSize);
+    drawCyberText(text, centerX - textWidth / 2, y, fontSize, color);
+}
+
 static unsigned char blendChannel(
     unsigned char start,
     unsigned char end,
@@ -2760,9 +2772,9 @@ void Game::drawGame() {
 
             drawCyberPanel(70, 25, 660, 395, NEO_CYAN);
 
-            drawCyberText(
+            drawCenteredCyberText(
                 "COMO JUGAR",
-                290,
+                400,
                 42,
                 32,
                 NEO_CYAN
@@ -2784,7 +2796,7 @@ void Game::drawGame() {
                 NEO_CYAN
             );
 
-            drawCyberText("OBSTACULOS", 135, 108, 17, NEO_MAGENTA);
+            drawCenteredCyberText("OBSTACULOS", 235, 108, 17, NEO_MAGENTA);
 
             drawMenuPreviewTexture(
                 menuObstacleTexture,
@@ -2800,7 +2812,7 @@ void Game::drawGame() {
                 NEO_YELLOW
             );
 
-            drawCyberText("RECOGIBLES", 135, 208, 17, NEO_YELLOW);
+            drawCenteredCyberText("RECOGIBLES", 235, 208, 17, NEO_YELLOW);
 
             drawMenuPreviewTexture(
                 menuCoinTexture[static_cast<int>(menuPreviewTimer * 8.0f) % 2],
@@ -2823,8 +2835,8 @@ void Game::drawGame() {
                 NEO_CYAN
             );
 
-            drawCyberText("EVITA LOS OBSTACULOS", 132, 305, 15, LIGHTGRAY);
-            drawCyberText("TOMA MONEDAS, NITRO Y ESCUDOS", 122, 322, 14, LIGHTGRAY);
+            drawCenteredCyberText("EVITA LOS OBSTACULOS", 235, 303, 14, LIGHTGRAY);
+            drawCenteredCyberText("TOMA MONEDAS, NITRO Y ESCUDOS", 235, 320, 13, LIGHTGRAY);
 
             drawRetroRoundButton(435.0f, 120.0f, "A", NEO_CYAN);
             drawCyberText("SALTAR", 475, 112, 18, WHITE);
@@ -2833,17 +2845,31 @@ void Game::drawGame() {
             drawRetroRoundButton(475.0f, 170.0f, "A", NEO_YELLOW);
             drawCyberText("DOBLE SALTO", 520, 162, 18, WHITE);
 
-            drawRetroRoundButton(435.0f, 220.0f, "DN", NEO_MAGENTA);
+            drawRetroRoundButton(435.0f, 220.0f, "", NEO_MAGENTA);
+            DrawLineEx({435.0f, 212.0f}, {435.0f, 222.0f}, 3.0f, WHITE);
+            DrawTriangle(
+                {435.0f, 228.0f},
+                {427.0f, 219.0f},
+                {443.0f, 219.0f},
+                WHITE
+            );
             drawCyberText("CAIDA RAPIDA", 475, 212, 18, WHITE);
 
             drawRetroPillButton({405.0f, 255.0f, 78.0f, 30.0f}, "START", NEO_RED);
             drawCyberText("PAUSA", 505, 262, 18, WHITE);
 
-            drawCyberText(
-                "EL MANDO ES LA REFERENCIA PRINCIPAL DE CONTROLES",
-                110,
-                365,
-                15,
+            drawCenteredCyberText(
+                "EL NITRO AUMENTA LA DIFICULTAD TEMPORALMENTE",
+                400,
+                346,
+                13,
+                NEO_YELLOW
+            );
+            drawCenteredCyberText(
+                "PERO TRIPLICA EL VALOR DE CREDITOS Y SCORE",
+                400,
+                362,
+                13,
                 NEO_YELLOW
             );
 
