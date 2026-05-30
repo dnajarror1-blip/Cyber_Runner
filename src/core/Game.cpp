@@ -90,6 +90,17 @@ static Color getAnimatedAccent(Color accent)
     return result;
 }
 
+static int getServerBestScore(const std::vector<RankingItem> &ranking)
+{
+    int bestScore = 0;
+
+    for (const RankingItem &item : ranking) {
+        bestScore = std::max(bestScore, item.bestScore);
+    }
+
+    return bestScore;
+}
+
 static float getMenuPreviewX(
     float startX,
     float speed,
@@ -327,6 +338,7 @@ void Game::setUsuario(
     creditos = usuarioActual.saldoTokens;
     playerData.username = playerName;
     playerData.credits = creditos;
+    dataManager.savePlayerData(playerData);
 }
 
 void Game::setModoPruebaSinApi(bool activo)
@@ -364,6 +376,7 @@ bool Game::iniciarPartidaApi() {
 
     creditos = partidaActual.saldoDespues;
     playerData.credits = creditos;
+    dataManager.savePlayerData(playerData);
 
     inicioPartida = std::chrono::steady_clock::now();
 
@@ -677,6 +690,18 @@ void Game::iniciarCargaPartida(GameScreen pantallaError, bool permitirModoLocal)
             resultado.partida = partida;
             resultado.mensaje = "API: partida iniciada correctamente.";
 
+            std::string rankingError;
+            std::vector<RankingItem> ranking;
+
+            if (api.consultarRanking(ranking, rankingError)) {
+                resultado.ranking = ranking;
+            } else {
+                TraceLog(
+                    LOG_WARNING,
+                    TextFormat("No se pudo sincronizar record del servidor: %s", rankingError.c_str())
+                );
+            }
+
             return resultado;
         }
     );
@@ -816,6 +841,13 @@ void Game::aplicarResultadoCarga(const LoadingResult &resultado) {
             nivelActual = 1;
             creditos = partidaActual.saldoDespues;
             playerData.credits = creditos;
+            dataManager.savePlayerData(playerData);
+
+            if (!resultado.ranking.empty()) {
+                rankingActual = resultado.ranking;
+                highScore = getServerBestScore(rankingActual);
+            }
+
             inicioPartida = std::chrono::steady_clock::now();
             mensajeApi = resultado.mensaje;
 
@@ -831,6 +863,10 @@ void Game::aplicarResultadoCarga(const LoadingResult &resultado) {
 
         case LoadingAction::RANKING: {
             rankingActual = resultado.ranking;
+            if (!rankingActual.empty()) {
+                highScore = getServerBestScore(rankingActual);
+            }
+
             mensajeApi = resultado.mensaje;
             currentScreen = RANKING;
             break;
@@ -889,6 +925,8 @@ void Game::consultarRankingApi() {
         currentScreen = RANKING;
         return;
     }
+
+    highScore = getServerBestScore(rankingActual);
 
     mensajeApi = "API: ranking consultado.";
     currentScreen = RANKING;
