@@ -2847,6 +2847,7 @@ void Game::drawGame() {
 
         case LOGIN: {
             drawCyberPanel(185, 60, 430, 335, NEO_CYAN);
+            drawMovingBorderGlow({185.0f, 60.0f, 430.0f, 335.0f}, NEO_CYAN, 0.12f);
 
             drawCyberText(
                 "CYBER-RUNNER",
@@ -2934,6 +2935,7 @@ void Game::drawGame() {
             audioManager.stopRunning();
 
             drawCyberPanel(185, 25, 430, 395, NEO_MAGENTA);
+            drawMovingBorderGlow({185.0f, 25.0f, 430.0f, 395.0f}, NEO_MAGENTA, 0.28f);
 
             float easterPhase = std::fmod(menuEasterEggTimer, 24.0f);
 
@@ -3069,6 +3071,7 @@ void Game::drawGame() {
             audioManager.stopRunning();
 
             drawCyberPanel(70, 25, 660, 395, NEO_CYAN);
+            drawMovingBorderGlow({70.0f, 25.0f, 660.0f, 395.0f}, NEO_CYAN, 0.44f);
 
             drawCenteredCyberText(
                 "COMO JUGAR",
@@ -3196,6 +3199,7 @@ void Game::drawGame() {
             audioManager.stopRunning();
 
             drawCyberPanel(80, 30, 640, 385, NEO_CYAN);
+            drawMovingBorderGlow({80.0f, 30.0f, 640.0f, 385.0f}, NEO_CYAN, 0.58f);
 
             drawCyberText(
                 "RANKING",
@@ -3406,6 +3410,7 @@ void Game::drawGame() {
             );
 
             drawCyberPanel(170, 145, 460, 170, NEO_RED);
+            drawMovingBorderGlow({170.0f, 145.0f, 460.0f, 170.0f}, NEO_RED, 0.72f);
 
             drawCyberText(
                 "CONFIRMAR SALIDA",
@@ -3574,6 +3579,7 @@ void Game::drawGame() {
             );
 
             drawCyberPanel(210, 100, 380, 255, NEO_YELLOW);
+            drawMovingBorderGlow({210.0f, 100.0f, 380.0f, 255.0f}, NEO_YELLOW, 0.86f);
 
             drawCyberText(
                 "JUEGO EN PAUSA",
