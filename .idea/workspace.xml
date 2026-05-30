@@ -28,9 +28,10 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6ddf144c-c33f-411d-9357-7ea431bb52dd" name="Changes" comment="Mejora la generación de objetos y añade el nitro nuevamente">
-      <change beforePath="$PROJECT_DIR$/.idea/editor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/editor.xml" afterDir="false" />
+    <list default="true" id="6ddf144c-c33f-411d-9357-7ea431bb52dd" name="Changes" comment="Arreglar las cagadas del server">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/core/Game.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/core/Game.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/Game.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/Game.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,23 +70,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.18257520342625" />
-      <entry key="MS500" value="4.438590395508529" />
-      <entry key="S2" value="14.265779102221478" />
-      <entry key="S5" value="26.146927519591248" />
-      <entry key="S10" value="40.62254251647559" />
-      <entry key="S30" value="76.32657585847043" />
-      <entry key="S60" value="101.69868174153805" />
-      <entry key="M2" value="127.31286582496317" />
-      <entry key="M5" value="186.7906356376444" />
-      <entry key="M10" value="337.54800426905" />
-      <entry key="M15" value="487.0633986260308" />
-      <entry key="M30" value="835.1167300011798" />
-      <entry key="H1" value="1304.9594844911878" />
-      <entry key="H2" value="1963.6237651761392" />
-      <entry key="H4" value="2705.990966630107" />
-      <entry key="D1" value="3861.341351766497" />
-      <entry key="W1" value="4141.298281475314" />
+      <entry key="MS100" value="1.00652040072413" />
+      <entry key="MS500" value="1.5484364590541029" />
+      <entry key="S2" value="2.5745298518263464" />
+      <entry key="S5" value="3.74672321104005" />
+      <entry key="S10" value="5.040967759308381" />
+      <entry key="S30" value="6.729154352558508" />
+      <entry key="S60" value="8.399622138621892" />
+      <entry key="M2" value="20.80106705527407" />
+      <entry key="M5" value="83.2018559864281" />
+      <entry key="M10" value="222.31053241870808" />
+      <entry key="M15" value="367.82999096936595" />
+      <entry key="M30" value="725.8237411649335" />
+      <entry key="H1" value="1217.860672515908" />
+      <entry key="H2" value="1898.7244436342385" />
+      <entry key="H4" value="2663.287342793209" />
+      <entry key="D1" value="3857.187668372038" />
+      <entry key="W1" value="4147.433647922903" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -107,23 +108,23 @@
       <entry key="W1" value="0.0" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.1498277902373708" />
-      <entry key="MS500" value="4.412993933756369" />
-      <entry key="S2" value="14.244989130113295" />
-      <entry key="S5" value="26.131550345382333" />
-      <entry key="S10" value="40.610440983881496" />
-      <entry key="S30" value="76.31858687392204" />
-      <entry key="S60" value="101.69308604586108" />
-      <entry key="M2" value="127.30922939068122" />
-      <entry key="M5" value="186.78841009586455" />
-      <entry key="M10" value="337.5456321295357" />
-      <entry key="M15" value="487.06075705860496" />
-      <entry key="M30" value="835.1139663013487" />
-      <entry key="H1" value="1304.9570649029215" />
-      <entry key="H2" value="1963.621922736052" />
-      <entry key="H4" value="2705.989743326778" />
-      <entry key="D1" value="3861.341078501592" />
-      <entry key="W1" value="4141.298240171266" />
+      <entry key="MS100" value="0.9790396819198355" />
+      <entry key="MS500" value="1.5403748324282318" />
+      <entry key="S2" value="2.57125729052932" />
+      <entry key="S5" value="3.7447205967104638" />
+      <entry key="S10" value="5.039530697893688" />
+      <entry key="S30" value="6.72847631676103" />
+      <entry key="S60" value="8.399188126311719" />
+      <entry key="M2" value="20.80049412153779" />
+      <entry key="M5" value="83.20087684283955" />
+      <entry key="M10" value="222.30898468026683" />
+      <entry key="M15" value="367.8280116540623" />
+      <entry key="M30" value="725.8213517351586" />
+      <entry key="H1" value="1217.858422313141" />
+      <entry key="H2" value="1898.722666126156" />
+      <entry key="H4" value="2663.286140678102" />
+      <entry key="D1" value="3857.187395678416" />
+      <entry key="W1" value="4147.4336065961925" />
     </decayedShown>
   </component>
   <component name="ProjectApplicationVersion">
@@ -230,7 +231,15 @@
       <option name="project" value="LOCAL" />
       <updated>1779925511941</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Arreglar las cagadas del server">
+      <option name="closed" value="true" />
+      <created>1780112197130</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1780112197130</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -255,6 +264,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Soluciona problema de congelamiento por API" />
-    <option name="LAST_COMMIT_MESSAGE" value="Soluciona problema de congelamiento por API" />
+    <MESSAGE value="Arreglar las cagadas del server" />
+    <option name="LAST_COMMIT_MESSAGE" value="Arreglar las cagadas del server" />
   </component>
 </project>

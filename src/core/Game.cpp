@@ -419,15 +419,9 @@ void Game::reportarScoreApiSiCorresponde() {
 }
 
 int Game::calcularTokensGanados(int scoreFinal) const {
-    if (scoreFinal >= GameApiConfig::SCORE_PREMIO_ALTO) {
-        return GameApiConfig::PREMIO_ALTO;
-    }
+    (void) scoreFinal;
 
-    if (scoreFinal >= GameApiConfig::SCORE_PREMIO_BAJO) {
-        return GameApiConfig::PREMIO_BAJO;
-    }
-
-    return 0;
+    return coinsCollectedThisRun / 5;
 }
 
 void Game::finalizarPartidaApi(const std::string &resultado) {
@@ -530,13 +524,15 @@ void Game::finalizarPartidaApiAsync(const std::string &resultado) {
         std::async(
             std::launch::async,
             [this,
-             idPartida,
-             scoreFinal,
-             nivelFinal,
-             ultimoScoreFinalReportado,
-             duracionSegundos,
-             tokensGanados,
-             resultadoFinal]() -> std::string {
+ idPartida,
+ scoreFinal,
+ nivelFinal,
+ ultimoScoreFinalReportado,
+ duracionSegundos,
+ tokensGanados,
+ resultadoFinal]() -> FinalizacionPartidaResult {
+
+                FinalizacionPartidaResult resultadoApi;
                 try {
                     if (scoreFinal > ultimoScoreFinalReportado) {
                         std::string errorScoreFinal;
@@ -562,16 +558,35 @@ void Game::finalizarPartidaApiAsync(const std::string &resultado) {
                     );
 
                     if (ok) {
-                        return "API: partida finalizada. Tokens ganados: " +
-                               std::to_string(tokensGanados);
-                    }
+    resultadoApi.ok = true;
+    resultadoApi.tokensGanados = tokensGanados;
+    resultadoApi.mensaje =
+        "API: partida finalizada. Tokens ganados: " +
+        std::to_string(tokensGanados);
 
-                    return "API: no se pudo finalizar partida.";
+    return resultadoApi;
+}
+
+resultadoApi.ok = false;
+resultadoApi.tokensGanados = 0;
+resultadoApi.mensaje = "API: no se pudo finalizar partida.";
+
+return resultadoApi;
+
                 } catch (const std::exception &e) {
-                    return std::string("API: error finalizando partida: ") + e.what();
-                } catch (...) {
-                    return "API: error desconocido finalizando partida.";
-                }
+     resultadoApi.ok = false;
+     resultadoApi.tokensGanados = 0;
+     resultadoApi.mensaje =
+         std::string("API: error finalizando partida: ") + e.what();
+
+     return resultadoApi;
+ } catch (...) {
+     resultadoApi.ok = false;
+     resultadoApi.tokensGanados = 0;
+     resultadoApi.mensaje = "API: error desconocido finalizando partida.";
+
+     return resultadoApi;
+ }
             }
         )
     );
@@ -582,7 +597,18 @@ void Game::limpiarFinalizacionesPartidaTerminadas() {
 
     while (it != finalizacionesPartidaPendientes.end()) {
         if (it->wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
-            mensajeApi = it->get();
+            FinalizacionPartidaResult resultado = it->get();
+
+            mensajeApi = resultado.mensaje;
+
+            if (resultado.ok) {
+                creditos += resultado.tokensGanados;
+                usuarioActual.saldoTokens = creditos;
+
+                playerData.credits = creditos;
+                dataManager.savePlayerData(playerData);
+            }
+
             it = finalizacionesPartidaPendientes.erase(it);
         } else {
             ++it;

@@ -46,6 +46,12 @@ struct LoadingResult {
     std::vector<RankingItem> ranking;
 };
 
+struct FinalizacionPartidaResult {
+    bool ok = false;
+    std::string mensaje;
+    int tokensGanados = 0;
+};
+
 class Game {
 private:
     // fondo imp
@@ -121,7 +127,7 @@ private:
 
     std::chrono::steady_clock::time_point inicioPartida;
 
-    std::vector<std::future<std::string>> finalizacionesPartidaPendientes;
+    std::vector<std::future<FinalizacionPartidaResult>> finalizacionesPartidaPendientes;
     std::future<LoadingResult> cargaPendiente;
 
     LoadingAction accionCarga = LoadingAction::NONE;
