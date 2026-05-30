@@ -150,11 +150,12 @@ private:
     float initialLoadTimer = 0.0f;
 
     int creditos;
+    int saldoBasePartida;
     int score;
     int highScore;
     int gameCost;
     int coinsCollectedThisRun;
-
+    
     float scoreTimer;
     float scorePerSecond;
     int nitroSpawnCountdown;

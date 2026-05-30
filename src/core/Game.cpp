@@ -313,6 +313,7 @@ Game::Game(ApiClient &apiClient, LoginManager &login)
     playerData = dataManager.loadPlayerData();
 
     creditos = playerData.credits;
+    saldoBasePartida = creditos;
     highScore = playerData.highScore;
     playerName = playerData.username;
 
@@ -336,6 +337,7 @@ void Game::setUsuario(
 
     playerName = usuarioActual.username;
     creditos = usuarioActual.saldoTokens;
+    saldoBasePartida = creditos;
     playerData.username = playerName;
     playerData.credits = creditos;
     dataManager.savePlayerData(playerData);
@@ -375,6 +377,9 @@ bool Game::iniciarPartidaApi() {
     nivelActual = 1;
 
     creditos = partidaActual.saldoDespues;
+    saldoBasePartida = creditos;
+    usuarioActual.saldoTokens = creditos;
+
     playerData.credits = creditos;
     dataManager.savePlayerData(playerData);
 
@@ -602,11 +607,22 @@ void Game::limpiarFinalizacionesPartidaTerminadas() {
             mensajeApi = resultado.mensaje;
 
             if (resultado.ok) {
-                creditos += resultado.tokensGanados;
+                creditos = saldoBasePartida + resultado.tokensGanados;
                 usuarioActual.saldoTokens = creditos;
+                saldoBasePartida = creditos;
 
                 playerData.credits = creditos;
                 dataManager.savePlayerData(playerData);
+
+                TraceLog(
+                    LOG_INFO,
+                    TextFormat(
+                        "Creditos sincronizados. Saldo base: %i | Tokens ganados: %i | Creditos actuales: %i",
+                        saldoBasePartida - resultado.tokensGanados,
+                        resultado.tokensGanados,
+                        creditos
+                    )
+                );
             }
 
             it = finalizacionesPartidaPendientes.erase(it);
@@ -865,9 +881,13 @@ void Game::aplicarResultadoCarga(const LoadingResult &resultado) {
             partidaFinalizada = false;
             ultimoScoreReportado = 0;
             nivelActual = 1;
-            creditos = partidaActual.saldoDespues;
-            playerData.credits = creditos;
-            dataManager.savePlayerData(playerData);
+
+                creditos = partidaActual.saldoDespues;
+                saldoBasePartida = creditos;
+                usuarioActual.saldoTokens = creditos;
+
+                playerData.credits = creditos;
+                dataManager.savePlayerData(playerData);
 
             if (!resultado.ranking.empty()) {
                 rankingActual = resultado.ranking;

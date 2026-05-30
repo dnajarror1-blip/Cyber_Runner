@@ -29,7 +29,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6ddf144c-c33f-411d-9357-7ea431bb52dd" name="Changes" comment="Arreglar las cagadas del server">
-      <change beforePath="$PROJECT_DIR$/api/GameApiConfig.h" beforeDir="false" afterPath="$PROJECT_DIR$/api/GameApiConfig.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/core/Game.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/core/Game.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/Game.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/Game.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -237,7 +239,15 @@
       <option name="project" value="LOCAL" />
       <updated>1780112197130</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Arreglar las cagadas del server">
+      <option name="closed" value="true" />
+      <created>1780115179302</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1780115179302</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
