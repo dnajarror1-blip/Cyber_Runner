@@ -3453,90 +3453,122 @@ void Game::drawGame() {
 
             int tokensResumen = calcularTokensGanados(score);
             const char *tokenLabel = tokensResumen == 1 ? "TOKEN" : "TOKENS";
+            Rectangle scoreBox = {185.0f, 120.0f, 205.0f, 74.0f};
+            Rectangle recordBox = {410.0f, 120.0f, 205.0f, 74.0f};
+            Rectangle conversionBox = {185.0f, 210.0f, 430.0f, 78.0f};
 
-            drawCyberText(
+            drawCenteredCyberText(
                 "RESUMEN DE PARTIDA",
-                225,
-                80,
-                30,
+                400,
+                78,
+                29,
                 NEO_RED
             );
 
-            drawCyberText(
-                TextFormat("PUNTAJE FINAL: %i", score),
-                250,
-                135,
-                20,
+            DrawRectangleRec(scoreBox, {0, 0, 0, 175});
+            DrawRectangleLinesEx(scoreBox, 2.0f, NEO_CYAN);
+            DrawRectangleLines(192, 127, 191, 60, {255, 255, 255, 55});
+
+            drawCenteredCyberText(
+                "PUNTAJE",
+                static_cast<int>(scoreBox.x + scoreBox.width / 2.0f),
+                132,
+                14,
+                NEO_CYAN
+            );
+
+            drawCenteredCyberText(
+                TextFormat("%i", score),
+                static_cast<int>(scoreBox.x + scoreBox.width / 2.0f),
+                154,
+                24,
                 WHITE
             );
 
-            drawCyberText(
-                TextFormat("RECORD: %i", highScore),
-                250,
-                165,
-                20,
+            DrawRectangleRec(recordBox, {0, 0, 0, 175});
+            DrawRectangleLinesEx(recordBox, 2.0f, GREEN);
+            DrawRectangleLines(417, 127, 191, 60, {255, 255, 255, 55});
+
+            drawCenteredCyberText(
+                "RECORD",
+                static_cast<int>(recordBox.x + recordBox.width / 2.0f),
+                132,
+                14,
                 GREEN
             );
 
-            drawCyberText(
-                TextFormat("MONEDAS: %i", coinsCollectedThisRun),
-                250,
-                195,
-                20,
-                NEO_YELLOW
-            );
-
-            Rectangle conversionBox = {222.0f, 218.0f, 356.0f, 60.0f};
-            DrawRectangleRec(conversionBox, {0, 0, 0, 185});
-            DrawRectangleLinesEx(conversionBox, 2.0f, NEO_YELLOW);
-            DrawRectangleLines(228, 224, 344, 48, {0, 255, 255, 80});
-            DrawLine(398, 233, 398, 263, {255, 255, 255, 70});
-
-            DrawCircle(260, 248, 15.0f, {253, 249, 0, 45});
-            DrawCircleLines(260, 248, 15.0f, NEO_YELLOW);
-            drawCyberText("C", 254, 238, 20, NEO_YELLOW);
-
-            drawCyberText("MONEDAS", 285, 232, 12, NEO_CYAN);
-            drawCyberText(
-                TextFormat("%i", coinsCollectedThisRun),
-                288,
-                248,
-                22,
+            drawCenteredCyberText(
+                TextFormat("%i", highScore),
+                static_cast<int>(recordBox.x + recordBox.width / 2.0f),
+                154,
+                24,
                 WHITE
             );
 
-            drawCyberText("=", 389, 242, 18, LIGHTGRAY);
+            DrawRectangleRec(conversionBox, {0, 0, 0, 185});
+            DrawRectangleLinesEx(conversionBox, 2.0f, NEO_YELLOW);
+            DrawRectangleLines(192, 217, 416, 64, {0, 255, 255, 75});
+            DrawLine(400, 235, 400, 270, {255, 255, 255, 75});
 
-            DrawCircle(436, 248, 15.0f, {0, 255, 255, 45});
-            DrawCircleLines(436, 248, 15.0f, NEO_CYAN);
-            drawCyberText("T", 430, 238, 20, NEO_CYAN);
+            drawCenteredCyberText(
+                "MONEDAS",
+                294,
+                222,
+                13,
+                NEO_YELLOW
+            );
 
-            drawCyberText(tokenLabel, 462, 232, 12, NEO_YELLOW);
-            drawCyberText(
+            DrawCircle(236, 252, 16.0f, {253, 249, 0, 45});
+            DrawCircleLines(236, 252, 16.0f, NEO_YELLOW);
+            drawCyberText("C", 230, 242, 20, NEO_YELLOW);
+
+            drawCenteredCyberText(
+                TextFormat("%i", coinsCollectedThisRun),
+                294,
+                244,
+                25,
+                WHITE
+            );
+
+            drawCenteredCyberText("=", 400, 244, 24, LIGHTGRAY);
+
+            drawCenteredCyberText(
+                tokenLabel,
+                506,
+                222,
+                13,
+                NEO_CYAN
+            );
+
+            DrawCircle(448, 252, 16.0f, {0, 255, 255, 45});
+            DrawCircleLines(448, 252, 16.0f, NEO_CYAN);
+            drawCyberText("T", 442, 242, 20, NEO_CYAN);
+
+            drawCenteredCyberText(
                 TextFormat("%i", tokensResumen),
-                466,
-                248,
-                22,
+                506,
+                244,
+                25,
                 WHITE
             );
 
             drawCenteredCyberText(
                 "5 MONEDAS = 1 TOKEN",
                 400,
-                280,
+                289,
                 12,
                 LIGHTGRAY
             );
 
             drawRetroActionButton(
-                {235.0f, 292.0f, 330.0f, 36.0f},
+                {235.0f, 314.0f, 330.0f, 36.0f},
                 "A",
                 "REINICIAR",
                 NEO_CYAN
             );
 
             drawRetroActionButton(
-                {235.0f, 337.0f, 330.0f, 36.0f},
+                {235.0f, 354.0f, 330.0f, 34.0f},
                 "B",
                 "SALIR AL MENU",
                 WHITE
