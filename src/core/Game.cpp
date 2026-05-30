@@ -299,6 +299,7 @@ Game::Game(ApiClient &apiClient, LoginManager &login)
     nitroSpawnCountdown = 0;
     coinsCollectedThisRun = 0;
     menuPreviewTimer = 0.0f;
+    menuEasterEggTimer = 0.0f;
     impactTimer = 0.0f;
     impactPosition = {0.0f, 0.0f};
 }
@@ -1678,6 +1679,8 @@ void Game::updateGame() {
         }
 
         case MENU: {
+            menuEasterEggTimer += frameTime;
+
             if (
                 gamepadBackPressed() ||
                 IsKeyPressed(KEY_BACKSPACE)
@@ -2601,6 +2604,35 @@ void Game::drawGame() {
             audioManager.stopRunning();
 
             drawCyberPanel(185, 25, 430, 395, NEO_MAGENTA);
+
+            float easterPhase = std::fmod(menuEasterEggTimer, 24.0f);
+
+            if (easterPhase < 5.8f) {
+                float runProgress = easterPhase / 5.8f;
+                float runnerX = -80.0f + runProgress * 960.0f;
+                float jumpPulse =
+                        std::sin(runProgress * 3.14159265f * 2.0f);
+
+                if (jumpPulse < 0.0f) {
+                    jumpPulse = 0.0f;
+                }
+
+                float runnerJump = jumpPulse * 34.0f;
+                bool runnerJumping = runnerJump > 4.0f;
+                Texture2D runnerTexture =
+                        runnerJumping
+                            ? menuPlayerJump
+                            : menuPlayerRun[
+                                static_cast<int>(menuEasterEggTimer * 11.0f) % 3
+                            ];
+
+                drawMenuPreviewTexture(
+                    runnerTexture,
+                    {runnerX, 306.0f - runnerJump, 34.0f, 64.0f},
+                    {255, 255, 255, 150},
+                    NEO_RED
+                );
+            }
 
             drawCyberText(
                 "ACCESO CONCEDIDO",

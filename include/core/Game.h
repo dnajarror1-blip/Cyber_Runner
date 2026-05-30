@@ -72,6 +72,7 @@ private:
     float foregroundOffset;
     float foregroundWidth;
     float menuPreviewTimer = 0.0f;
+    float menuEasterEggTimer = 0.0f;
 
     // hitbox visual del juego
     const float groundY = 350.0f;
