@@ -4,6 +4,9 @@
 #include <cmath>
 #include <exception>
 #include "../../api/GameApiConfig.h"
+
+// SECCION: Estilo visual compartido
+// Colores y helpers de dibujo usados por menus, popups y pantallas de estado.
 // Paleta de Colores Neón
 const Color NEO_CYAN = {0, 255, 255, 255};
 const Color NEO_MAGENTA = {255, 0, 255, 255};
@@ -13,17 +16,21 @@ const Color MENU_PANEL_FILL = {3, 6, 18, 230};
 const Color MENU_BUTTON_FILL = {5, 12, 28, 225};
 const Color MENU_SHADOW = {0, 0, 0, 210};
 
+// SECCION: Entrada con teclado y control
+// Detecta el boton usado como "volver" en controles compatibles.
 static bool gamepadBackPressed()
 {
     return IsGamepadAvailable(0) &&
            IsGamepadButtonPressed(0, GAMEPAD_BUTTON_MIDDLE_LEFT);
 }
 
+// Evita aplicar transiciones visuales encima del gameplay activo y del impacto.
 static bool shouldAnimateScreenTransition(GameScreen screen)
 {
     return screen != JUGANDO && screen != IMPACTO;
 }
 
+// FUNCION: Dibuja texto con sombra para mantener el estilo cyberpunk.
 static void drawCyberText(
     const char *text,
     int x,
@@ -36,6 +43,7 @@ static void drawCyberText(
     DrawText(text, x, y, fontSize, color);
 }
 
+// FUNCION: Centra texto manteniendo el mismo estilo visual.
 static void drawCenteredCyberText(
     const char *text,
     int centerX,
@@ -48,6 +56,7 @@ static void drawCenteredCyberText(
     drawCyberText(text, centerX - textWidth / 2, y, fontSize, color);
 }
 
+// Helpers para animar colores sin duplicar calculos en cada panel.
 static unsigned char blendChannel(
     unsigned char start,
     unsigned char end,
@@ -90,6 +99,7 @@ static Color getAnimatedAccent(Color accent)
     return result;
 }
 
+// FUNCION: Obtiene el mejor score recibido desde el ranking del servidor.
 static int getServerBestScore(const std::vector<RankingItem> &ranking)
 {
     int bestScore = 0;
@@ -101,6 +111,7 @@ static int getServerBestScore(const std::vector<RankingItem> &ranking)
     return bestScore;
 }
 
+// FUNCION: Calcula la posicion de elementos decorativos del menu en bucle.
 static float getMenuPreviewX(
     float startX,
     float speed,
@@ -117,6 +128,7 @@ static float getMenuPreviewX(
     return x;
 }
 
+// FUNCION: Dibuja una textura del menu o un rectangulo de respaldo si no cargo el asset.
 static void drawMenuPreviewTexture(
     Texture2D texture,
     Rectangle dest,
@@ -146,6 +158,7 @@ static void drawMenuPreviewTexture(
     );
 }
 
+// FUNCION: Dibuja paneles reutilizables de menus, ranking, pausa y game over.
 static void drawCyberPanel(
     int x,
     int y,
@@ -176,6 +189,7 @@ static void drawCyberPanel(
     );
 }
 
+// Helpers para animar el brillo que recorre los bordes de los paneles.
 static Vector2 getBorderPoint(Rectangle rect, float progress)
 {
     float perimeter = rect.width * 2.0f + rect.height * 2.0f;
@@ -239,6 +253,7 @@ static void drawMovingBorderGlow(
     );
 }
 
+// FUNCION: Dibuja botones circulares que representan entradas de control.
 static void drawRetroRoundButton(
     float x,
     float y,
@@ -281,6 +296,7 @@ static void drawRetroRoundButton(
     );
 }
 
+// FUNCION: Dibuja botones horizontales pequenos usados en pantallas de menu.
 static void drawRetroPillButton(
     Rectangle rect,
     const char *label,
@@ -311,6 +327,7 @@ static void drawRetroPillButton(
     );
 }
 
+// FUNCION: Dibuja una accion con boton de control y texto descriptivo.
 static void drawRetroActionButton(
     Rectangle rect,
     const char *buttonLabel,
@@ -341,6 +358,8 @@ static void drawRetroActionButton(
     );
 }
 
+// SECCION: Inicializacion de Game
+// Prepara valores base, datos locales y estado inicial sin iniciar todavia una partida.
 Game::Game(ApiClient &apiClient, LoginManager &login)
     : api(apiClient),
       loginManager(login) {
@@ -391,6 +410,7 @@ Game::Game(ApiClient &apiClient, LoginManager &login)
     impactPosition = {0.0f, 0.0f};
 }
 
+// FUNCION: Recibe el usuario autenticado y sincroniza nombre y tokens visibles.
 void Game::setUsuario(
     const UsuarioApi &usuario
 ) {
@@ -406,11 +426,14 @@ void Game::setUsuario(
     dataManager.savePlayerData(playerData);
 }
 
+// FUNCION: Activa el modo local usado para pruebas sin depender del backend.
 void Game::setModoPruebaSinApi(bool activo)
 {
     modoPruebaSinApi = activo;
 }
 
+// SECCION: API de partida
+// Inicia una partida en el backend y descuenta/sincroniza el costo de entrada.
 bool Game::iniciarPartidaApi() {
     if (!sesionIniciada || !api.tieneSesion()) {
         mensajeApi = "API: no hay sesion activa.";
@@ -443,6 +466,7 @@ bool Game::iniciarPartidaApi() {
 
     int saldoDespuesCalculado = partidaActual.saldoDespues;
 
+    // IMPORTANTE: Mantiene un respaldo local si la respuesta no trae saldos utiles.
     if (
         partidaActual.saldoAntes == 0 &&
         partidaActual.saldoDespues == 0 &&
@@ -487,6 +511,7 @@ bool Game::iniciarPartidaApi() {
     return true;
 }
 
+// FUNCION: Reporta score durante gameplay si la partida sigue activa.
 void Game::reportarScoreApiSiCorresponde() {
     if (!partidaActiva || partidaFinalizada) {
         return;
@@ -515,12 +540,15 @@ void Game::reportarScoreApiSiCorresponde() {
     }
 }
 
+// FUNCION: Convierte las monedas recolectadas en tokens del resumen final.
 int Game::calcularTokensGanados(int scoreFinal) const {
     (void) scoreFinal;
 
     return coinsCollectedThisRun / 5;
 }
 
+// FUNCION: Finaliza la partida directamente contra la API.
+// IMPORTANTE: La version asincrona es la usada para evitar congelamientos.
 void Game::finalizarPartidaApi(const std::string &resultado) {
     if (!partidaActiva || partidaFinalizada) {
         return;
@@ -593,6 +621,8 @@ void Game::finalizarPartidaApi(const std::string &resultado) {
     partidaActiva = false;
 }
 
+// FUNCION: Finaliza la partida en segundo plano y deja el resultado pendiente.
+// IMPORTANTE: Esta ruta evita bloquear la pantalla de game over por llamadas de red.
 void Game::finalizarPartidaApiAsync(const std::string &resultado) {
     if (!partidaActiva || partidaFinalizada) {
         return;
@@ -617,6 +647,7 @@ void Game::finalizarPartidaApiAsync(const std::string &resultado) {
     partidaActiva = false;
     mensajeApi = "API: finalizando partida...";
 
+    // Copia los datos finales porque el gameplay puede cambiar de pantalla mientras la API responde.
     finalizacionesPartidaPendientes.push_back(
         std::async(
             std::launch::async,
@@ -689,6 +720,7 @@ return resultadoApi;
     );
 }
 
+// FUNCION: Revisa finalizaciones asincronas terminadas y aplica tokens ganados.
 void Game::limpiarFinalizacionesPartidaTerminadas() {
     auto it = finalizacionesPartidaPendientes.begin();
 
@@ -726,6 +758,8 @@ void Game::limpiarFinalizacionesPartidaTerminadas() {
     }
 }
 
+// SECCION: Popups
+// Guarda el contenido que drawPopupModal mostrara sobre la pantalla actual.
 void Game::mostrarPopup(
     const std::string &titulo,
     const std::string &mensaje,
@@ -737,6 +771,7 @@ void Game::mostrarPopup(
     popupActivo = true;
 }
 
+// FUNCION: Limpia el popup activo para volver al flujo normal.
 void Game::cerrarPopup() {
     popupActivo = false;
     popupTitulo.clear();
@@ -744,6 +779,8 @@ void Game::cerrarPopup() {
     popupBoton.clear();
 }
 
+// SECCION: Carga asincrona
+// Inicia login sin congelar el menu mientras el backend valida credenciales.
 void Game::iniciarCargaLogin() {
     if (cargaPendiente.valid()) {
         return;
@@ -785,6 +822,7 @@ void Game::iniciarCargaLogin() {
     );
 }
 
+// FUNCION: Prepara una partida consultando la API en segundo plano.
 void Game::iniciarCargaPartida(GameScreen pantallaError, bool permitirModoLocal) {
     if (cargaPendiente.valid()) {
         return;
@@ -810,6 +848,7 @@ void Game::iniciarCargaPartida(GameScreen pantallaError, bool permitirModoLocal)
 
     int costoPartida = gameCost;
 
+    // La operacion queda en un future para que la pantalla CARGANDO siga respondiendo.
     cargaPendiente = std::async(
         std::launch::async,
         [this, costoPartida]() -> LoadingResult {
@@ -861,6 +900,7 @@ void Game::iniciarCargaPartida(GameScreen pantallaError, bool permitirModoLocal)
     );
 }
 
+// FUNCION: Consulta el ranking del servidor sin bloquear la pantalla.
 void Game::iniciarCargaRanking() {
     if (cargaPendiente.valid()) {
         return;
@@ -911,6 +951,7 @@ void Game::iniciarCargaRanking() {
     );
 }
 
+// FUNCION: Usa la misma pantalla de carga para volver al menu de forma consistente.
 void Game::iniciarCargaVolverMenu() {
     if (cargaPendiente.valid()) {
         return;
@@ -935,6 +976,7 @@ void Game::iniciarCargaVolverMenu() {
     );
 }
 
+// FUNCION: Revisa si una carga asincrona termino y aplica su resultado.
 void Game::actualizarCarga() {
     if (!cargaPendiente.valid()) {
         currentScreen = pantallaErrorCarga;
@@ -959,6 +1001,7 @@ void Game::actualizarCarga() {
     aplicarResultadoCarga(resultado);
 }
 
+// FUNCION: Traduce el resultado de una carga en cambios de pantalla y datos.
 void Game::aplicarResultadoCarga(const LoadingResult &resultado) {
     switch (accionCarga) {
         case LoadingAction::LOGIN: {
@@ -981,6 +1024,7 @@ void Game::aplicarResultadoCarga(const LoadingResult &resultado) {
 
         case LoadingAction::START_GAME: {
             if (!resultado.ok) {
+                // Si esta permitido, el juego puede continuar localmente aunque falle la API.
                 if (cargaPermiteModoLocal) {
                     mensajeApi = "API: modo prueba local, partida sin servidor.";
                     resetGame();
@@ -1003,6 +1047,7 @@ void Game::aplicarResultadoCarga(const LoadingResult &resultado) {
 
                 int saldoDespuesCalculado = partidaActual.saldoDespues;
 
+                // IMPORTANTE: Protege el saldo visible cuando el backend no devuelve saldos calculados.
                 if (
                     partidaActual.saldoAntes == 0 &&
                     partidaActual.saldoDespues == 0 &&
@@ -1080,6 +1125,7 @@ void Game::aplicarResultadoCarga(const LoadingResult &resultado) {
     cargaPermiteModoLocal = false;
 }
 
+// FUNCION: Consulta ranking de forma directa y actualiza la pantalla de ranking.
 void Game::consultarRankingApi() {
     rankingActual.clear();
 
@@ -1166,6 +1212,10 @@ void Game::resetGame() {
 
     obstacles.clear();
 
+    // SECCION: Obstaculos - posicion y tamano inicial
+    // Cada obstaculo usa: x inicial, y/altura visual, ancho, alto y velocidad.
+    // Para ajustar donde aparecen al iniciar una partida, revisar estos valores.
+    // y=310 se usa para obstaculos de suelo; y=220/205 se usa para drones.
     obstacles.push_back(
         Obstacle(
             1000,
@@ -1328,6 +1378,9 @@ void Game::resetGame() {
 
     coins.clear();
 
+    // SECCION: Monedas - posicion y tamano inicial
+    // Aqui se crea la fila base de monedas: x inicial, separacion, altura y tamano.
+    // La generacion real despues se reorganiza en generarMonedasEnMatriz().
     for (int i = 0; i < 14; ++i) {
         coins.push_back(
             Coin(
@@ -1347,6 +1400,8 @@ void Game::generarMonedasEnMatriz(float startX) {
         return;
     }
 
+    // SECCION: Monedas
+    // patron controla la forma visual del grupo: filas rectas o zigzag.
     int patron = GetRandomValue(0, 2);
     bool spawnNitro = nitroSpawnCountdown <= 0;
     bool monedasCercaDron = false;
@@ -1377,6 +1432,7 @@ void Game::generarMonedasEnMatriz(float startX) {
         size_t nitroIndex = coins.size() - 1;
 
         if (i == shieldIndex) {
+            // Posicion especial del escudo dentro del grupo de monedas.
             coins[i].reset(
                 startX + 520.0f,
                 static_cast<float>(GetRandomValue(205, 295)),
@@ -1387,6 +1443,7 @@ void Game::generarMonedasEnMatriz(float startX) {
         }
 
         if (i == nitroIndex) {
+            // Posicion especial del nitro o moneda final dentro del grupo.
             coins[i].reset(
                 startX + 740.0f,
                 static_cast<float>(GetRandomValue(205, 295)),
@@ -1397,6 +1454,7 @@ void Game::generarMonedasEnMatriz(float startX) {
         }
 
         if (monedasCercaDron && (i == 10 || i == 11)) {
+            // Monedas cercanas al dron: offsetX y offsetY ajustan su posicion alrededor del obstaculo aereo.
             float offsetX = i == 10 ? -34.0f : 34.0f;
             float offsetY = i == 10 ? -18.0f : 20.0f;
 
@@ -1412,6 +1470,7 @@ void Game::generarMonedasEnMatriz(float startX) {
         int columna = static_cast<int>(i % 4);
         int fila = static_cast<int>(i / 4);
 
+        // columna, fila, separacion y alturas definen la matriz visual de monedas.
         float x = startX + columna * 34.0f;
         float y = 0.0f;
 
@@ -1434,6 +1493,7 @@ void Game::actualizarGeneracionMonedas() {
         }
     }
 
+    // startX define desde donde aparece el siguiente grupo de monedas fuera de pantalla.
     float startX = 850.0f + static_cast<float>(GetRandomValue(180, 360));
 
     for (auto &obs: obstacles) {
@@ -1453,6 +1513,8 @@ void Game::actualizarGeneracionMonedas() {
 }
 
 void Game::separarObstaculos() {
+    // SECCION: Obstaculos
+    // minSpacing controla la distancia minima entre obstaculos para evitar apariciones injustas.
     const float minSpacing = 390.0f;
 
     for (size_t i = 0; i < obstacles.size(); ++i) {
@@ -1646,6 +1708,8 @@ void Game::run() {
 
 //fondo imp
 void Game::drawBackground() {
+    // SECCION: Fondo
+    // Cambiar el divisor del score modifica cada cuantos puntos cambia el fondo.
     int etapa = (score / 4000) % 3;
 
     static int etapaAnterior = 0;
@@ -1669,6 +1733,7 @@ void Game::drawBackground() {
         fondoSiguiente = fondo1;
     }
 
+    // La escala adapta la textura al alto logico de pantalla.
     float scale =
             static_cast<float>(screenHeight) /
             static_cast<float>(fondoActual.height);
@@ -1724,6 +1789,9 @@ void Game::drawForeground()
         return;
     }
 
+    // SECCION: Hitbox visual
+    // foregroundHeight cambia el alto visual del piso; groundY define donde se dibuja.
+    // Si se cambia la altura visual del piso, revisar tambien hitboxes y posicion del jugador.
     const float foregroundHeight = 100.0f;
 
     const float scale =
@@ -1740,6 +1808,7 @@ void Game::drawForeground()
         static_cast<float>(foregroundTexture.height)
     };
 
+    // dest1 y dest2 repiten el foreground para lograr desplazamiento continuo.
     Rectangle dest1 = {
         foregroundOffset,
         groundY,
@@ -2598,6 +2667,8 @@ void Game::drawGame() {
         case CARGA_INICIAL: {
             audioManager.stopRunning();
 
+            // SECCION: Pantalla de carga inicial
+            // Panel, texto y barra usan coordenadas fijas del lienzo logico 800x450.
             drawCyberPanel(205, 135, 390, 185, NEO_CYAN);
 
             int puntos = static_cast<int>(GetTime() * 4.0) % 4;
@@ -2651,6 +2722,8 @@ void Game::drawGame() {
         case INICIO: {
             audioManager.stopRunning();
 
+            // SECCION: Pantalla de inicio
+            // Estos valores controlan la previsualizacion animada del corredor y objetos del menu inicial.
             const float previewSpeed = 245.0f;
             const float previewPlayerX = 105.0f;
             auto previewCollected = [previewPlayerX](float x, float width) {
@@ -2709,6 +2782,7 @@ void Game::drawGame() {
                                     static_cast<int>(menuPreviewTimer * 9.0f) % 3
                                 ]
                         );
+            // Posicion y tamano del jugador decorativo de la pantalla inicial.
             Rectangle previewPlayer = {
                 previewPlayerX,
                 292.0f - jumpHeight,
@@ -2804,6 +2878,7 @@ void Game::drawGame() {
                 NEO_RED
             );
 
+            // Textos principales del titulo: cambiar aqui nombre, posicion o tamano visual.
             DrawText("CYBER", 280, 122, 52, {0, 0, 0, 210});
             DrawText("CYBER", 276, 118, 52, {255, 0, 255, 150});
             DrawText("CYBER", 272, 114, 52, {0, 255, 255, 150});
@@ -2823,6 +2898,7 @@ void Game::drawGame() {
 
             bool mostrarStart = static_cast<int>(GetTime() * 2.0) % 2 == 0;
 
+            // Texto parpadeante de inicio.
             if (mostrarStart) {
                 drawCenteredCyberText(
                     "PRESIONA START",
@@ -2852,9 +2928,12 @@ void Game::drawGame() {
         }
 
         case LOGIN: {
+            // SECCION: Login visual
+            // Panel principal y cajas de texto; los rectangulos controlan posicion y tamano de los inputs.
             drawCyberPanel(185, 60, 430, 335, NEO_CYAN);
             drawMovingBorderGlow({185.0f, 60.0f, 430.0f, 335.0f}, NEO_CYAN, 0.12f);
 
+            // Titulo de la pantalla de login.
             drawCyberText(
                 "CYBER-RUNNER",
                 250,
@@ -2879,6 +2958,7 @@ void Game::drawGame() {
                 LIGHTGRAY
             );
 
+            // Campo visual de usuario: x, y, ancho y alto.
             DrawRectangle(250, 180, 300, 38, {0, 0, 0, 225});
             DrawRectangleLinesEx(
                 {250.0f, 180.0f, 300.0f, 38.0f},
@@ -2908,6 +2988,7 @@ void Game::drawGame() {
                 LIGHTGRAY
             );
 
+            // Campo visual de password: x, y, ancho y alto.
             DrawRectangle(250, 260, 300, 38, {0, 0, 0, 225});
             DrawRectangleLinesEx(
                 {250.0f, 260.0f, 300.0f, 38.0f},
@@ -2952,11 +3033,14 @@ void Game::drawGame() {
         case MENU: {
             audioManager.stopRunning();
 
+            // SECCION: Menu principal
+            // Panel, botones y textos principales para ajustar la distribucion visual del menu.
             drawCyberPanel(185, 25, 430, 395, NEO_MAGENTA);
             drawMovingBorderGlow({185.0f, 25.0f, 430.0f, 395.0f}, NEO_MAGENTA, 0.28f);
 
             float easterPhase = std::fmod(menuEasterEggTimer, 24.0f);
 
+            // Animacion decorativa del jugador atravesando el menu.
             if (easterPhase < 5.8f) {
                 float runProgress = easterPhase / 5.8f;
                 float runnerX = -80.0f + runProgress * 960.0f;
@@ -3010,6 +3094,7 @@ void Game::drawGame() {
                 sesionIniciada ? NEO_YELLOW : GRAY
             );
 
+            // Botones del menu: cada rectangulo define x, y, ancho y alto.
             drawRetroActionButton(
                 {250.0f, 140.0f, 300.0f, 38.0f},
                 "A",
@@ -3088,6 +3173,8 @@ void Game::drawGame() {
         case COMO_JUGAR: {
             audioManager.stopRunning();
 
+            // SECCION: Como jugar
+            // Esta pantalla es principalmente visual: aqui se cambian instrucciones, iconos y posiciones.
             drawCyberPanel(70, 25, 660, 395, NEO_CYAN);
             drawMovingBorderGlow({70.0f, 25.0f, 660.0f, 395.0f}, NEO_CYAN, 0.44f);
 
@@ -3099,6 +3186,7 @@ void Game::drawGame() {
                 NEO_CYAN
             );
 
+            // Panel izquierdo con ejemplos de obstaculos y recogibles.
             DrawRectangle(105, 92, 260, 250, {0, 0, 0, 225});
             DrawRectangleLinesEx({105.0f, 92.0f, 260.0f, 250.0f}, 1.5f, NEO_MAGENTA);
             drawMovingBorderGlow({105.0f, 92.0f, 260.0f, 250.0f}, NEO_MAGENTA, 0.94f, -1.0f);
@@ -3162,6 +3250,7 @@ void Game::drawGame() {
             drawCenteredCyberText("EVITA LOS OBSTACULOS", 235, 303, 14, LIGHTGRAY);
             drawCenteredCyberText("TOMA MONEDAS, NITRO Y ESCUDOS", 235, 320, 13, LIGHTGRAY);
 
+            // Lista derecha de controles: cambiar textos o posiciones aqui.
             drawRetroRoundButton(435.0f, 120.0f, "A", NEO_CYAN);
             drawCyberText("SALTAR", 475, 112, 18, WHITE);
 
@@ -3217,6 +3306,8 @@ void Game::drawGame() {
         case RANKING: {
             audioManager.stopRunning();
 
+            // SECCION: Ranking visual
+            // Panel y tabla del ranking; las columnas se ajustan con las posiciones x de los textos.
             drawCyberPanel(80, 30, 640, 385, NEO_CYAN);
             drawMovingBorderGlow({80.0f, 30.0f, 640.0f, 385.0f}, NEO_CYAN, 0.58f);
 
@@ -3285,12 +3376,14 @@ void Game::drawGame() {
                     }
                 }
 
+                // Cantidad de filas visibles en la tabla.
                 int filas = std::min(
                     static_cast<int>(rankingActual.size()),
                     7
                 );
 
                 for (int i = 0; i < filas; ++i) {
+                    // y controla la separacion vertical entre filas del ranking.
                     int y = 148 + i * 24;
                     std::string usernameRanking = rankingActual[i].username;
                     bool esUsuarioActual = usernameRanking == playerName;
@@ -3307,6 +3400,7 @@ void Game::drawGame() {
                     }
 
                     if (i == 0) {
+                        // Corona del primer lugar: crownX, crownY y pixel ajustan su posicion y escala.
                         int crownX = 143;
                         int crownY = y - 4;
                         int pixel = 3;
@@ -3422,6 +3516,8 @@ void Game::drawGame() {
         }
 
         case CONFIRMAR_SALIDA: {
+            // SECCION: Confirmacion de salida
+            // Textos y botones de esta pantalla se dibujan aqui.
             drawCyberText(
                 "CYBER RUNNER",
                 245,
@@ -3458,11 +3554,14 @@ void Game::drawGame() {
         }
 
         case JUGANDO: {
+            // SECCION: Gameplay visual
+            // Aqui se dibujan jugador, obstaculos, monedas, HUD y efectos activos.
             if (nitroActive && player != nullptr) {
                 Rectangle playerRect = player->getRect();
                 float pulse =
                         (std::sin(static_cast<float>(GetTime()) * 16.0f) + 1.0f) *
                         0.5f;
+                // Lineas del efecto nitro: offsets y grosores controlan largo y ubicacion.
                 float lineStartX = playerRect.x - 74.0f - pulse * 8.0f;
                 float lineEndX = playerRect.x - 10.0f;
 
@@ -3498,6 +3597,8 @@ void Game::drawGame() {
                 coin.draw();
             }
 
+            // Linea de referencia del suelo visual para depuracion de hitbox.
+            // Se deja comentada para activarla solo durante ajustes visuales.
             //DrawLine(
             //    0,
             //    350,
@@ -3516,6 +3617,7 @@ void Game::drawGame() {
                 shieldTimer / 10.0f
             );
 
+            // Contador de monedas de la partida: ajustar aqui posicion, icono y texto.
             DrawCircleGradient(682, 410, 34.0f, {0, 0, 0, 135}, {0, 0, 0, 0});
             drawMenuPreviewTexture(
                 menuCoinTexture[static_cast<int>(GetTime() * 8.0f) % 2],
@@ -3540,6 +3642,7 @@ void Game::drawGame() {
                     Vector2 playerCenter = player->getPosition();
                     float time = static_cast<float>(GetTime());
                     float pulse = (std::sin(time * 5.5f) + 1.0f) * 0.5f;
+                    // Escudo visual alrededor del jugador: radius controla tamano del halo.
                     float radius = 38.0f + pulse * 5.0f;
 
                     DrawCircleGradient(
@@ -3591,6 +3694,8 @@ void Game::drawGame() {
 
         case PAUSA: {
             audioManager.stopRunning();
+            // SECCION: Pausa visual
+            // Overlay, panel y botones del menu de pausa.
             DrawRectangle(
                 0,
                 0,
@@ -3629,10 +3734,13 @@ void Game::drawGame() {
 
         case GAMEOVER: {
             audioManager.stopRunning();
+            // SECCION: Game Over visual
+            // Cajas del resumen final: score, record y conversion monedas/tokens.
             drawCyberPanel(145, 55, 510, 340, NEO_RED);
 
             int tokensResumen = calcularTokensGanados(score);
             const char *tokenLabel = tokensResumen == 1 ? "TOKEN" : "TOKENS";
+            // Rectangulos principales del resumen: x, y, ancho y alto.
             Rectangle scoreBox = {185.0f, 120.0f, 205.0f, 74.0f};
             Rectangle recordBox = {410.0f, 120.0f, 205.0f, 74.0f};
             Rectangle conversionBox = {185.0f, 205.0f, 430.0f, 94.0f};
@@ -3744,6 +3852,7 @@ void Game::drawGame() {
                 LIGHTGRAY
             );
 
+            // Botones del resumen final: cada rectangulo define x, y, ancho y alto.
             drawRetroActionButton(
                 {235.0f, 318.0f, 330.0f, 34.0f},
                 "A",
@@ -3759,6 +3868,7 @@ void Game::drawGame() {
             );
 
             if (mostrarMensajesApi) {
+                // Texto informativo de API debajo del resumen.
                 drawCyberText(
                     mensajeApi.c_str(),
                     215,
@@ -3800,6 +3910,8 @@ void Game::drawPopupModal() {
         return;
     }
 
+    // SECCION: Popup
+    // Overlay y panel modal reutilizado para mensajes de error o confirmacion.
     DrawRectangle(0, 0, screenWidth, screenHeight, {0, 0, 0, 175});
     drawCyberPanel(150, 135, 500, 180, NEO_RED);
 
@@ -3811,6 +3923,7 @@ void Game::drawPopupModal() {
         NEO_YELLOW
     );
 
+    // El mensaje se centra calculando su ancho antes de dibujarlo.
     int messageWidth = MeasureText(popupMensaje.c_str(), 17);
     drawCyberText(
         popupMensaje.c_str(),
