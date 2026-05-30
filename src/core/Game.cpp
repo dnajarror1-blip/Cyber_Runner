@@ -176,6 +176,63 @@ static void drawCyberPanel(
     );
 }
 
+static Vector2 getBorderPoint(Rectangle rect, float progress)
+{
+    float perimeter = rect.width * 2.0f + rect.height * 2.0f;
+    float distance = std::fmod(progress, 1.0f) * perimeter;
+
+    if (distance < rect.width) {
+        return {rect.x + distance, rect.y};
+    }
+
+    distance -= rect.width;
+
+    if (distance < rect.height) {
+        return {rect.x + rect.width, rect.y + distance};
+    }
+
+    distance -= rect.height;
+
+    if (distance < rect.width) {
+        return {rect.x + rect.width - distance, rect.y + rect.height};
+    }
+
+    distance -= rect.width;
+
+    return {rect.x, rect.y + rect.height - distance};
+}
+
+static void drawMovingBorderGlow(
+    Rectangle rect,
+    Color color,
+    float phase
+)
+{
+    float time = static_cast<float>(GetTime());
+    float progress = std::fmod(time * 0.23f + phase, 1.0f);
+    Vector2 glow = getBorderPoint(rect, progress);
+
+    Color soft = color;
+    soft.a = 95;
+
+    Color bright = color;
+    bright.a = 230;
+
+    DrawCircleGradient(
+        static_cast<int>(glow.x),
+        static_cast<int>(glow.y),
+        18.0f,
+        soft,
+        {0, 0, 0, 0}
+    );
+    DrawCircle(
+        static_cast<int>(glow.x),
+        static_cast<int>(glow.y),
+        2.5f,
+        bright
+    );
+}
+
 static void drawRetroRoundButton(
     float x,
     float y,
@@ -741,7 +798,7 @@ void Game::iniciarCargaPartida(GameScreen pantallaError, bool permitirModoLocal)
     pantallaErrorCarga = pantallaError;
     cargaPermiteModoLocal = permitirModoLocal;
     tituloCarga = "PREPARANDO PARTIDA";
-    detalleCarga = "Reservando partida y sincronizando creditos";
+    detalleCarga = "Reservando partida y sincronizando tokens";
     inicioCarga = std::chrono::steady_clock::now();
     currentScreen = CARGANDO;
 
@@ -1945,9 +2002,9 @@ void Game::updateGame() {
 
                 if (!modoPruebaSinApi && creditos < gameCost) {
                     mostrarPopup(
-                        "CREDITOS INSUFICIENTES",
+                        "TOKENS INSUFICIENTES",
                         TextFormat(
-                            "Necesitas %i creditos para jugar. Tienes %i.",
+                            "Necesitas %i tokens para jugar. Tienes %i.",
                             gameCost,
                             creditos
                         ),
@@ -2969,7 +3026,7 @@ void Game::drawGame() {
             );
 
             drawCyberText(
-                TextFormat("COSTO POR PARTIDA: %i CREDITO(S)", gameCost),
+                TextFormat("COSTO POR PARTIDA: %i TOKEN(S)", gameCost),
                 250,
                 388,
                 13,
@@ -3122,7 +3179,7 @@ void Game::drawGame() {
                 NEO_YELLOW
             );
             drawCenteredCyberText(
-                "PERO TRIPLICA EL VALOR DE CREDITOS Y SCORE",
+                "PERO TRIPLICA EL VALOR DE TOKENS Y SCORE",
                 400,
                 362,
                 13,
@@ -3564,6 +3621,7 @@ void Game::drawGame() {
             DrawRectangleRec(scoreBox, {0, 0, 0, 175});
             DrawRectangleLinesEx(scoreBox, 2.0f, NEO_CYAN);
             DrawRectangleLines(192, 127, 191, 60, {255, 255, 255, 55});
+            drawMovingBorderGlow(scoreBox, NEO_CYAN, 0.0f);
 
             drawCenteredCyberText(
                 "PUNTAJE",
@@ -3584,6 +3642,7 @@ void Game::drawGame() {
             DrawRectangleRec(recordBox, {0, 0, 0, 175});
             DrawRectangleLinesEx(recordBox, 2.0f, GREEN);
             DrawRectangleLines(417, 127, 191, 60, {255, 255, 255, 55});
+            drawMovingBorderGlow(recordBox, GREEN, 0.34f);
 
             drawCenteredCyberText(
                 "RECORD",
@@ -3606,6 +3665,7 @@ void Game::drawGame() {
             DrawRectangleLines(192, 212, 416, 80, {0, 255, 255, 75});
             DrawLine(400, 229, 400, 263, {255, 255, 255, 75});
             DrawLine(210, 271, 590, 271, {253, 249, 0, 75});
+            drawMovingBorderGlow(conversionBox, NEO_YELLOW, 0.68f);
 
             drawCenteredCyberText(
                 "MONEDAS",

@@ -166,5 +166,5 @@ void HUD::drawGameHUD(
 }
 
 void HUD::drawMenuHUD(int creditos) {
-    DrawText(TextFormat("CREDITOS: %i", creditos), 445, 115, 15, NEO_YELLOW_HUD);
+    DrawText(TextFormat("TOKENS: %i", creditos), 445, 115, 15, NEO_YELLOW_HUD);
 }
