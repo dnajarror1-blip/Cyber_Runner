@@ -2805,9 +2805,13 @@ void Game::drawGame() {
                 NEO_MAGENTA
             );
 
+            float instructionDroneY =
+                    135.0f +
+                    std::sin(menuPreviewTimer * 2.2f) * 12.0f;
+
             drawMenuPreviewTexture(
                 menuDroneTexture,
-                {240.0f, 135.0f, 58.0f, 36.0f},
+                {240.0f, instructionDroneY, 58.0f, 36.0f},
                 WHITE,
                 NEO_YELLOW
             );
