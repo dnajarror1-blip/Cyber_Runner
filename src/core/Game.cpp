@@ -1729,12 +1729,46 @@ void Game::updateGame() {
 
             if (
                 IsKeyPressed(KEY_FOUR) ||
+                IsKeyPressed(KEY_H) ||
+                (
+                    IsGamepadAvailable(0) &&
+                    IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_1)
+                )
+            ) {
+                currentScreen = COMO_JUGAR;
+            }
+
+            if (
+                IsKeyPressed(KEY_FIVE) ||
                 (
                     IsGamepadAvailable(0) &&
                     IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_RIGHT)
                 )
             ) {
                 currentScreen = CONFIRMAR_SALIDA;
+            }
+
+            break;
+        }
+
+        case COMO_JUGAR: {
+            menuPreviewTimer += frameTime;
+
+            bool volverMenuPressed =
+                    IsKeyPressed(KEY_ESCAPE) ||
+                    IsKeyPressed(KEY_BACKSPACE) ||
+                    IsKeyPressed(KEY_H) ||
+                    (
+                        IsGamepadAvailable(0) &&
+                        (
+                            IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_RIGHT) ||
+                            IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_1) ||
+                            IsGamepadButtonPressed(0, GAMEPAD_BUTTON_MIDDLE_LEFT)
+                        )
+                    );
+
+            if (volverMenuPressed) {
+                currentScreen = MENU;
             }
 
             break;
@@ -2688,6 +2722,13 @@ void Game::drawGame() {
 
             drawRetroActionButton(
                 {250.0f, 290.0f, 300.0f, 38.0f},
+                "RB",
+                "COMO JUGAR",
+                NEO_CYAN
+            );
+
+            drawRetroActionButton(
+                {250.0f, 340.0f, 300.0f, 38.0f},
                 "B",
                 "SALIR DEL JUEGO",
                 NEO_RED
@@ -2696,20 +2737,109 @@ void Game::drawGame() {
             drawCyberText(
                 TextFormat("COSTO POR PARTIDA: %i CREDITO(S)", gameCost),
                 250,
-                345,
-                15,
+                388,
+                13,
                 NEO_YELLOW
             );
 
             drawCyberText(
                 mensajeApi.c_str(),
                 250,
-                402,
-                15,
+                405,
+                13,
                 LIGHTGRAY
             );
 
             hud.drawMenuHUD(creditos);
+
+            break;
+        }
+
+        case COMO_JUGAR: {
+            audioManager.stopRunning();
+
+            drawCyberPanel(70, 25, 660, 395, NEO_CYAN);
+
+            drawCyberText(
+                "COMO JUGAR",
+                290,
+                42,
+                32,
+                NEO_CYAN
+            );
+
+            DrawRectangle(105, 92, 260, 250, {0, 0, 0, 225});
+            DrawRectangleLinesEx({105.0f, 92.0f, 260.0f, 250.0f}, 1.5f, NEO_MAGENTA);
+            DrawLine(120, 285, 350, 285, {0, 255, 255, 100});
+
+            Texture2D runnerTexture =
+                    (static_cast<int>(menuPreviewTimer * 8.0f) % 2 == 0)
+                        ? menuPlayerRun[static_cast<int>(menuPreviewTimer * 9.0f) % 3]
+                        : menuPlayerJump;
+
+            drawMenuPreviewTexture(
+                runnerTexture,
+                {145.0f, 210.0f, 42.0f, 76.0f},
+                WHITE,
+                NEO_CYAN
+            );
+
+            drawMenuPreviewTexture(
+                menuObstacleTexture,
+                {232.0f, 235.0f, 38.0f, 52.0f},
+                WHITE,
+                NEO_MAGENTA
+            );
+
+            drawMenuPreviewTexture(
+                menuDroneTexture,
+                {285.0f, 150.0f, 58.0f, 36.0f},
+                WHITE,
+                NEO_YELLOW
+            );
+
+            drawMenuPreviewTexture(
+                menuCoinTexture[static_cast<int>(menuPreviewTimer * 8.0f) % 2],
+                {185.0f, 150.0f, 25.0f, 25.0f},
+                WHITE,
+                NEO_YELLOW
+            );
+
+            drawMenuPreviewTexture(
+                menuShieldTexture,
+                {225.0f, 140.0f, 32.0f, 32.0f},
+                WHITE,
+                NEO_CYAN
+            );
+
+            drawCyberText("EVITA OBSTACULOS", 132, 308, 16, LIGHTGRAY);
+
+            drawRetroPillButton({405.0f, 105.0f, 70.0f, 30.0f}, "SPACE", NEO_CYAN);
+            drawRetroRoundButton(505.0f, 120.0f, "A", NEO_CYAN);
+            drawCyberText("SALTAR", 535, 112, 18, WHITE);
+
+            drawRetroPillButton({405.0f, 155.0f, 70.0f, 30.0f}, "SPACE", NEO_YELLOW);
+            drawRetroRoundButton(505.0f, 170.0f, "A", NEO_YELLOW);
+            drawCyberText("DOBLE SALTO", 535, 162, 18, WHITE);
+
+            drawRetroPillButton({405.0f, 205.0f, 70.0f, 30.0f}, "ABAJO", NEO_MAGENTA);
+            drawRetroRoundButton(505.0f, 220.0f, "DN", NEO_MAGENTA);
+            drawCyberText("CAIDA RAPIDA", 535, 212, 18, WHITE);
+
+            drawRetroPillButton({405.0f, 255.0f, 70.0f, 30.0f}, "P", NEO_RED);
+            drawRetroPillButton({495.0f, 255.0f, 78.0f, 30.0f}, "START", NEO_RED);
+            drawCyberText("PAUSA", 595, 262, 18, WHITE);
+
+            drawCyberText(
+                "RECOLECTA MONEDAS Y ESCUDOS PARA SOBREVIVIR MAS TIEMPO",
+                110,
+                365,
+                15,
+                NEO_YELLOW
+            );
+
+            drawRetroRoundButton(260.0f, 395.0f, "B", NEO_RED);
+            drawCyberText("VOLVER AL MENU", 290, 387, 16, LIGHTGRAY);
 
             break;
         }

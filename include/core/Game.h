@@ -20,6 +20,7 @@ enum GameScreen {
     INICIO,
     LOGIN,
     MENU,
+    COMO_JUGAR,
     RANKING,
     CARGANDO,
     JUGANDO,
