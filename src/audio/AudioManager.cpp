@@ -11,6 +11,8 @@ AudioManager::~AudioManager()
 
 void AudioManager::load()
 {
+    // SECCION: Audio - carga de assets
+    // Las rutas apuntan a assets/music y se cargan una vez al iniciar Game::run().
     jumpSound = LoadSound("assets/music/jump.wav");
 
     doubleJumpSound = LoadSound("assets/music/salto2.wav");
@@ -29,11 +31,13 @@ void AudioManager::load()
 
     runningSound = LoadSound("assets/music/running.wav");
 
+    // El loop de carrera se deja a menor volumen para no tapar efectos importantes.
     SetSoundVolume(runningSound, 0.50f);
 }
 
 void AudioManager::unload()
 {
+    // Detiene el loop antes de liberar sonidos.
     StopSound(runningSound);
 
     UnloadSound(jumpSound);
@@ -57,6 +61,8 @@ void AudioManager::unload()
 
 void AudioManager::update()
 {
+    // SECCION: Loop de carrera
+    // Si el jugador esta corriendo y el sonido termino, se vuelve a reproducir.
     if (runningPlaying)
     {
         if (!IsSoundPlaying(runningSound))
@@ -103,6 +109,7 @@ void AudioManager::playShield()
 
 void AudioManager::playGameOver()
 {
+    // Evita superponer varias veces el sonido de game over.
     if (!IsSoundPlaying(gameOverSound))
     {
         PlaySound(gameOverSound);
@@ -111,6 +118,7 @@ void AudioManager::playGameOver()
 
 void AudioManager::startRunning()
 {
+    // Solo inicia el loop si no estaba marcado como activo.
     if (!runningPlaying)
     {
         runningPlaying = true;
@@ -124,6 +132,7 @@ void AudioManager::startRunning()
 
 void AudioManager::stopRunning()
 {
+    // Se llama al saltar, pausar, impactar o salir de gameplay.
     runningPlaying = false;
 
     StopSound(runningSound);

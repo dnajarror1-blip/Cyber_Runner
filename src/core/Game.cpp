@@ -2639,10 +2639,15 @@ void Game::checkCollisions()
     }
 }
 
+// FUNCION: Dibuja la pantalla de carga usada por login, ranking y preparacion de partida.
+// SECCION: Cargando
+// Esta pantalla solo muestra informacion; la operacion real avanza en actualizarCarga().
 void Game::drawLoadingScreen()
 {
+    // Panel central de carga: modificar aqui posicion y tamano del bloque visual.
     drawCyberPanel(210, 140, 380, 175, NEO_CYAN);
 
+    // Agrega puntos animados al titulo para mostrar que la carga sigue activa.
     int puntos = static_cast<int>(GetTime() * 4.0) % 4;
     std::string titulo = tituloCarga;
 
@@ -2670,6 +2675,7 @@ void Game::drawLoadingScreen()
         LIGHTGRAY
     );
 
+    // Barra visual de espera; no representa progreso real de red, solo actividad visual.
     float progreso = static_cast<float>(
         std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::steady_clock::now() - inicioCarga
@@ -2693,8 +2699,12 @@ void Game::drawLoadingScreen()
     );
 }
 
+// FUNCION: Dibuja la animacion de impacto antes de entrar a Game Over.
+// SECCION: Impacto
+// Usa la posicion guardada en checkCollisions() para centrar el efecto en el jugador.
 void Game::drawImpactAnimation()
 {
+    // Cada frame cambia segun el temporizador de impacto.
     int frame = static_cast<int>(impactTimer / 0.16f);
 
     if (frame > 3) {
@@ -2711,6 +2721,7 @@ void Game::drawImpactAnimation()
             static_cast<float>(texture.height)
         };
 
+        // Dest controla posicion y tamano de la explosion.
         Rectangle dest = {
             impactPosition.x - 48.0f,
             impactPosition.y - 52.0f,
@@ -2736,6 +2747,7 @@ void Game::drawImpactAnimation()
         );
     }
 
+    // Oscurece la pantalla al final del impacto para preparar el cambio a Game Over.
     float fadeProgress = (impactTimer - 0.55f) / 0.50f;
 
     if (fadeProgress < 0.0f) {
@@ -2755,6 +2767,9 @@ void Game::drawImpactAnimation()
     );
 }
 
+// FUNCION: Dibuja la pantalla actual.
+// SECCION: Flujo de pantalla
+// Este switch es el mapa visual principal del juego.
 void Game::drawGame() {
     switch (currentScreen) {
         case CARGA_INICIAL: {
@@ -3604,6 +3619,7 @@ void Game::drawGame() {
 
         case CARGANDO: {
             audioManager.stopRunning();
+            // Reutiliza la misma pantalla para cargas de login, ranking y partida.
             drawLoadingScreen();
             break;
         }
@@ -3975,6 +3991,7 @@ void Game::drawGame() {
         }
     }
 
+    // Fade visual entre pantallas que no son gameplay activo ni impacto.
     if (
         screenTransitionAlpha > 0.0f &&
         shouldAnimateScreenTransition(currentScreen)
@@ -3995,9 +4012,11 @@ void Game::drawGame() {
         );
     }
 
+    // El popup siempre se dibuja al final para quedar encima de cualquier pantalla.
     drawPopupModal();
 }
 
+// FUNCION: Dibuja popups modales sobre la pantalla actual.
 void Game::drawPopupModal() {
     if (!popupActivo) {
         return;
@@ -4026,6 +4045,7 @@ void Game::drawPopupModal() {
         WHITE
     );
 
+    // Boton de confirmacion del popup.
     drawRetroRoundButton(315.0f, 270.0f, "A", NEO_CYAN);
     drawCyberText(
         popupBoton.c_str(),
@@ -4036,11 +4056,15 @@ void Game::drawPopupModal() {
     );
 }
 
+// FUNCION: Escala el lienzo interno de 800x450 a la ventana real.
+// SECCION: Escalado de pantalla
+// Mantiene proporcion para evitar deformar sprites y textos cuando la ventana cambia de tamano.
 void Game::drawScaledGame(RenderTexture2D &target) {
     BeginDrawing();
 
     ClearBackground(BLACK);
 
+    // Usa el menor factor para que todo el juego quepa sin recortarse.
     float scale = std::min(
         static_cast<float>(GetScreenWidth()) / screenWidth,
         static_cast<float>(GetScreenHeight()) / screenHeight
@@ -4062,6 +4086,7 @@ void Game::drawScaledGame(RenderTexture2D &target) {
         -static_cast<float>(target.texture.height)
     };
 
+    // dest centra el render interno dentro de la ventana real.
     Rectangle dest = {
         offsetX,
         offsetY,

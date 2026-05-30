@@ -1,6 +1,8 @@
 #include "entities/Player.h"
 
 Player::Player() {
+    // SECCION: Assets del jugador
+    // Estas texturas controlan la animacion de correr, salto y doble salto con nitro.
     run1 = LoadTexture("assets/player1.png");
     run2 = LoadTexture("assets/player2.png");
     run3 = LoadTexture("assets/player3.png");
@@ -20,12 +22,15 @@ Player::~Player() {
 
 void Player::update(float deltaTime)
 {
+    // Los eventos duran un frame; Game los consulta para reproducir audio.
     jumpEvent = false;
 
     doubleJumpEvent = false;
 
     landingEvent = false;
 
+    // SECCION: Entrada con teclado y control
+    // SPACE o A del control activan salto si quedan saltos disponibles.
     bool jumpPressed =
             IsKeyPressed(KEY_SPACE) ||
             (
@@ -39,6 +44,7 @@ void Player::update(float deltaTime)
 
         bool secondJump = saltosDisponibles == 1;
 
+        // El segundo salto usa fuerza especial cuando nitro esta activo.
         velocidadY =
                 (hasNitro && secondJump)
                     ? fuerzaSaltoNitro
@@ -61,6 +67,7 @@ void Player::update(float deltaTime)
         }
     }
 
+    // Caida rapida: flecha abajo, direccion abajo o boton inferior izquierdo del control.
     bool fastFallPressed =
             IsKeyDown(KEY_DOWN) ||
             (
@@ -76,6 +83,8 @@ void Player::update(float deltaTime)
         velocidadY = fastFallSpeed;
     }
 
+    // SECCION: Fisica del jugador
+    // La gravedad aumenta velocidadY y luego se aplica a la posicion vertical.
     velocidadY += gravedad * deltaTime;
 
     if (velocidadY > velocidadCaidaMaxima)
@@ -85,6 +94,7 @@ void Player::update(float deltaTime)
 
     rect.y += velocidadY * deltaTime;
 
+    // Al tocar suelo se reinician saltos y se marca aterrizaje si venia en el aire.
     if (rect.y >= sueloY)
     {
         rect.y = sueloY;
@@ -103,6 +113,8 @@ void Player::update(float deltaTime)
         saltosDisponibles = 2;
     }
 
+    // SECCION: Animacion del jugador
+    // En suelo se alternan frames de carrera; en aire se usan sprites de salto.
     if (enSuelo)
     {
         frameTime += deltaTime;
@@ -148,6 +160,7 @@ void Player::update(float deltaTime)
 }
 
 void Player::draw() {
+    // Si una textura no cargo, se dibuja el hitbox para que el juego siga siendo visible.
     if (currentTexture == nullptr || currentTexture->id == 0) {
         DrawRectangleRec(rect, RED);
         return;
@@ -160,6 +173,7 @@ void Player::draw() {
         (float) currentTexture->height
     };
 
+    // dest usa el mismo rectangulo que las colisiones del jugador.
     Rectangle dest = {
         rect.x,
         rect.y,
@@ -176,6 +190,8 @@ void Player::draw() {
         WHITE
     );
 
+    // SECCION: Hitbox visual
+    // Descomentar este bloque ayuda a depurar el rectangulo real de colision.
     //DrawRectangleLinesEx(// Contorno del hitbox, se ha dejado como comment para cualquier cambio adicional
     //    rect,
     //    1.0f,

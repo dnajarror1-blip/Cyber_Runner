@@ -2,6 +2,8 @@
 
 Coin::Coin(float x, float y, float size, float speed, ItemType type)
 {
+    // SECCION: Monedas - posicion y tamano
+    // size define ancho y alto del hitbox del item.
     rect = {x, y, size, size};
 
     this->speed = speed;
@@ -9,6 +11,7 @@ Coin::Coin(float x, float y, float size, float speed, ItemType type)
 
     active = true;
 
+    // Texturas de monedas y poderes.
     coinTexture1 = LoadTexture("assets/coin1.png");
     coinTexture2 = LoadTexture("assets/coin2.png");
     nitroTexture = LoadTexture("assets/nitro.png");
@@ -155,13 +158,17 @@ Coin& Coin::operator=(Coin&& other) noexcept
 
 void Coin::update(float deltaTime)
 {
+    // Si el item ya fue recogido o salio de pantalla, no se actualiza.
     if (!active)
     {
         return;
     }
 
+    // Movimiento horizontal con la misma velocidad del escenario.
     rect.x -= speed * deltaTime;
 
+    // SECCION: Animacion de item
+    // Las monedas alternan dos texturas; los poderes usan textura fija.
     animationTimer += deltaTime;
 
     if (animationTimer >= animationSpeed)
@@ -191,6 +198,7 @@ void Coin::update(float deltaTime)
         currentTexture = nullptr;
     }
 
+    // Cuando sale por la izquierda se desactiva hasta que Game lo regenere.
     if (rect.x + rect.width < 0)
     {
         active = false;
@@ -199,6 +207,7 @@ void Coin::update(float deltaTime)
 
 void Coin::draw()
 {
+    // Solo se dibujan items activos.
     if (!active)
     {
         return;
@@ -217,6 +226,7 @@ void Coin::draw()
         (float)currentTexture->height
     };
 
+    // dest usa el mismo rectangulo que se revisa para colision.
     Rectangle dest = {
         rect.x,
         rect.y,
@@ -236,6 +246,8 @@ void Coin::draw()
 
 void Coin::reset(float x)
 {
+    // SECCION: Respawn de monedas
+    // Este reset decide si aparece escudo o moneda normal.
     int roll = GetRandomValue(0, 100);
 
     if (roll >= 80)
@@ -250,12 +262,14 @@ void Coin::reset(float x)
 
 void Coin::reset(float x, float y, ItemType newType)
 {
+    // Reposiciona y reactiva el item para reutilizar el mismo objeto.
     rect.x = x;
     rect.y = y;
     type = newType;
     active = true;
     animationTimer = 0.0f;
 
+    // Selecciona textura inicial segun tipo.
     if (type == ItemType::SHIELD)
     {
         currentTexture = &shieldTexture;
@@ -295,6 +309,7 @@ bool Coin::isActive()
 
 void Coin::collect()
 {
+    // La recoleccion solo desactiva; Game decide score, tokens y sonido.
     active = false;
 }
 

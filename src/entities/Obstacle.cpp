@@ -2,6 +2,8 @@
 #include <cmath>
 
 Obstacle::Obstacle(float x, float y, float width, float height, float speed) {
+    // SECCION: Obstaculos - posicion y tamano
+    // x, y, width y height definen el hitbox inicial que tambien se usa para dibujar.
     rect = {x, y, width, height};
     this->speed = speed;
     baseY = y;
@@ -11,6 +13,7 @@ Obstacle::Obstacle(float x, float y, float width, float height, float speed) {
     droneTexture = LoadTexture("assets/dron.png");
     groundTexture = LoadTexture("assets/groundobstacle.png");
 
+    // La altura inicial decide si el obstaculo empieza como dron o barrera de suelo.
     if (rect.y < 300) {
         type = ObstacleType::AIR;
     } else {
@@ -75,11 +78,13 @@ Obstacle& Obstacle::operator=(Obstacle&& other) noexcept
 }
 
 void Obstacle::update(float deltaTime) {
+    // SECCION: Movimiento de obstaculos
     // 1. El movimiento constante a la izquierda
     float speedMultiplier = type == ObstacleType::AIR ? 1.18f : 1.0f;
 
     rect.x -= speed * speedMultiplier * deltaTime;
 
+    // Los drones tienen una oscilacion vertical para que no sean estaticos.
     if (type == ObstacleType::AIR)
     {
         verticalTimer += deltaTime;
@@ -89,6 +94,7 @@ void Obstacle::update(float deltaTime) {
     }
 
     // 2. Si sale de la pantalla, lo "teletransportamos" y cambiamos su forma
+    // Al salir de pantalla, el obstaculo reaparece delante del jugador.
     if (rect.x + rect.width < 0) {
         respawn(800 + GetRandomValue(500, 900));
         return;
@@ -120,6 +126,8 @@ void Obstacle::setSpeed(float newSpeed) {
 
 void Obstacle::draw()
 {
+    // SECCION: Dibujo de obstaculos
+    // Se dibuja segun el tipo actual: dron en aire o barrera en suelo.
     if (type == ObstacleType::AIR)
     {
         if (droneTexture.id == 0)
@@ -135,6 +143,7 @@ void Obstacle::draw()
             (float)droneTexture.height
         };
 
+        // dest usa el rectangulo de colision como destino visual.
         Rectangle dest = {
             rect.x,
             rect.y,
@@ -166,6 +175,7 @@ void Obstacle::draw()
             (float)groundTexture.height
         };
 
+        // dest usa el rectangulo de colision como destino visual.
         Rectangle dest = {
             rect.x,
             rect.y,
@@ -192,15 +202,19 @@ Rectangle Obstacle::getRect() {
 
 void Obstacle::forceRespawn()
 {
+    // Usado cuando el jugador tenia escudo: evita que el mismo obstaculo choque otra vez.
     respawn(800 + GetRandomValue(600, 950));
 }
 
 void Obstacle::respawn(float x)
 {
+    // SECCION: Respawn de obstaculos
+    // x define donde reaparece; y, width y height se ajustan segun tipo.
     rect.x = x;
     verticalTimer = 0.0f;
     verticalPhase = static_cast<float>(GetRandomValue(0, 628)) / 100.0f;
 
+    // 0 crea dron; 1 crea barrera de suelo.
     if (GetRandomValue(0, 1) == 0)
     {
         rect.y = 205;
