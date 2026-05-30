@@ -2770,7 +2770,7 @@ void Game::drawGame() {
 
             DrawRectangle(105, 92, 260, 250, {0, 0, 0, 225});
             DrawRectangleLinesEx({105.0f, 92.0f, 260.0f, 250.0f}, 1.5f, NEO_MAGENTA);
-            DrawLine(120, 285, 350, 285, {0, 255, 255, 100});
+            DrawLine(120, 190, 350, 190, {0, 255, 255, 100});
 
             Texture2D runnerTexture =
                     (static_cast<int>(menuPreviewTimer * 8.0f) % 2 == 0)
@@ -2779,59 +2779,68 @@ void Game::drawGame() {
 
             drawMenuPreviewTexture(
                 runnerTexture,
-                {145.0f, 210.0f, 42.0f, 76.0f},
+                {132.0f, 230.0f, 36.0f, 64.0f},
                 WHITE,
                 NEO_CYAN
             );
 
+            drawCyberText("OBSTACULOS", 135, 108, 17, NEO_MAGENTA);
+
             drawMenuPreviewTexture(
                 menuObstacleTexture,
-                {232.0f, 235.0f, 38.0f, 52.0f},
+                {150.0f, 132.0f, 38.0f, 52.0f},
                 WHITE,
                 NEO_MAGENTA
             );
 
             drawMenuPreviewTexture(
                 menuDroneTexture,
-                {285.0f, 150.0f, 58.0f, 36.0f},
+                {240.0f, 135.0f, 58.0f, 36.0f},
                 WHITE,
                 NEO_YELLOW
             );
+
+            drawCyberText("RECOGIBLES", 135, 208, 17, NEO_YELLOW);
 
             drawMenuPreviewTexture(
                 menuCoinTexture[static_cast<int>(menuPreviewTimer * 8.0f) % 2],
-                {185.0f, 150.0f, 25.0f, 25.0f},
+                {205.0f, 228.0f, 25.0f, 25.0f},
                 WHITE,
                 NEO_YELLOW
             );
 
             drawMenuPreviewTexture(
-                menuShieldTexture,
-                {225.0f, 140.0f, 32.0f, 32.0f},
+                menuNitroTexture,
+                {248.0f, 226.0f, 30.0f, 30.0f},
                 WHITE,
                 NEO_CYAN
             );
 
-            drawCyberText("EVITA OBSTACULOS", 132, 308, 16, LIGHTGRAY);
+            drawMenuPreviewTexture(
+                menuShieldTexture,
+                {292.0f, 224.0f, 32.0f, 32.0f},
+                WHITE,
+                NEO_CYAN
+            );
 
-            drawRetroPillButton({405.0f, 105.0f, 70.0f, 30.0f}, "SPACE", NEO_CYAN);
-            drawRetroRoundButton(505.0f, 120.0f, "A", NEO_CYAN);
-            drawCyberText("SALTAR", 535, 112, 18, WHITE);
+            drawCyberText("EVITA LOS OBSTACULOS", 132, 305, 15, LIGHTGRAY);
+            drawCyberText("TOMA MONEDAS, NITRO Y ESCUDOS", 122, 322, 14, LIGHTGRAY);
 
-            drawRetroPillButton({405.0f, 155.0f, 70.0f, 30.0f}, "SPACE", NEO_YELLOW);
-            drawRetroRoundButton(505.0f, 170.0f, "A", NEO_YELLOW);
-            drawCyberText("DOBLE SALTO", 535, 162, 18, WHITE);
+            drawRetroRoundButton(435.0f, 120.0f, "A", NEO_CYAN);
+            drawCyberText("SALTAR", 475, 112, 18, WHITE);
 
-            drawRetroPillButton({405.0f, 205.0f, 70.0f, 30.0f}, "ABAJO", NEO_MAGENTA);
-            drawRetroRoundButton(505.0f, 220.0f, "DN", NEO_MAGENTA);
-            drawCyberText("CAIDA RAPIDA", 535, 212, 18, WHITE);
+            drawRetroRoundButton(435.0f, 170.0f, "A", NEO_YELLOW);
+            drawRetroRoundButton(475.0f, 170.0f, "A", NEO_YELLOW);
+            drawCyberText("DOBLE SALTO", 520, 162, 18, WHITE);
 
-            drawRetroPillButton({405.0f, 255.0f, 70.0f, 30.0f}, "P", NEO_RED);
-            drawRetroPillButton({495.0f, 255.0f, 78.0f, 30.0f}, "START", NEO_RED);
-            drawCyberText("PAUSA", 595, 262, 18, WHITE);
+            drawRetroRoundButton(435.0f, 220.0f, "DN", NEO_MAGENTA);
+            drawCyberText("CAIDA RAPIDA", 475, 212, 18, WHITE);
+
+            drawRetroPillButton({405.0f, 255.0f, 78.0f, 30.0f}, "START", NEO_RED);
+            drawCyberText("PAUSA", 505, 262, 18, WHITE);
 
             drawCyberText(
-                "RECOLECTA MONEDAS Y ESCUDOS PARA SOBREVIVIR MAS TIEMPO",
+                "EL MANDO ES LA REFERENCIA PRINCIPAL DE CONTROLES",
                 110,
                 365,
                 15,
@@ -3008,6 +3017,34 @@ void Game::drawGame() {
         }
 
         case JUGANDO: {
+            if (nitroActive && player != nullptr) {
+                Rectangle playerRect = player->getRect();
+                float pulse =
+                        (std::sin(static_cast<float>(GetTime()) * 16.0f) + 1.0f) *
+                        0.5f;
+                float lineStartX = playerRect.x - 74.0f - pulse * 8.0f;
+                float lineEndX = playerRect.x - 10.0f;
+
+                DrawLineEx(
+                    {lineStartX, playerRect.y + 12.0f},
+                    {lineEndX, playerRect.y + 12.0f},
+                    3.0f,
+                    {253, 249, 0, 165}
+                );
+                DrawLineEx(
+                    {lineStartX - 12.0f, playerRect.y + 30.0f},
+                    {lineEndX, playerRect.y + 30.0f},
+                    4.0f,
+                    {0, 255, 255, 170}
+                );
+                DrawLineEx(
+                    {lineStartX - 4.0f, playerRect.y + 48.0f},
+                    {lineEndX, playerRect.y + 48.0f},
+                    2.0f,
+                    {255, 255, 255, 135}
+                );
+            }
+
             if (player != nullptr) {
                 player->draw();
             }
@@ -3037,48 +3074,6 @@ void Game::drawGame() {
                 nitroTimer / 8.0f,
                 shieldTimer / 10.0f
             );
-            if (nitroActive && player != nullptr) {
-                Vector2 playerCenter = player->getPosition();
-                Rectangle playerRect = player->getRect();
-                float pulse =
-                        (std::sin(static_cast<float>(GetTime()) * 12.0f) + 1.0f) *
-                        0.5f;
-
-                DrawCircleGradient(
-                    static_cast<int>(playerCenter.x - 18.0f),
-                    static_cast<int>(playerCenter.y + 8.0f),
-                    24.0f + pulse * 6.0f,
-                    {0, 255, 255, 110},
-                    {0, 0, 0, 0}
-                );
-                DrawRing(
-                    playerCenter,
-                    29.0f + pulse * 3.0f,
-                    32.0f + pulse * 3.0f,
-                    -25.0f,
-                    210.0f,
-                    48,
-                    {0, 255, 255, 170}
-                );
-                DrawLineEx(
-                    {playerRect.x - 52.0f, playerCenter.y - 13.0f},
-                    {playerRect.x - 6.0f, playerCenter.y - 5.0f},
-                    3.0f,
-                    {253, 249, 0, 150}
-                );
-                DrawLineEx(
-                    {playerRect.x - 62.0f, playerCenter.y + 10.0f},
-                    {playerRect.x - 5.0f, playerCenter.y + 6.0f},
-                    4.0f,
-                    {0, 255, 255, 155}
-                );
-                DrawLineEx(
-                    {playerRect.x - 40.0f, playerCenter.y + 24.0f},
-                    {playerRect.x - 5.0f, playerCenter.y + 16.0f},
-                    2.0f,
-                    {255, 255, 255, 125}
-                );
-            }
 
             if (hasShield) {
                 if (player != nullptr) {
