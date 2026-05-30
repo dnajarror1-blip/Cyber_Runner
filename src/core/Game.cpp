@@ -1098,7 +1098,7 @@ void Game::resetGame() {
 
     coins.clear();
 
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < 14; ++i) {
         coins.push_back(
             Coin(
                 900 + i * 32,
@@ -1143,7 +1143,10 @@ void Game::generarMonedasEnMatriz(float startX) {
     }
 
     for (size_t i = 0; i < coins.size(); ++i) {
-        if (i == 8) {
+        size_t shieldIndex = coins.size() - 2;
+        size_t nitroIndex = coins.size() - 1;
+
+        if (i == shieldIndex) {
             coins[i].reset(
                 startX + 520.0f,
                 static_cast<float>(GetRandomValue(205, 295)),
@@ -1153,7 +1156,7 @@ void Game::generarMonedasEnMatriz(float startX) {
             continue;
         }
 
-        if (i == 9) {
+        if (i == nitroIndex) {
             coins[i].reset(
                 startX + 740.0f,
                 static_cast<float>(GetRandomValue(205, 295)),
@@ -1163,9 +1166,9 @@ void Game::generarMonedasEnMatriz(float startX) {
             continue;
         }
 
-        if (monedasCercaDron && (i == 6 || i == 7)) {
-            float offsetX = i == 6 ? -34.0f : 34.0f;
-            float offsetY = i == 6 ? -18.0f : 20.0f;
+        if (monedasCercaDron && (i == 10 || i == 11)) {
+            float offsetX = i == 10 ? -34.0f : 34.0f;
+            float offsetY = i == 10 ? -18.0f : 20.0f;
 
             coins[i].reset(
                 dronCercano.x + offsetX,
@@ -1254,6 +1257,7 @@ void Game::run() {
         screenHeight,
         "Cyber-Runner"
     );
+    SetExitKey(KEY_NULL);
 
     InitAudioDevice();
 
@@ -2924,15 +2928,7 @@ void Game::drawGame() {
 
             drawCyberText(
                 "SCORE",
-                440,
-                115,
-                18,
-                NEO_YELLOW
-            );
-
-            drawCyberText(
-                "NIVEL",
-                560,
+                520,
                 115,
                 18,
                 NEO_YELLOW
@@ -2982,15 +2978,7 @@ void Game::drawGame() {
 
                     drawCyberText(
                         TextFormat("%i", rankingActual[i].bestScore),
-                        440,
-                        y,
-                        18,
-                        WHITE
-                    );
-
-                    drawCyberText(
-                        TextFormat("%i", rankingActual[i].bestNivel),
-                        560,
+                        520,
                         y,
                         18,
                         WHITE
